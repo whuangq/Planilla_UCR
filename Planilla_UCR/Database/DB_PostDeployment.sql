@@ -8,14 +8,97 @@ Post-Deployment Script Template
  Example:      :setvar TableName MyTable							
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
+Use: on Remote DB
+First run post deployment to fill remote BD tables. then run Blazor app
 */
 
-use PatatasConSueno
+USE PatatasConSueno
 
-CREATE TABLE [dbo].[CONNECTION_TEST]
+CREATE TABLE [dbo].[Projects]
 (
-	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
-    [Text] VARCHAR(50) NOT NULL, 
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [Project_Name] NCHAR(100) NULL, 
+    [Publication] INT NULL, 
+    [Group] NCHAR(100) NULL
 )
 
-INSERT INTO CONNECTION_TEST(Text) VALUES('Hello world')
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(1, 'Project1', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(2, 'Project2', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(3, 'Project3', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(4, 'Project4', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(5, 'Project5', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(6, 'Project6', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(7, 'Project7', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(8, 'Project8', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(9, 'Project9', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
+
+MERGE INTO [dbo].[Projects] AS TARGET
+USING 
+(VALUES 
+(10, 'Project10', 12, 'PatatasConSueno'))
+AS SOURCE ([Id],[Project_Name],[Publication],[Group]) ON TARGET.[Id] = SOURCE.[Id]
+WHEN NOT MATCHED BY TARGET THEN
+INSERT ([Id],[Project_Name],[Publication],[Group]) VALUES ([Id],[Project_Name],[Publication],[Group]);
