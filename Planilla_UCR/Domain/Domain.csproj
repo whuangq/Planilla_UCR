@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpFunctionalExtensions" Version="2.29.1" />
-    <PackageReference Include="LanguageExt.Core" Version="4.0.4" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.15.2" />
+    <PackageReference Include="LanguageExt.Core" Version="3.4.15" />
   </ItemGroup>
 
 </Project>
