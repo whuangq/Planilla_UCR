@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Employees.Repositories
 {
-    public interface IProjectRepository : IRepository<Employee>
+    public interface IEmployeeRepository : IRepository<Employee>
     {
-        Task CreateEmployee();
+        Task CreateAsync();
     }
 }
