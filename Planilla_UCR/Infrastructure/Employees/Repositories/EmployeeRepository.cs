@@ -1,7 +1,7 @@
 ﻿using Domain.Core.Repositories;
-using Domain.Projects.DTOs;
-using Domain.Projects.Entities;
-using Domain.Projects.Repositories;
+using Domain.Employees.DTOs;
+using Domain.Employees.Entities;
+using Domain.Employees.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Projects.Repositories
 {
-    internal class ProjectRepository : IProjectRepository
+    internal class EmployeeRepository : IEmployeeRepository
     {
         private readonly ProjectDbContext _dbContext;
         public IUnitOfWork UnitOfWork => _dbContext;
 
-        public ProjectRepository(ProjectDbContext unitOfWork)
+        public EmployeeRepository(ProjectDbContext unitOfWork)
         {
             _dbContext = unitOfWork;
         }
 
-        public async Task<IEnumerable<ProjectDTO>> GetAllAsync()
+        public Task CreateAsync()
         {
-            return await _dbContext.Projects.Select(t => new ProjectDTO(t.Id, t.Project_Name, t.Publication, t.Group)).ToListAsync();
+            throw new NotImplementedException();
         }
     }
 }
