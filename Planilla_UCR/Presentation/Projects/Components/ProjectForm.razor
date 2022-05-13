@@ -1,9 +1,14 @@
 ﻿@page "/projects"
+@using Domain.Employees.DTOs
+@using Application.Employees
+@using Domain.Employees.Entities
+@using Presentation.Core.Components
+
 @using Domain.Projects.DTOs
 @using Application.Projects
 @using Domain.Projects.Entities
-@using Presentation.Core.Components
 
+@inject IEmployeeService EmployeeService
 @inject IProjectService ProjectService
 
 <div class="container">
@@ -23,7 +28,7 @@
                         <td><strong>Investigation Group name</strong></td>
                     </tr>
 
-                    @foreach (var project in _projects)
+                    @*@foreach (var project in _projects)
                     {
                         <tr>
                             <td align="center">@project.Id</td>
@@ -31,20 +36,26 @@
                             <td align="center">@project.Publication</td>
                             <td align="center">@project.Group</td>
                         </tr>
-                    }
+                    }*@
             </table>
         }
     </Loading>
 </div>
 
 @code {
+    // private IEnumerable<ProjectDTO> _projects;
 
     private bool _isLoading = true;
-    private IEnumerable<ProjectDTO> _projects;
-
     protected override async Task OnInitializedAsync()
     {
-        _projects = await ProjectService.GetAllProjectsAsync();
+        String name = "Le"; 
+        String email = "Leone";
+        int id = 202220222;
+        String bankAccount = "cuentaBa";
+
+        await EmployeeService.CreateEmployeeAsync(email, id, name, bankAccount);
+        // _projects = await ProjectService.GetAllProjectsAsync();
+
         _isLoading = false;
     }
 }

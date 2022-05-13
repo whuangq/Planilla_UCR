@@ -11,6 +11,6 @@ namespace Domain.Employees.Repositories
 {
     public interface IEmployeeRepository : IRepository<Employee>
     {
-        Task CreateAsync();
+        Task CreateAsync(String email, int id, String name, String bankAccount);
     }
 }

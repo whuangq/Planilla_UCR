@@ -10,6 +10,6 @@ namespace Application.Employees
 {
     public interface IEmployeeService
     {
-        Task CreateEmployeeAsync();
+        Task CreateEmployeeAsync(String email,int id, String name, String bankAccount);
     }
 }

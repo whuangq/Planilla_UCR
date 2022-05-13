@@ -17,30 +17,28 @@ namespace Infrastructure.Employees.EntityMappings
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            builder.ToTable("Employees");
+            builder.ToTable("PERSON");
 
-            builder.HasKey(p => p.Email);
+            builder.HasKey(p => p.Id);
+
+            builder.Property(P => P.Email);
 
             builder.Property(p => p.Name)
                    .IsRequired();
 
+            builder.Property(p => p.LastName1);
+
+            builder.Property(p => p.LastName2);
+
+            builder.Property(p => p.Ssn)
+                 .IsRequired();
+
             builder.Property(p => p.BankAccount)
-                 .IsRequired();
+               .IsRequired();
 
-            builder.Property(p => p.ID)
-                 .IsRequired();
+            builder.Property(p => p.Adress);
 
-            builder.Property(p => p.LastName1)
-                .IsRequired();
-
-            builder.Property(p => p.LastName2)
-                .IsRequired();
-
-            builder.Property(p => p.Adress)
-                .IsRequired();
-
-            builder.Property(p => p.PhoneNumber)
-                .IsRequired();
+            builder.Property(p => p.PhoneNumber);
         }
     }
 }

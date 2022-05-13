@@ -19,9 +19,9 @@ namespace Application.Employees.Implementations
             _employeeRepository = employeeRepository;
         }
 
-        public async Task CreateEmployeeAsync()
+        public async Task CreateEmployeeAsync(String email, int id, String name, String bankAccount)
         {
-            await _employeeRepository.CreateAsync();
+            await _employeeRepository.CreateAsync(email, id, name, bankAccount);
         }
     }
 }

@@ -4,6 +4,21 @@
 		<TargetFramework>net5.0</TargetFramework>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Projects\Models\**" />
+	  <Compile Remove="Projects\Pages\**" />
+	  <Compile Remove="Projects\Validators\**" />
+	  <Content Remove="Projects\Models\**" />
+	  <Content Remove="Projects\Pages\**" />
+	  <Content Remove="Projects\Validators\**" />
+	  <EmbeddedResource Remove="Projects\Models\**" />
+	  <EmbeddedResource Remove="Projects\Pages\**" />
+	  <EmbeddedResource Remove="Projects\Validators\**" />
+	  <None Remove="Projects\Models\**" />
+	  <None Remove="Projects\Pages\**" />
+	  <None Remove="Projects\Validators\**" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
@@ -16,13 +31,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
 		<PackageReference Include="PeterLeslieMorris.Blazor.Validation" Version="1.7.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-
-		<Folder Include="Projects\Models\" />
-		<Folder Include="Projects\Pages\" />
-		<Folder Include="Projects\Validators\" />
 	</ItemGroup>
 
 	<ItemGroup>

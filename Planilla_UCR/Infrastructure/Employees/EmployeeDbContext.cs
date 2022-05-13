@@ -13,7 +13,7 @@ namespace Infrastructure.Employees
 {
     internal class EmployeeDbContext:ApplicationDbContext
     {
-        public EmployeeDbContext(DbContextOptions options, ILogger<EmployeeDbContext> logger) : base(options, logger)
+        public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options, ILogger<EmployeeDbContext> logger) : base(options, logger)
         {
         }
 

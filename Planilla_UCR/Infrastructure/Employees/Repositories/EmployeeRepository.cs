@@ -9,21 +9,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Projects.Repositories
+namespace Infrastructure.Employees.Repositories
 {
     internal class EmployeeRepository : IEmployeeRepository
     {
-        private readonly ProjectDbContext _dbContext;
+        private readonly EmployeeDbContext _dbContext;
         public IUnitOfWork UnitOfWork => _dbContext;
 
-        public EmployeeRepository(ProjectDbContext unitOfWork)
+        public EmployeeRepository(EmployeeDbContext unitOfWork)
         {
             _dbContext = unitOfWork;
         }
 
-        public Task CreateAsync()
+        public async Task CreateAsync(String email, int id, String name, String bankAccount)
         {
-            throw new NotImplementedException();
+            Employee e = new Employee(email, name, id, bankAccount);
+            _dbContext.Update(e);
+
+            await _dbContext.SaveEntitiesAsync();
         }
     }
 }

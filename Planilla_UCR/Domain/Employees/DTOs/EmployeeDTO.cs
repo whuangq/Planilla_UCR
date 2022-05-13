@@ -13,7 +13,7 @@ namespace Domain.Employees.DTOs
         public String Name { get; }
         public String LastName1 { get; }
         public String LastName2 { get; }
-        public int ID { get; }
+        public int Ssn { get; }
         public String BankAccount { get; }
         public String Adress { get; }
         public String PhoneNumber { get; }
@@ -24,7 +24,7 @@ namespace Domain.Employees.DTOs
             Name = name;
             LastName1 = lastName1;
             LastName2 = lastName2;
-            ID = id;
+            Ssn = id;
             BankAccount = bankAccount;
             Adress = adress;
             PhoneNumber = phoneNumber;
