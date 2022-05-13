@@ -13,7 +13,7 @@ namespace Infrastructure.Subscriptions
 {
     public class SubscriptionDbContext : ApplicationDbContext
     {
-        public SubscriptionDbContext(DbContextOptions options, ILogger<SubscriptionDbContext> logger) : base(options, logger)
+        public SubscriptionDbContext(DbContextOptions<SubscriptionDbContext> options, ILogger<SubscriptionDbContext> logger) : base(options, logger)
         {
         }
 

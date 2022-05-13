@@ -4,6 +4,7 @@ using Infrastructure.Projects;
 using Infrastructure.Projects.Repositories;
 using Infrastructure.Subscriptions;
 using Infrastructure.Subscriptions.Repositories;
+using Domain.Projects.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;

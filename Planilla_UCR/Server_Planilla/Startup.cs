@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure;
+using MudBlazor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace Server
 {
@@ -29,6 +31,7 @@ namespace Server
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMudServices();
             services.AddInfrastructureLayer(Configuration.GetConnectionString("DefaultConnection"));
             services.AddApplicationLayer();
         }

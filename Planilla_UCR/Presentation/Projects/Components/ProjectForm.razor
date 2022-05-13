@@ -6,45 +6,36 @@
 
 @inject IProjectService ProjectService
 
-<div class="container">
-    <h1>Projects</h1>
-    <Loading IsLoading="_isLoading">
-        @if (_isLoading)
-        {
-            <h4 class="text-danger">There are no projects currently registered.</h4>
-        }
-        else
-        {
-            <table>
-                    <tr>
-                        <td><strong>Id</strong></td>
-                        <td><strong>Project name</strong></td>
-                        <td><strong>Number of publications</strong></td>
-                        <td><strong>Investigation Group name</strong></td>
-                    </tr>
+@if (_loading)
+{
+    <h4 class="text-danger">Loading proyects :)</h4>
+}
+else
+{
+    <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Project_Name</MudTh>
+            <MudTh>Publication</MudTh>
+            <MudTh>Group</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Project_Name">@context.Project_Name</MudTd>
+            <MudTd DataLabel="Publication">@context.Publication</MudTd>
+            <MudTd DataLabel="Group">@context.Group</MudTd>
+        </RowTemplate>
+    </MudTable>
+}
 
-                    @foreach (var project in _projects)
-                    {
-                        <tr>
-                            <td align="center">@project.Id</td>
-                            <td align="center">@project.Project_Name</td>
-                            <td align="center">@project.Publication</td>
-                            <td align="center">@project.Group</td>
-                        </tr>
-                    }
-            </table>
-        }
-    </Loading>
-</div>
-
-@code {
-
-    private bool _isLoading = true;
-    private IEnumerable<ProjectDTO> _projects;
+@code { 
+    private bool _hidePosition;
+    private bool _loading = true;
+    private IEnumerable<ProjectDTO> Elements;
 
     protected override async Task OnInitializedAsync()
     {
-        _projects = await ProjectService.GetAllProjectsAsync();
-        _isLoading = false;
+        Elements = await ProjectService.GetAllProjectsAsync();
+        _loading = false;
     }
 }

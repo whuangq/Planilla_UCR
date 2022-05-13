@@ -44,7 +44,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _subscriptions = await SubscriptionService.GetAllProjectsAsync();
+        _subscriptions = await SubscriptionService.GetAllSubscriptionsAsync();
         _isLoading = false;
     }
 }
