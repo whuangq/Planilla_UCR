@@ -4,25 +4,44 @@
 		<TargetFramework>net5.0</TargetFramework>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Projects\Models\**" />
+	  <Compile Remove="Projects\Pages\**" />
+	  <Compile Remove="Projects\Validators\**" />
+	  <Content Remove="Projects\Models\**" />
+	  <Content Remove="Projects\Pages\**" />
+	  <Content Remove="Projects\Validators\**" />
+	  <EmbeddedResource Remove="Projects\Models\**" />
+	  <EmbeddedResource Remove="Projects\Pages\**" />
+	  <EmbeddedResource Remove="Projects\Validators\**" />
+	  <None Remove="Projects\Models\**" />
+	  <None Remove="Projects\Pages\**" />
+	  <None Remove="Projects\Validators\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Blazored.FluentValidation" Version="2.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.2.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+		<PackageReference Include="Blazored.FluentValidation" Version="2.0.3" />
+		<PackageReference Include="Blazored.FluentValidation" Version="2.0.3" />
+		<PackageReference Include="BlazorInputFile" Version="0.2.0" />
+		<PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.11" />
+		<PackageReference Include="MudBlazor" Version="5.1.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.11" />
 		<PackageReference Include="PeterLeslieMorris.Blazor.Validation" Version="1.7.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-
-		<Folder Include="Projects\Models\" />
-		<Folder Include="Projects\Pages\" />
-		<Folder Include="Projects\Validators\" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
+		<PackageReference Include="Radzen.Blazor" Version="3.11.9" />
+		<PackageReference Include="MudBlazor" Version="5.1.5" />
+		<PackageReference Include="System.Text.Json" Version="5.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
