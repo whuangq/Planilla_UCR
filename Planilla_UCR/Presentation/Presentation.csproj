@@ -20,6 +20,12 @@
 
 	<ItemGroup>
 
+		<Folder Include="Subscriptions\Models\" />
+
+		<Folder Include="Subscriptions\Pages\" />
+
+		<Folder Include="Subscriptions\Validators\" />
+
 		<Folder Include="Projects\Models\" />
 		<Folder Include="Projects\Pages\" />
 		<Folder Include="Projects\Validators\" />
