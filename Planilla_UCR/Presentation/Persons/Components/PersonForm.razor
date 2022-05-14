@@ -11,9 +11,12 @@
 @inject IPersonService PersonService
 
 <MudGrid>
-    @*Small fields *@
-    <MudItem xs="12" sm="7">
-        <MudPaper  Height="250px" Width="70%" Outlined="false" Class="border-none pa-4" Elevation="0">
+    @*Text fields *@
+    <MudItem xs="12" sm="8">
+        <MudPaper  Height="250px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudToolBar>
+            <MudSpacer></MudSpacer> <MudTextField @bind-Value="personalInfo" Label="" ReadOnly="true" Variant="Variant.Text" /> <MudSpacer></MudSpacer>
+            </MudToolBar>
             <MudGrid>
             <MudItem xs="6">
                 <MudTextField @bind-Value="name" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
@@ -41,16 +44,17 @@
              </MudItem>
             <MudItem xs="12">
                     <MudTextField @bind-Value="bankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
+                    <MudDivider />
             </MudItem>
 
-            <MudItem xs="12">
-                <br />
+            @*<MudItem xs="12">
                 <MudDivider />
-                <br />
-            </MudItem>
+            </MudItem>*@
 
             <MudItem xs="12" sm="6" md="4">
-                <MudButton Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Secondary">
+               @* <MudToolBar><MudSpacer></MudSpacer>
+                  <MudButton></MudButton> <MudButton></MudButton> <MudButton></MudButton> <MudButton></MudButton>
+                <MudSpacer></MudSpacer>*@<MudButton Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Secondary">
                     @if (_processing)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -60,50 +64,21 @@
                     {
                         <MudText>Crear</MudText>
                     }
-                </MudButton>
+                </MudButton>@* <MudSpacer></MudSpacer>
+                </MudToolBar>*@
             </MudItem>
 
             </MudGrid>
         </MudPaper>
     </MudItem>
-
     @*File uploader *@
-    <MudItem xs="12" sm="5">
-          <FileUploader></FileUploader>   
+    <MudItem xs="3">
+            <MudToolBar>
+            <MudSpacer></MudSpacer> <MudTextField @bind-Value="profilePhoto" Label="" ReadOnly="true" Variant="Variant.Text" /> <MudSpacer></MudSpacer>
+            </MudToolBar>
+          <FileUploader>
+          </FileUploader>   
     </MudItem>
-</MudGrid>
-
-@*Big fields *@
-<MudGrid>
-    @*<MudItem xs="12">
-        <MudPaper  Height="150px" Width="50%" Outlined="false" Class="border-none pa-4" Elevation="0">
-                    <MudItem xs="12">
-                    <MudTextField @bind-Value="direction" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
-                    </MudItem>
-                    <MudItem xs="12">
-                    <MudTextField @bind-Value="bankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
-                    </MudItem>
-
-                    <br />
-                    <MudDivider />
-                    <br />
-                    <MudGrid>
-                        <MudItem xs="12" sm="6" md="4">
-                            <MudButton Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Secondary">
-                                @if (_processing)
-                                {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                    <MudText Class="ms-2">Procesando</MudText>
-                                }
-                                else
-                                {
-                                    <MudText>Crear</MudText>
-                                }
-                            </MudButton>
-                        </MudItem>
-                    </MudGrid>
-        </MudPaper>
-     </MudItem>*@
 </MudGrid>
 
 @code{
@@ -115,8 +90,12 @@
     public string bankAccount { get; set; }
     public string direction { get; set; }
     public string phone { get; set; }
+
+    public string personalInfo { get; set; }  = "                      Información personal";
+    public string  profilePhoto { get; set; }  = "            Foto de perfil";
     private bool _isLoading = true;
     private bool _processing = false;
+
 
     async Task ProcessSomething()
     {
