@@ -11,19 +11,20 @@ namespace Domain.Subscriptions.Entities
 {
     public class Subscription : AggregateRoot
     {
-        public int Id { get; }
-        public String Subscription_Name { get; }
-        public int Publication { get; }
-        public String Group { get; }
+        public String EmployerEmail { get; }
+        public String NameSubscription { get; }
+        public int Cost { get; }
+        public int TypeSubscription { get; }
+        
 
-        public Subscription(int id, String name, int publication, String Group)
+        public Subscription(String employerEmail, String nameSubscription, int cost, int typeSubscription)
         {
-            Id = id;
-            Subscription_Name = name;
-            Publication = publication;
-            Group = Group;
+            EmployerEmail = employerEmail;
+            NameSubscription = nameSubscription;
+            Cost = cost;
+            TypeSubscription = typeSubscription;
         }
-
+        /*
         public Subscription(int id)
         {
             Id = id;
@@ -33,6 +34,6 @@ namespace Domain.Subscriptions.Entities
         {
             Id = id;
             Subscription_Name = name;
-        }
+        }*/
     }
 }

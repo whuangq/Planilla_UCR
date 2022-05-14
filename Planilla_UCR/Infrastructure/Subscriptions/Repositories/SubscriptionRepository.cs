@@ -23,7 +23,7 @@ namespace Infrastructure.Subscriptions.Repositories
 
         public async Task<IEnumerable<SubscriptionDTO>> GetAllAsync()
         {
-            return await _dbContext.Projects.Select(t => new SubscriptionDTO(t.Id, t.Subscription_Name, t.Publication, t.Group)).ToListAsync();
+            return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.NameSubscription, t.Cost, t.TypeSubscription)).ToListAsync();
         }
     }
 }

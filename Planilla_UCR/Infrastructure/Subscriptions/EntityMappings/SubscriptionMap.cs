@@ -17,20 +17,19 @@ namespace Infrastructure.Subscriptions.EntityMappings
     {
         public void Configure(EntityTypeBuilder<Subscription> builder)
         {
-            builder.ToTable("Projects");
+            builder.ToTable("Subscription");
 
-            builder.HasKey(p => p.Id);
+            builder.HasKey(p => p.EmployerEmail);
 
-            builder.Property(p => p.Subscription_Name)
+            builder.Property(p => p.NameSubscription)
                    .IsRequired()
                    .HasMaxLength(100);
 
-            builder.Property(p => p.Publication)
+            builder.Property(p => p.Cost)
                  .IsRequired();
 
-            builder.Property(p => p.Group)
-                   .IsRequired()
-                   .HasMaxLength(100);
+            builder.Property(p => p.TypeSubscription)
+                   .IsRequired();
         }
 
     }

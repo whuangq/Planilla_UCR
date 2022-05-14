@@ -17,7 +17,7 @@ namespace Infrastructure.Subscriptions
         {
         }
 
-        public DbSet<Subscription> Projects { get; set; } = null!;
+        public DbSet<Subscription> Subscriptions { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

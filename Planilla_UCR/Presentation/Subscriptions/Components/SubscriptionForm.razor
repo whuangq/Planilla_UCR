@@ -17,21 +17,21 @@
         {
             <table>
                     <tr>
-                        <td><strong>Id</strong></td>
+                        <td><strong>Employer</strong></td>
                         <td><strong>Subscription name</strong></td>
-                        <td><strong>Number of publications</strong></td>
-                        <td><strong>Investigation Group name</strong></td>
+                        <td><strong>Cost</strong></td>
+                        <td><strong>TypeSubscription</strong></td>
                     </tr>
                     
-                    @*@foreach (var project in _subscriptions)
+                    @foreach (var subscription in _subscriptions)
                     {
                         <tr>
-                            <td align="center">@subscription.Id</td>
-                            <td align="center">@project.Subscription_Name</td>
-                            <td align="center">@project.Publication</td>
-                            <td align="center">@project.Group</td>
+                            <td align="center">@subscription.EmployerEmail</td>
+                            <td align="center">@subscription.NameSubscription</td>
+                            <td align="center">@subscription.Cost</td>
+                            <td align="center">@subscription.TypeSubscription</td>
                         </tr>
-                    }*@
+                    }
             </table>
         }
     </Loading>

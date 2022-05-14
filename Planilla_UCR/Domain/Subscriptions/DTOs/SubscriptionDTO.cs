@@ -9,17 +9,17 @@ namespace Domain.Subscriptions.DTOs
 {
     public class SubscriptionDTO
     {
-        public int Id { get; }
-        public String Subscription_Name { get; }
-        public int Publication { get; }
-        public String Group { get; }
+        public String EmployerEmail { get; }
+        public String NameSubscription { get; }
+        public int Cost { get; }
+        public int TypeSubscription { get; }
 
-        public SubscriptionDTO(int id, String name, int publication, String investigation_group)
+        public SubscriptionDTO(String employerEmail, String nameSubscription, int cost, int typeSubscription)
         {
-            Id = id;
-            Subscription_Name = name;
-            Publication = publication;
-            Group = investigation_group;
+            EmployerEmail = employerEmail;
+            NameSubscription = nameSubscription;
+            Cost = cost;
+            TypeSubscription = typeSubscription;
         }
 
     }
