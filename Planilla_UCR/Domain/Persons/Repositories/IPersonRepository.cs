@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Persons.Repositories
 {
-    public interface IPersonRepository : IRepository<Person>
+    public interface IPersonRepository
     {
-        Task CreatePersonAsync(String email, int id, String name, String bankAccount);
+        Task CreatePersonAsync(String email, int Ssn, String name, String bankAccount);
     }
 }

@@ -24,8 +24,7 @@ namespace Infrastructure.Persons.Repositories
         public async Task CreatePersonAsync(String email, int id, String name, String bankAccount)
         {
             Person e = new Person(email, name, id, bankAccount);
-            _dbContext.Update(e);
-
+            _dbContext.Persons.Add(e);
             await _dbContext.SaveEntitiesAsync();
         }
     }

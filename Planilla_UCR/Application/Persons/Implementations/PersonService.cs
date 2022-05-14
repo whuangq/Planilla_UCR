@@ -19,9 +19,9 @@ namespace Application.Persons.Implementations
             _personRepository = employeeRepository;
         }
 
-        public async Task CreatePersonAsync(String email, int id, String name, String bankAccount)
+        public async Task CreatePersonAsync(String email, int Ssn, String name, String bankAccount)
         {
-            await _personRepository.CreatePersonAsync(email, id, name, bankAccount);
+            await _personRepository.CreatePersonAsync(email, Ssn, name, bankAccount);
         }
     }
 }

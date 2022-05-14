@@ -9,3 +9,28 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+<MudThemeProvider Theme="MyCustomTheme" />
+@code{
+    private static string GreenPredominant = "#00695c";
+    private static string celesteUCR = "#41ade7";
+    private static string celesteUCR_Hover = "#13a4ca";
+    private static string grisParrafo = "#808080";
+    private static string White = "#FFFFFF";
+
+    MudTheme MyCustomTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = White,
+            Secondary = GreenPredominant,
+            AppbarBackground = White,            
+            AppbarText = White,
+            DrawerBackground = GreenPredominant,
+            DrawerText = White,
+            DrawerIcon = GreenPredominant,  
+            TextDisabled = White,
+            
+        }
+    };
+}

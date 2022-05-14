@@ -5,6 +5,7 @@ using Domain.Persons.Entities;
 using Domain.Persons.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,7 @@ namespace Infrastructure.Persons.EntityMappings
         {
             builder.ToTable("Person");
 
-            builder.HasKey(p => p.Id);
-
-            builder.Property(p => p.Email)
-                   .IsRequired();
+            builder.HasKey(p => p.Email);
 
             builder.Property(p => p.Name)
                    .IsRequired();
