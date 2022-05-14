@@ -1,0 +1,39 @@
+﻿@page "/persons"
+@using Domain.Persons.DTOs
+@using Application.Persons
+@using Domain.Persons.Entities
+@using Presentation.Core.Components
+
+@using Domain.Projects.DTOs
+@using Application.Projects
+@using Domain.Projects.Entities
+
+@inject IPersonService PersonService
+
+<div class="container">
+    <h1>Projects</h1>
+    <Loading IsLoading="_isLoading">
+        @if (_isLoading)
+        {
+            <h4 class="text-danger">Trabajando</h4>
+        }
+        else
+        {
+             <h4 class="text-danger">Agregado !</h4>
+        }
+    </Loading>
+</div>
+
+@code {
+    private bool _isLoading = true;
+    protected override async Task OnInitializedAsync()
+    {
+        String name = "Le"; 
+        String email = "Leone";
+        int id = 202220222;
+        String bankAccount = "cuentaBa";
+
+        await PersonService.CreatePersonAsync(email, id, name, bankAccount);
+        _isLoading = false;
+    }
+}

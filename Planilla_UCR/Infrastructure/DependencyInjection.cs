@@ -2,6 +2,10 @@
 using Infrastructure.Projects;
 using Infrastructure.Projects.Repositories;
 using Domain.Projects.Repositories;
+
+using Infrastructure.Persons;
+using Infrastructure.Persons.Repositories;
+using Domain.Persons.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,6 +22,9 @@ namespace Infrastructure
         {
             services.AddDbContext<ProjectDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IProjectRepository, ProjectRepository>();
+
+            services.AddDbContext<PersonDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IPersonRepository, PersonRepository>();
             return services;
         }
     }
