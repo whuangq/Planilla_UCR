@@ -6,45 +6,37 @@
 
 @inject ISubscriptionService SubscriptionService
 
-<div class="container">
-    <h1>Subscriptions</h1>
-    <Loading IsLoading="_isLoading">
-        @if (_isLoading)
-        {
-            <h4 class="text-danger">There are no projects currently registered.</h4>
-        }
-        else
-        {
-            <table>
-                    <tr>
-                        <td><strong>Employer</strong></td>
-                        <td><strong>Subscription name</strong></td>
-                        <td><strong>Cost</strong></td>
-                        <td><strong>TypeSubscription</strong></td>
-                    </tr>
-                    
-                    @foreach (var subscription in _subscriptions)
-                    {
-                        <tr>
-                            <td align="center">@subscription.EmployerEmail</td>
-                            <td align="center">@subscription.NameSubscription</td>
-                            <td align="center">@subscription.Cost</td>
-                            <td align="center">@subscription.TypeSubscription</td>
-                        </tr>
-                    }
-            </table>
-        }
-    </Loading>
-</div>
+@if (_loading)
+{
+    <h4 class="text-danger">Loading proyects :)</h4>
+}
+else
+{
+    <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Employer</MudTh>
+            <MudTh>Subscription Name</MudTh>
+            <MudTh>Cost</MudTh>
+            <MudTh>Type</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Employer">@context.EmployerEmail</MudTd>
+            <MudTd DataLabel="Subscription Name">@context.NameSubscription</MudTd>
+            <MudTd DataLabel="Cost">@context.Cost</MudTd>
+            <MudTd DataLabel="Type">@context.TypeSubscription</MudTd>
+        </RowTemplate>
+    </MudTable>
+}
 
-@code {
 
-    private bool _isLoading = true;
-    private IEnumerable<SubscriptionDTO> _subscriptions;
+@code { 
+    private bool _hidePosition;
+    private bool _loading = true;
+    private IEnumerable<SubscriptionDTO> Elements;
 
     protected override async Task OnInitializedAsync()
     {
-        _subscriptions = await SubscriptionService.GetAllSubscriptionsAsync();
-        _isLoading = false;
+        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        _loading = false;
     }
 }
