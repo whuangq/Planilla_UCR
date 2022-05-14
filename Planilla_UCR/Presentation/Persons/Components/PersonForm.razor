@@ -10,137 +10,103 @@
 
 @inject IPersonService PersonService
 
-    <MudContainer Fixed="true">
-        <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-        <MudPaper  Height="250px" Width="70%" Outlined="false" Class="border-none pa-4" Elevation="0">
-             <MudGrid>
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="name" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
-                 <MudItem xs="6">
-                   <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
-                 <MudItem xs="6">
-                    <MudTextField @bind-Value="fname" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
-                <MudItem xs="6">
-                   <MudTextField @bind-Value="sname" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
-                 <MudItem xs="6">
-                    <MudTextField @bind-Value="phone" Label="Telefono" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
-                 <MudItem xs="6">
-                    <MudTextField @bind-Value="id" Label="Cedula" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
-            </MudGrid>
-          </MudPaper>
-          <MudItem xs="3">
-                    <FileUploader></FileUploader>
-          </MudItem>
-          </MudPaper>
-    </MudContainer>
-    <MudContainer Fixed="true">
-        <MudPaper  Height="150px" Width="70%" Outlined="false" Class="border-none pa-4" Elevation="0">
-            <MudItem xs="12">
-            <MudTextField @bind-Value="direction" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
-            </MudItem>
-            <MudItem xs="12">
-                <MudTextField @bind-Value="bankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
-            </MudItem>
-        </MudPaper>
-    </MudContainer>
-@*
-<MudPaper Class="d-flex align-content-start flex-wrap flex-grow-1 gap-4" >
-
-    <MudPaper Class="pa-16 ma-2" Outlined="true" Square="true" Width="600px" Height="600px">
-        <MudGrid>
-        <MudItem xs="6">
-            <MudTextField @bind-Value="name" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-         <MudItem xs="6">
-           <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-         <MudItem xs="6">
-            <MudTextField @bind-Value="fname" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-        <MudItem xs="6">
-           <MudTextField @bind-Value="sname" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-         <MudItem xs="6">
-            <MudTextField @bind-Value="phone" Label="Telefono" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-         <MudItem xs="6">
-            <MudTextField @bind-Value="id" Label="Cedula" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-        </MudGrid>
-    </MudPaper>
-    <MudPaper Class="pa-16 ma-2" Outlined="true" Square="true" Width="200px" Height="64px">
-        <MudText>IMG</MudText>
-    </MudPaper>*@
-    @*
-    <br />
-    <MudPaper Class="pa-16 ma-2" Outlined="true" Square="true" Width="800px" Height="100">
-        <MudItem xs="12">
-        <MudTextField @bind-Value="direction" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-        <MudItem xs="12">
-            <MudTextField @bind-Value="bankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
-        </MudItem>
-    </MudPaper>
-</MudPaper>
-*@
-@*<MudGrid>
-    <MudPaper Class="pa-16 ma-2" Outlined="true" Square="true">
-    <MudItem xs="12" sm="6" md="4">
-        <MudTextField @bind-Value="name" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-     <MudItem xs="12" sm="6" md="4">
-       <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-     <MudItem xs="12" sm="6" md="4">
-       <MudTextField @bind-Value="fname" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="4">
-       <MudTextField @bind-Value="sname" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="4">
-        <MudTextField @bind-Value="phone" Label="Telefono" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="4">
-        <MudTextField @bind-Value="id" Label="Cedula" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-    <MudItem xs="12">
-        <MudTextField @bind-Value="direction" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-    <MudItem xs="12">
-        <MudTextField @bind-Value="bankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
-    </MudItem>
-     </MudPaper>
-</MudGrid>
-<MudPaper Class="pa-16 ma-2" Outlined="true" Square="true">
-            <MudText>JIJ</MudText>
-</MudPaper>
-*@
-<br />
-<MudDivider />
-<br />
 <MudGrid>
-    <MudItem xs="12" sm="6" md="4">
-        <MudButton Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Secondary">
-            @if (_processing)
-            {
-                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                <MudText Class="ms-2">Procesando</MudText>
-            }
-            else
-            {
-                <MudText>Crear</MudText>
-            }
-        </MudButton>
+    @*Small fields *@
+    <MudItem xs="12" sm="7">
+        <MudPaper  Height="250px" Width="70%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudGrid>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="name" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudTextField @bind-Value="fname" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="sname" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
+            </MudItem>
+                <MudItem xs="6">
+                <MudTextField @bind-Value="phone" Label="Telefono" Variant="Variant.Outlined"></MudTextField>
+            </MudItem>
+                <MudItem xs="6">
+                <MudTextField @bind-Value="id" Label="Cedula" Variant="Variant.Outlined"></MudTextField>
+            </MudItem>
+
+             <MudItem xs="12">
+                    <MudTextField @bind-Value="direction" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
+             </MudItem>
+            <MudItem xs="12">
+                    <MudTextField @bind-Value="bankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="12">
+                <br />
+                <MudDivider />
+                <br />
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="4">
+                <MudButton Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Secondary">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">Procesando</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Crear</MudText>
+                    }
+                </MudButton>
+            </MudItem>
+
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+
+    @*File uploader *@
+    <MudItem xs="12" sm="5">
+          <FileUploader></FileUploader>   
     </MudItem>
 </MudGrid>
-   
-@code {
+
+@*Big fields *@
+<MudGrid>
+    @*<MudItem xs="12">
+        <MudPaper  Height="150px" Width="50%" Outlined="false" Class="border-none pa-4" Elevation="0">
+                    <MudItem xs="12">
+                    <MudTextField @bind-Value="direction" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="12">
+                    <MudTextField @bind-Value="bankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
+                    </MudItem>
+
+                    <br />
+                    <MudDivider />
+                    <br />
+                    <MudGrid>
+                        <MudItem xs="12" sm="6" md="4">
+                            <MudButton Disabled="@_processing" OnClick="ProcessSomething" Variant="Variant.Filled" Color="Color.Secondary">
+                                @if (_processing)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                    <MudText Class="ms-2">Procesando</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>Crear</MudText>
+                                }
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+        </MudPaper>
+     </MudItem>*@
+</MudGrid>
+
+@code{
     public string name { get; set; }
     public string email { get; set; }
     public string id { get; set; }
