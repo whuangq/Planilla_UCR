@@ -23,20 +23,42 @@ else
             <MudTd DataLabel="Employer">@context.EmployerEmail</MudTd>
             <MudTd DataLabel="Subscription Name">@context.NameSubscription</MudTd>
             <MudTd DataLabel="Cost">@context.Cost</MudTd>
-            <MudTd DataLabel="Type">@context.TypeSubscription</MudTd>
+            <MudTd DataLabel="Type">
+                <div class="pic">
+                    <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
+                </div>
+            </MudTd>
         </RowTemplate>
     </MudTable>
 }
 
 
-@code { 
+@code {
     private bool _hidePosition;
     private bool _loading = true;
     private IEnumerable<SubscriptionDTO> Elements;
 
+    public bool Dense { get; set; }
+    public bool Clickable { get; set; }
+    public bool Gutters { get; set; }
+
+    [Parameter] public string? image { get; set; }
+    //[Parameter] public Subscription? _subscription { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        //await SubscriptionService.CreateSubscriptionAsync("jeremy@ucr.ac.cr", "Fundación Perritos", 15000, 0);
         Elements = await SubscriptionService.GetAllSubscriptionsAsync();
         _loading = false;
+
+        /*if (_subscription.Image is null)
+        {
+            image = "picture-default.png";
+        }
+        else
+        {
+            image = _subscription.Image;
+        }*/
+        image = "./img/HospitalNinos.jpg";// + image;
     }
 }

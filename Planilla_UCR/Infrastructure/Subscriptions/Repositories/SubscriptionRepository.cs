@@ -25,5 +25,12 @@ namespace Infrastructure.Subscriptions.Repositories
         {
             return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.NameSubscription, t.Cost, t.TypeSubscription)).ToListAsync();
         }
+
+        public async Task CreateSubscriptionAsync(String employerEmail, String nameSubscription, int cost, int type)
+        {
+            Subscription e = new Subscription(employerEmail, nameSubscription, cost, type);
+            _dbContext.Subscriptions.Add(e);
+            await _dbContext.SaveEntitiesAsync();
+        }
     }
 }

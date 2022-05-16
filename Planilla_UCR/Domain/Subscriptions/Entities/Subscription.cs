@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Subscriptions.Entities
 {
-    public class Subscription : AggregateRoot
+    public class Subscription
     {
         public String EmployerEmail { get; }
         public String NameSubscription { get; }
         public int Cost { get; }
         public int TypeSubscription { get; }
-        
+
 
         public Subscription(String employerEmail, String nameSubscription, int cost, int typeSubscription)
         {
@@ -24,16 +24,5 @@ namespace Domain.Subscriptions.Entities
             Cost = cost;
             TypeSubscription = typeSubscription;
         }
-        /*
-        public Subscription(int id)
-        {
-            Id = id;
-        }
-
-        public Subscription(int id, String name)
-        {
-            Id = id;
-            Subscription_Name = name;
-        }*/
     }
 }

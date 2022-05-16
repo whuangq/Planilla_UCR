@@ -9,6 +9,7 @@ namespace Application.Subscriptions
 {
     public interface ISubscriptionService
     {
-        Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync(); 
+        Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync();
+        Task CreateSubscriptionAsync(String employerEmail, String nameSubscription, int cost, int type);
     }
 }

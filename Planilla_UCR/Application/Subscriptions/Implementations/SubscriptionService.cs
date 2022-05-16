@@ -14,7 +14,7 @@ namespace Application.Subscriptions.Implementations
     {
         private readonly ISubscriptionRepository _subscriptionRepository;
 
-        public SubscriptionService(ISubscriptionRepository subscriptionRepository) 
+        public SubscriptionService(ISubscriptionRepository subscriptionRepository)
         {
             _subscriptionRepository = subscriptionRepository;
         }
@@ -22,6 +22,11 @@ namespace Application.Subscriptions.Implementations
         public async Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync()
         {
             return await _subscriptionRepository.GetAllAsync();
+        }
+
+        public async Task CreateSubscriptionAsync(String employerEmail, String nameSubscription, int cost, int type)
+        {
+            await _subscriptionRepository.CreateSubscriptionAsync(employerEmail, nameSubscription, cost, type);
         }
     }
 }
