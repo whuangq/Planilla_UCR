@@ -6,7 +6,6 @@
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 
-
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -18,13 +17,11 @@
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 <MudGrid>
-    @*Text fields *@
     <MudItem xs="12" sm="8">
         <MudPaper  Height="220px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
             <MudText Align="Align.Center" Typo="Typo.h6">Información personal</MudText>
             <MudForm @ref="form">
-            <MudGrid>
-                
+                    <MudGrid>
                     @*Small fields *@
                     <MudItem xs="6">
                         <MudTextField @bind-Value="personInfo.Name" Label="Nombre" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
@@ -61,29 +58,29 @@
                     </MudItem>
                 
 
-                @*Create buton *@
-                <MudItem xs="12" sm="6" md="4">
-                    <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
-                        @if (snackHandler._saving)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                            <MudText Class="ms-2">Procesando</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Crear</MudText>
-                        }
-                    </MudButton>
-                </MudItem>
+                    @*Create buton *@
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
+                            @if (snackHandler._saving)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                <MudText Class="ms-2">Procesando</MudText>
+                            }
+                            else
+                            {
+                                <MudText>Crear</MudText>
+                            }
+                        </MudButton>
+                    </MudItem>
 
-                 @*Clear buton *@
-                <MudItem xs="12" sm="6" md="4">
-                    <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
-                            <MudText>Limpiar</MudText>
-                    </MudButton>
-                </MudItem>
+                     @*Clear buton *@
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
+                                <MudText>Limpiar</MudText>
+                        </MudButton>
+                    </MudItem>
 
-            </MudGrid>
+                </MudGrid>
             </MudForm>
         </MudPaper>
     </MudItem>
@@ -96,12 +93,12 @@
 
 </MudGrid>
 
-@if (snackHandler._created)
+@*@if (snackHandler._created)
 {
     ShowSnackNotification("Cuenta creada", Severity.Success);
     snackHandler._created = false;
 }
-
+*@
 @code {
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
     SnackHandler snackHandler = new SnackHandler();
@@ -115,7 +112,7 @@
         {
             await PersonService.CreatePersonAsync(personInfo);
             snackHandler._saving = false;
-            snackHandler._created = true;
+            ShowSnackNotification("Cuenta para"+personInfo.Name+" creada", Severity.Success);
         }
         snackHandler._saving = false;
     }
@@ -152,18 +149,20 @@
 
     bool ValidateInfo(Person personInfo)
     {
-        bool valid = true;
-        valid = ValidateSsn(personInfo);
-        valid = ValidateEmail(personInfo);
-        return valid;
+        bool ssn = ValidateSsn(personInfo);
+        bool email = ValidateEmail(personInfo);
+        return ssn && email;
     }
 
     void ShowSnackNotification(string message, Severity severity)
     {
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PreventDuplicates = false;
+        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Configuration.NewestOnTop = true;
         Snackbar.Add($"{message}", severity, config =>
         {
-            config.RequireInteraction = true;
+            config.RequireInteraction = false;
             config.ShowCloseIcon = true;
             config.Onclick = snackbar =>
             {

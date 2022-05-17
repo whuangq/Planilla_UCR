@@ -1,6 +1,8 @@
 ﻿using Domain.Core.Repositories;
 using Domain.Persons.Entities;
 using Domain.Persons.Repositories;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persons.Repositories
@@ -17,8 +19,15 @@ namespace Infrastructure.Persons.Repositories
 
         public async Task CreatePersonAsync(Person personInfo)
         {
-            _dbContext.Persons.Add(personInfo);
-            await _dbContext.SaveEntitiesAsync();
+            try
+            {
+                _dbContext.Persons.Add(personInfo);
+                await _dbContext.SaveEntitiesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception: " + ex.Message);
+            }   
         }
     }
 }
