@@ -1,64 +1,70 @@
 ﻿@page "/persons"
-@using Domain.Persons.DTOs
 @using Application.Persons
 @using Domain.Persons.Entities
 @using Presentation.Core.Components
+@using Presentation.Persons.Models
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 
-@if (_created)
-{
-    ShowSuccesNotification("Cuenta creada");
-}
 
+@*Navigation footprint *@
+@{
+    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Inicio", href: "#"),
+        new BreadcrumbItem("Cuenta", href: "#"),
+    };
+}
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
 <MudGrid>
     @*Text fields *@
     <MudItem xs="12" sm="8">
         <MudPaper  Height="220px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
             <MudText Align="Align.Center" Typo="Typo.h6">Información personal</MudText>
-
+            <MudForm @ref="form">
             <MudGrid>
-                @*Small fields *@
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="personInfo.Name" Label="Nombre" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
+                
+                    @*Small fields *@
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="personInfo.Name" Label="Nombre" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
+                    </MudItem>
 
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="personInfo.Email" Label="Email" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="personInfo.Email" Label="Email" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
+                    </MudItem>
 
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="personInfo.LastName1" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="personInfo.LastName1" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
+                    </MudItem>
 
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="personInfo.LastName2" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="personInfo.LastName2" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
+                    </MudItem>
 
-                 <MudItem xs="6">
-                    <MudTextField @bind-Value="personInfo.PhoneNumber" Label="Telefono" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
+                     <MudItem xs="6">
+                        <MudTextField @bind-Value="personInfo.PhoneNumber" Label="Telefono" Variant="Variant.Outlined" ></MudTextField>
+                    </MudItem>
 
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
+                    </MudItem>
 
-                @*Large fields *@
-                <MudItem xs="12">
-                    <MudTextField @bind-Value="personInfo.Adress" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
-                </MudItem>
+                    @*Large fields *@
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="personInfo.Adress" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
+                    </MudItem>
 
-                <MudItem xs="12">
-                    <MudTextField @bind-Value="personInfo.BankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined"></MudTextField>
-                <MudDivider />
-                </MudItem>
-               
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="personInfo.BankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
+                    <MudDivider />
+                    </MudItem>
+                
 
                 @*Create buton *@
                 <MudItem xs="12" sm="6" md="4">
-                    <MudButton Disabled="@_saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
-                        @if (_saving)
+                    <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
+                        @if (snackHandler._saving)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                             <MudText Class="ms-2">Procesando</MudText>
@@ -72,83 +78,90 @@
 
                  @*Clear buton *@
                 <MudItem xs="12" sm="6" md="4">
-                    <MudButton Disabled="@_cleanning" OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
-                        @if (_cleanning)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                            <MudText Class="ms-2">limpiando</MudText>
-                        }
-                        else
-                        {
+                    <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
                             <MudText>Limpiar</MudText>
-                        }
                     </MudButton>
                 </MudItem>
+
             </MudGrid>
+            </MudForm>
         </MudPaper>
     </MudItem>
 
     @*File uploader *@
     <MudItem xs="3">
-         @*<MudText Align="Align.Center" Typo="Typo.h6">Foto de perfil</MudText>*@
         <FileUploader>
         </FileUploader>   
     </MudItem>
+
 </MudGrid>
 
-@code{
+@if (snackHandler._created)
+{
+    ShowSnackNotification("Cuenta creada", Severity.Success);
+    snackHandler._created = false;
+}
+
+@code {
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
-
-
-    public string personalInfo { get; set; }  = "                      Información personal";
-    public string  profilePhoto { get; set; }  = "            Foto de perfil";
-    private bool _isLoading = true;
-    private bool _saving = false;
-    private bool _cleanning = false;
-    bool _created = false;
-    bool _validInfo = false;
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Inicio", href: "#"),
-        new BreadcrumbItem("Cuenta", href: "#"),
-    };
+    SnackHandler snackHandler = new SnackHandler();
+    MudForm form;
 
     async Task SavePersonInfo()
     {
-        _validInfo = true;
-        _saving = true;
-        ValidateName(personInfo);
-        ValidateEmail(personInfo);
-        ValidateBankAccount(personInfo);
-        ValidateSsn(personInfo);
-        if (_validInfo)
+        snackHandler._saving = true;
+        await form.Validate();
+        if (form.IsValid && ValidateInfo(personInfo))
         {
             await PersonService.CreatePersonAsync(personInfo);
-            _saving = false;
-            _created = true;
+            snackHandler._saving = false;
+            snackHandler._created = true;
         }
-        _saving = false;
+        snackHandler._saving = false;
     }
 
-    void ShowSuccesNotification(string message)
+    bool ValidateSsn(Person personInfo)
     {
-        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
-        Snackbar.Add($"{message}", Severity.Success, config =>
+        bool valid = true;
+        if (personInfo.Ssn == 0 || personInfo.Ssn < 0)
         {
-            config.RequireInteraction = true;
-            config.ShowCloseIcon = true;
-            config.Onclick = snackbar =>
-            {
-                return Task.CompletedTask;
-            };
-        });
+            ShowSnackNotification("Número de cédula incorrecta", Severity.Error);
+            valid = false;
+        }
+        return valid;
     }
 
-    void ShowErrorNotification(string message)
+    bool ValidateEmail(Person personInfo)
+    {
+        bool valid = true;
+
+        valid = personInfo.Email.Contains('@');
+        if (!valid)
+        {
+            ShowSnackNotification("El email debe contener un @", Severity.Error);
+        }
+
+        int emailEnd = personInfo.Email.IndexOf(".com");
+        if (emailEnd == -1)
+        {
+            ShowSnackNotification("El email debe contener .com", Severity.Error);
+            valid = false;
+        }
+        return valid;
+    }
+
+    bool ValidateInfo(Person personInfo)
+    {
+        bool valid = true;
+        valid = ValidateSsn(personInfo);
+        valid = ValidateEmail(personInfo);
+        return valid;
+    }
+
+    void ShowSnackNotification(string message, Severity severity)
     {
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
-        Snackbar.Add($"{message}", Severity.Error, config =>
+        Snackbar.Add($"{message}", severity, config =>
         {
             config.RequireInteraction = true;
             config.ShowCloseIcon = true;
@@ -169,53 +182,5 @@
         personInfo.BankAccount = "";
         personInfo.PhoneNumber = "";
         personInfo.Ssn = 0;
-    }
-
-    void ValidateName(Person personInfo)
-    {
-        if (personInfo.Name == "")
-        {
-            personInfo.Name = "*Campo Requerido";
-            _validInfo = false;
-        }
-        if (personInfo.Name == "*Campo Requerido")
-        {
-            _validInfo = false;
-        }
-    }
-
-    void ValidateEmail(Person personInfo)
-    {
-        if (personInfo.Email == "")
-        {
-            personInfo.Email = "* Campo Requerido";
-            _validInfo = false;
-        }
-        if (personInfo.Email == "* Campo Requerido")
-        {
-            _validInfo = false;
-        }
-    }
-
-    void ValidateBankAccount(Person personInfo)
-    {
-        if (personInfo.BankAccount == "")
-        {
-            personInfo.BankAccount = "* Campo Requerido";
-            _validInfo = false;
-        }
-        if (personInfo.BankAccount == "* Campo Requerido")
-        {
-            _validInfo = false;
-        }
-    }
-
-    void ValidateSsn(Person personInfo)
-    {
-        if (personInfo.Ssn == 0)
-        {
-            ShowErrorNotification("Número de cédula incorrecto");
-            _validInfo = false;
-        }
     }
 }
