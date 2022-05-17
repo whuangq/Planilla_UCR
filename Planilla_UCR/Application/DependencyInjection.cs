@@ -1,5 +1,5 @@
-﻿using Application.Projects;
-using Application.Projects.Implementations;
+﻿using Application.Accounts;
+using Application.Accounts.Implementations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Application
     {
         public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
         {
-            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IAccountService, AccountService>();
             return services;
         }
     }

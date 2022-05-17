@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Repositories;
-using Infrastructure.Projects;
-using Infrastructure.Projects.Repositories;
+using Infrastructure.Accounts;
+using Infrastructure.Accounts.Repositories;
+using Domain.Accounts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,8 +16,9 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<ProjectDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddDbContext<AccountDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IAccountRepository, AccountRepository>();
+
             return services;
         }
     }

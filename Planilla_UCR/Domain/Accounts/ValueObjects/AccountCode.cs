@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Domain.Projects.ValueObjects
+namespace Domain.Accounts.ValueObjects
 {
-    class ProjectCode 
+    class AccountCode 
     {
 
     }
