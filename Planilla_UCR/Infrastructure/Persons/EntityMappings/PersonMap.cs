@@ -1,16 +1,6 @@
-﻿using Domain.Core.Helpers;
-using Domain.Core.ValueObjects;
-using Domain.Persons;
-using Domain.Persons.Entities;
-using Domain.Persons.ValueObjects;
+﻿using Domain.Persons.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Persons.EntityMappings
 {

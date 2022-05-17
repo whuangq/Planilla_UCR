@@ -1,12 +1,6 @@
 ﻿using Domain.Core.Repositories;
-using Domain.Persons.DTOs;
 using Domain.Persons.Entities;
 using Domain.Persons.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persons.Repositories
@@ -21,10 +15,9 @@ namespace Infrastructure.Persons.Repositories
             _dbContext = unitOfWork;
         }
 
-        public async Task CreatePersonAsync(String email, int id, String name, String bankAccount)
+        public async Task CreatePersonAsync(Person personInfo)
         {
-            Person e = new Person(email, name, id, bankAccount);
-            _dbContext.Persons.Add(e);
+            _dbContext.Persons.Add(personInfo);
             await _dbContext.SaveEntitiesAsync();
         }
     }

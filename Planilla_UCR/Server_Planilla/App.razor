@@ -13,9 +13,6 @@
 <MudThemeProvider Theme="MyCustomTheme" />
 @code{
     private static string GreenPredominant = "#00695c";
-    private static string celesteUCR = "#41ade7";
-    private static string celesteUCR_Hover = "#13a4ca";
-    private static string grisParrafo = "#808080";
     private static string White = "#FFFFFF";
 
     MudTheme MyCustomTheme = new MudTheme()
@@ -31,6 +28,17 @@
             DrawerIcon = GreenPredominant,  
             TextDisabled = White,
             
+        },
+        Typography = new Typography()
+        {
+            H6 = new H6()
+            {
+                FontFamily = new[] { "Roboto", "Helvetica", "Arial", "sans-serif" },
+                FontSize = "1.25rem",
+                FontWeight = 500,
+                LineHeight = 1.6,
+                LetterSpacing = ".0075em"
+            }
         }
     };
 }

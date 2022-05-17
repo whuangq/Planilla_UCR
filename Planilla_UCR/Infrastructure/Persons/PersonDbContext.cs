@@ -1,13 +1,8 @@
-﻿using Domain.Persons.Entities;
+﻿using Infrastructure.Persons.EntityMappings;
+using Domain.Persons.Entities;
 using Infrastructure.Core;
-using Infrastructure.Persons.EntityMappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Persons
 {

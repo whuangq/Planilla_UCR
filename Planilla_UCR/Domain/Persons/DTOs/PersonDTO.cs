@@ -1,24 +1,20 @@
-﻿using Domain.Core.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Domain.Persons.DTOs
 {
     public class PersonsDTO
     {
-        public String Email { get; }
-        public String Name { get; }
-        public String LastName1 { get; }
-        public String LastName2 { get; }
+        public String Email { get; set; }
+        public String Name { get; set; }
+        public String LastName1 { get; set; }
+        public String LastName2 { get; set; }
         public int Ssn { get; }
-        public String BankAccount { get; }
-        public String Adress { get; }
-        public String PhoneNumber { get; }
+        public String BankAccount { get; set; }
+        public String Adress { get; set; }
+        public String PhoneNumber { get; set; }
 
-        public PersonsDTO(String email, String name, String lastName1, String lastName2, int id, String bankAccount, String adress, String phoneNumber)
+        public PersonsDTO(String email, String name, String lastName1, String lastName2, int id, String bankAccount,
+                          String adress, String phoneNumber)
         {
             Email = email;
             Name = name;
