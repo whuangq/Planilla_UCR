@@ -8,7 +8,8 @@ namespace Infrastructure.Persons
 {
     internal class PersonDbContext : ApplicationDbContext
     {
-        public PersonDbContext(DbContextOptions<PersonDbContext> options, ILogger<PersonDbContext> logger) : base(options, logger)
+        public PersonDbContext(DbContextOptions<PersonDbContext> options,
+                               ILogger<PersonDbContext> logger) : base(options, logger)
         {
         }
 

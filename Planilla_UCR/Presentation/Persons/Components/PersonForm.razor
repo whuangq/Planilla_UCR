@@ -93,12 +93,6 @@
 
 </MudGrid>
 
-@*@if (snackHandler._created)
-{
-    ShowSnackNotification("Cuenta creada", Severity.Success);
-    snackHandler._created = false;
-}
-*@
 @code {
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
     SnackHandler snackHandler = new SnackHandler();
@@ -136,13 +130,6 @@
         if (!valid)
         {
             ShowSnackNotification("El email debe contener un @", Severity.Error);
-        }
-
-        int emailEnd = personInfo.Email.IndexOf(".com");
-        if (emailEnd == -1)
-        {
-            ShowSnackNotification("El email debe contener .com", Severity.Error);
-            valid = false;
         }
         return valid;
     }

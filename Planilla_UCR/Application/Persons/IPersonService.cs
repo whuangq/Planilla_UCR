@@ -1,6 +1,4 @@
-﻿using Domain.Persons.DTOs;
-using Domain.Persons.Entities;
-using System;
+﻿using Domain.Persons.Entities;
 using System.Threading.Tasks;
 
 namespace Application.Persons

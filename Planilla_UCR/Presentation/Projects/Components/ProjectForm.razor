@@ -1,8 +1,10 @@
 ﻿@page "/projects"
 @using Domain.Projects.DTOs
 @using Application.Projects
+@using Presentation.Persons
 @using Domain.Projects.Entities
 @using Presentation.Core.Components
+
 
 @inject IProjectService ProjectService
 
@@ -12,30 +14,25 @@
 }
 else
 {
-    <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Project_Name</MudTh>
-            <MudTh>Publication</MudTh>
-            <MudTh>Group</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Project_Name">@context.Project_Name</MudTd>
-            <MudTd DataLabel="Publication">@context.Publication</MudTd>
-            <MudTd DataLabel="Group">@context.Group</MudTd>
-        </RowTemplate>
-    </MudTable>
-}
+    <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="password" Label="Password" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+    </MudGrid>
+    <Presentation.Persons.Components.PersonForm>
+    </Presentation.Persons.Components.PersonForm>
+} 
 
 @code { 
     private bool _hidePosition;
-    private bool _loading = true;
+    private bool _loading = false;
     private IEnumerable<ProjectDTO> Elements;
+     public string email { get; set; }
+    public string password { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        Elements = await ProjectService.GetAllProjectsAsync();
-        _loading = false;
-    }
+    
 }

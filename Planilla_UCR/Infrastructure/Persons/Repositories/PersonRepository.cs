@@ -26,7 +26,7 @@ namespace Infrastructure.Persons.Repositories
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Exception: " + ex.Message);
+                Debug.WriteLine("Repeated key error" + ex.Message);
             }   
         }
     }
