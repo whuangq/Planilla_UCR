@@ -13,3 +13,6 @@ VALUES('jeremy@ucr.ac.cr',
 
 INSERT INTO Employer
 VALUES('jeremy@ucr.ac.cr')
+
+select *
+from Subscription

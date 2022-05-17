@@ -1,4 +1,4 @@
-﻿@page "/subscriptions"
+﻿@page "/deductions"
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
@@ -12,22 +12,31 @@
 }
 else
 {
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    <MudItem xs="2">
+        <MudSelect  @bind-Value="project" Label="Proyecto">
+            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
+            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
+        </MudSelect>
+    </MudItem>
     <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
         <HeaderContent>
-            <MudTh>Employer</MudTh>
-            <MudTh>Subscription Name</MudTh>
-            <MudTh>Cost</MudTh>
-            <MudTh>Type</MudTh>
+            <MudTh></MudTh>
+            @*<MudTh>Empleador</MudTh>*@
+            <MudTh>Nombre</MudTh>
+            <MudTh>Descripción</MudTh>
+            <MudTh>Costo</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Employer">@context.EmployerEmail</MudTd>
-            <MudTd DataLabel="Subscription Name">@context.NameSubscription</MudTd>
-            <MudTd DataLabel="Cost">@context.Cost</MudTd>
             <MudTd DataLabel="Type">
                 <div class="pic">
                     <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
                 </div>
             </MudTd>
+            @*<MudTd DataLabel="Empleador">@context.EmployerEmail</MudTd>*@
+            <MudTd DataLabel="Nombre">@context.NameSubscription</MudTd>
+            <MudTd DataLabel="Descripción">@context.NameSubscription</MudTd>
+            <MudTd DataLabel="Costo">@context.Cost</MudTd>
         </RowTemplate>
     </MudTable>
 }
@@ -38,12 +47,18 @@ else
     private bool _loading = true;
     private IEnumerable<SubscriptionDTO> Elements;
 
-    public bool Dense { get; set; }
-    public bool Clickable { get; set; }
-    public bool Gutters { get; set; }
+    public string project { get; set; }
 
     [Parameter] public string? image { get; set; }
     //[Parameter] public Subscription? _subscription { get; set; }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: "deductions"),
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,14 +66,6 @@ else
         Elements = await SubscriptionService.GetAllSubscriptionsAsync();
         _loading = false;
 
-        /*if (_subscription.Image is null)
-        {
-            image = "picture-default.png";
-        }
-        else
-        {
-            image = _subscription.Image;
-        }*/
-        image = "./img/HospitalNinos.jpg";// + image;
+        image = "./img/default_image.jpg";
     }
 }

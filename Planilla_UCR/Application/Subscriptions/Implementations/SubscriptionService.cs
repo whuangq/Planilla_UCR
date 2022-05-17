@@ -24,9 +24,9 @@ namespace Application.Subscriptions.Implementations
             return await _subscriptionRepository.GetAllAsync();
         }
 
-        public async Task CreateSubscriptionAsync(String employerEmail, String nameSubscription, int cost, int type)
+        public async Task CreateSubscriptionAsync(Subscription subscription)
         {
-            await _subscriptionRepository.CreateSubscriptionAsync(employerEmail, nameSubscription, cost, type);
+            await _subscriptionRepository.CreateSubscriptionAsync(subscription);
         }
     }
 }

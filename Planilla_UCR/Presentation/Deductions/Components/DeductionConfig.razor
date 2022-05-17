@@ -1,0 +1,77 @@
+﻿@page "/configdeductions"
+@using Domain.Subscriptions.DTOs
+@using Application.Subscriptions
+@using Domain.Subscriptions.Entities
+@using Presentation.Core.Components
+
+@inject ISubscriptionService SubscriptionService
+
+@if (_loading)
+{
+    <h4 class="text-danger">Loading proyects :)</h4>
+}
+else
+{
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    <MudItem xs="2">
+        <MudSelect  @bind-Value="project" Label="Proyecto">
+            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
+            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    <MudTable Items="@Elements.Take(4)" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh></MudTh>
+            @*<MudTh>Empleador</MudTh>*@
+            <MudTh>Nombre</MudTh>
+            <MudTh>Descripción</MudTh>
+            <MudTh>Costo</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Type">
+                <div class="pic">
+                    <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
+                </div>
+            </MudTd>
+            @*<MudTd DataLabel="Empleador">@context.EmployerEmail</MudTd>*@
+            <MudTd DataLabel="Nombre">@context.NameSubscription</MudTd>
+            <MudTd DataLabel="Descripción">@context.NameSubscription</MudTd>
+            <MudTd DataLabel="Costo">@context.Cost</MudTd>
+        </RowTemplate>
+        <FooterContent>
+            <MudTd colspan="5">Select All</MudTd>
+        </FooterContent>
+    </MudTable>
+    <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.NameSubscription).Select(x=>x.NameSubscription)))</MudText>
+}
+
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private HashSet<SubscriptionDTO> selectedItems1 = new HashSet<SubscriptionDTO>();
+    private IEnumerable<SubscriptionDTO> Elements;
+
+    public string project { get; set; }
+
+    [Parameter] public string? image { get; set; }
+    //[Parameter] public Subscription? _subscription { get; set; }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: "deductions"),
+        new BreadcrumbItem("Configuraciones", href: "configdeductions"),
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await SubscriptionService.CreateSubscriptionAsync("jeremy@ucr.ac.cr", "Fundación Perritos", 15000, 0);
+        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        _loading = false;
+
+        image = "./img/default_image.jpg";
+    }
+}

@@ -8,27 +8,27 @@
 	  <Compile Remove="Projects\Models\**" />
 	  <Compile Remove="Projects\Pages\**" />
 	  <Compile Remove="Projects\Validators\**" />
-	  <Compile Remove="Subscriptions\Models\**" />
-	  <Compile Remove="Subscriptions\Pages\**" />
-	  <Compile Remove="Subscriptions\Validators\**" />
+	  <Compile Remove="Deductions\Models\**" />
+	  <Compile Remove="Deductions\Pages\**" />
+	  <Compile Remove="Deductions\Validators\**" />
 	  <Content Remove="Projects\Models\**" />
 	  <Content Remove="Projects\Pages\**" />
 	  <Content Remove="Projects\Validators\**" />
-	  <Content Remove="Subscriptions\Models\**" />
-	  <Content Remove="Subscriptions\Pages\**" />
-	  <Content Remove="Subscriptions\Validators\**" />
+	  <Content Remove="Deductions\Models\**" />
+	  <Content Remove="Deductions\Pages\**" />
+	  <Content Remove="Deductions\Validators\**" />
 	  <EmbeddedResource Remove="Projects\Models\**" />
 	  <EmbeddedResource Remove="Projects\Pages\**" />
 	  <EmbeddedResource Remove="Projects\Validators\**" />
-	  <EmbeddedResource Remove="Subscriptions\Models\**" />
-	  <EmbeddedResource Remove="Subscriptions\Pages\**" />
-	  <EmbeddedResource Remove="Subscriptions\Validators\**" />
+	  <EmbeddedResource Remove="Deductions\Models\**" />
+	  <EmbeddedResource Remove="Deductions\Pages\**" />
+	  <EmbeddedResource Remove="Deductions\Validators\**" />
 	  <None Remove="Projects\Models\**" />
 	  <None Remove="Projects\Pages\**" />
 	  <None Remove="Projects\Validators\**" />
-	  <None Remove="Subscriptions\Models\**" />
-	  <None Remove="Subscriptions\Pages\**" />
-	  <None Remove="Subscriptions\Validators\**" />
+	  <None Remove="Deductions\Models\**" />
+	  <None Remove="Deductions\Pages\**" />
+	  <None Remove="Deductions\Validators\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -54,10 +54,6 @@
 		<PackageReference Include="Radzen.Blazor" Version="3.11.9" />
 		<PackageReference Include="MudBlazor" Version="5.1.5" />
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
-
-		<Folder Include="Projects\Models\" />
-		<Folder Include="Projects\Pages\" />
-		<Folder Include="Projects\Validators\" />
 	</ItemGroup>
 
 	<ItemGroup>
