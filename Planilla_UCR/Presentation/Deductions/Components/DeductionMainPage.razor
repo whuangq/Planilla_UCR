@@ -38,7 +38,12 @@ else
                 </div>
             </MudTd>
             @*<MudTd DataLabel="Empleador">@context.EmployerEmail</MudTd>*@
-            <MudTd DataLabel="Nombre">@context.NameSubscription</MudTd>
+            <MudTd DataLabel="Nombre">
+                <MudLink Href="@($"/Details/{context.EmployerEmail}/{context.NameSubscription}")">
+                    @context.NameSubscription
+                </MudLink>
+                
+            </MudTd>
             <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
             <MudTd DataLabel="Costo">@context.Cost</MudTd>
         </RowTemplate>
@@ -70,8 +75,7 @@ else
 
     public string project { get; set; }
 
-    [Parameter] public string? image { get; set; }
-    //[Parameter] public Subscription? _subscription { get; set; }
+    public string image { get; set; }
 
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {

@@ -1,0 +1,54 @@
+﻿@page "/Details/{employerEmail}/{subscriptionName}"
+
+@using Domain.Subscriptions.DTOs
+@using Application.Subscriptions
+@using Domain.Subscriptions.Entities
+@using Presentation.Core.Components
+
+@inject ISubscriptionService SubscriptionService
+
+@if (_loading)
+{
+    <h4 class="text-danger">Loading proyects :)</h4>
+}
+else
+{
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    <MudTable Items="@Elements.Take(4)" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Empleador</MudTh>
+            <MudTh>Nombre</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Empleador">@employerEmail</MudTd>
+            <MudTd DataLabel="Nombre">@subscriptionName</MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private HashSet<SubscriptionDTO> selectedItems1 = new HashSet<SubscriptionDTO>();
+    private IEnumerable<SubscriptionDTO> Elements;
+
+    public string project { get; set; }
+
+    [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string subscriptionName { get; set; }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: "deductions"),
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        _loading = false;
+    }
+}
