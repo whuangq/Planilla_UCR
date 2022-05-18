@@ -1,8 +1,7 @@
-﻿@page "/Asociate_Employees"
-@using Application.Employees
+﻿@using Application.Employees
 @using Domain.Employees.Entities
 @using Presentation.Core.Components
-@using Presentation.EmployeeAgreeAgreement
+@using Presentation.HireEmployees
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
@@ -15,12 +14,12 @@
     };
 }
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
     <br />
     <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados registrados</MudText>
     <br />
     <br />
-    <MudToolBar DisableGutters="true" Class="gap-4">
+ 
+   <MudToolBar DisableGutters="true" Class="gap-4">
         <MudButton></MudButton>
         <MudSpacer></MudSpacer>
         @*Create button *@
@@ -32,6 +31,7 @@
         <MudSpacer></MudSpacer>
         <MudButton></MudButton>
     </MudToolBar>
+
 @code {
 
    private void GoToCreateEmployee()

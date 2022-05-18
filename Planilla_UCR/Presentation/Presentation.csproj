@@ -35,7 +35,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="EmployeeAgreeAgreement\Models\" />
+	  <Folder Include="HireEmployees\Models\" />
 	</ItemGroup>
 
 </Project>
