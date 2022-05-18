@@ -5,24 +5,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Projects\Models\**" />
-	  <Compile Remove="Projects\Pages\**" />
-	  <Compile Remove="Projects\Validators\**" />
 	  <Compile Remove="Deductions\Pages\**" />
 	  <Compile Remove="Deductions\Validators\**" />
-	  <Content Remove="Projects\Models\**" />
-	  <Content Remove="Projects\Pages\**" />
-	  <Content Remove="Projects\Validators\**" />
 	  <Content Remove="Deductions\Pages\**" />
 	  <Content Remove="Deductions\Validators\**" />
-	  <EmbeddedResource Remove="Projects\Models\**" />
-	  <EmbeddedResource Remove="Projects\Pages\**" />
-	  <EmbeddedResource Remove="Projects\Validators\**" />
 	  <EmbeddedResource Remove="Deductions\Pages\**" />
 	  <EmbeddedResource Remove="Deductions\Validators\**" />
-	  <None Remove="Projects\Models\**" />
-	  <None Remove="Projects\Pages\**" />
-	  <None Remove="Projects\Validators\**" />
 	  <None Remove="Deductions\Pages\**" />
 	  <None Remove="Deductions\Validators\**" />
 	</ItemGroup>

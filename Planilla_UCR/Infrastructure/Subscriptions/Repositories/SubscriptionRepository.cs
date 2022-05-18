@@ -31,5 +31,16 @@ namespace Infrastructure.Subscriptions.Repositories
             _dbContext.Subscriptions.Add(subscription);
             await _dbContext.SaveEntitiesAsync();
         }
+
+        public async Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription)
+        {
+            IList<Subscription> subscriptionResult = await _dbContext.Subscriptions.Where(e => e.EmployerEmail == employerEmail && e.NameSubscription == nameSubscription).ToListAsync();
+            Subscription subscription = null;
+            if (subscriptionResult.Length() > 0)
+            {
+                subscription = subscriptionResult.First();
+            }
+            return subscription;
+        }
     }
 }

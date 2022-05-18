@@ -14,26 +14,38 @@
 else
 {
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-    <MudTable Items="@Elements.Take(4)" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
-        <HeaderContent>
-            <MudTh>Empleador</MudTh>
-            <MudTh>Nombre</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Empleador">@employerEmail</MudTd>
-            <MudTd DataLabel="Nombre">@subscriptionName</MudTd>
-        </RowTemplate>
-    </MudTable>
+
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>    
+                <MudText Typo="Typo.h6" Align="Align.Center">@subscription.NameSubscription</MudText>
+            </CardHeaderContent>
+            <CardHeaderAvatar>
+                <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
+            </CardHeaderAvatar>
+            <CardHeaderActions>
+                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText>Organización:</MudText>
+             <MudText Typo="Typo.body2">@subscription.ProviderName</MudText>
+            <MudText>Costo: </MudText>
+            <MudText Typo="Typo.body2">@subscription.Cost</MudText>
+            <MudText>Descripción: </MudText>
+            <MudText Typo="Typo.body2">@subscription.SubscriptionDescription</MudText>
+        </MudCardContent>
+    </MudCard>
 }
 
 
 @code {
     private bool _hidePosition;
     private bool _loading = true;
-    private HashSet<SubscriptionDTO> selectedItems1 = new HashSet<SubscriptionDTO>();
     private IEnumerable<SubscriptionDTO> Elements;
+    public Subscription subscription;
 
-    public string project { get; set; }
+    public string image { get; set; }
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string subscriptionName { get; set; }
@@ -43,12 +55,13 @@ else
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
         new BreadcrumbItem("Nombre", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions"),
+        new BreadcrumbItem("Deducciones", href: "deductions")
     };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        subscription = await SubscriptionService.GetSubscription(employerEmail, subscriptionName);
+        image = "./img/default_image.jpg";
         _loading = false;
     }
 }

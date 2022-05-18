@@ -28,5 +28,9 @@ namespace Application.Subscriptions.Implementations
         {
             await _subscriptionRepository.CreateSubscriptionAsync(subscription);
         }
+
+        public async Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription) {
+            return await _subscriptionRepository.GetSubscription(employerEmail, nameSubscription);
+        }
     }
 }

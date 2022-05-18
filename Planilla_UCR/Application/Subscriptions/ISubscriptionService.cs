@@ -11,5 +11,7 @@ namespace Application.Subscriptions
     {
         Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync();
         Task CreateSubscriptionAsync(Subscription subscription);
+
+        Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription);
     }
 }
