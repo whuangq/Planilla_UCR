@@ -6,27 +6,22 @@
 
 @using Domain.Projects.DTOs
 @using Application.Projects
+@using Presentation.Persons
 @using Domain.Projects.Entities
 
 @inject IEmployeeService EmployeeService
 @inject IProjectService ProjectService
 
-<div class="container">
-    <h1>Projects</h1>
-    <Loading IsLoading="_isLoading">
-        @if (_isLoading)
-        {
-            <h4 class="text-danger">There are no projects currently registered.</h4>
-        }
-        else
-        {
-            <table>
-                    <tr>
-                        <td><strong>Id</strong></td>
-                        <td><strong>Project name</strong></td>
-                        <td><strong>Number of publications</strong></td>
-                        <td><strong>Investigation Group name</strong></td>
-                    </tr>
+@if (_loading)
+{
+    <h4 class="text-danger">Loading proyects :)</h4>
+}
+else
+{
+    <MudGrid>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
 
                     @*@foreach (var project in _projects)
                     {
