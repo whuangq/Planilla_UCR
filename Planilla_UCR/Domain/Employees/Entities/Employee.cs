@@ -10,10 +10,5 @@ namespace Domain.Employees.Entities
         {
             Email = email;
         }
-
-        public Employee(String email, String name, int id, String bankAccount)
-        {
-            Email = email;
-        }
     }
 }
