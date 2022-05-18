@@ -1,4 +1,4 @@
-﻿@page "/configdeductions"
+﻿@page "/Deductions/Configurations"
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
@@ -43,6 +43,10 @@ else
         </FooterContent>
     </MudTable>
     <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.NameSubscription).Select(x=>x.NameSubscription)))</MudText>
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudSpacer></MudSpacer>
+        <MudButton Variant="Variant.Filled" OnClick="DeleteDeductions" Color="Color.Error">Borrar</MudButton>
+    </MudToolBar>
 }
 
 
@@ -72,5 +76,10 @@ else
         _loading = false;
 
         image = "./img/default_image.jpg";
+    }
+
+    private void DeleteDeductions()
+    {
+        
     }
 }

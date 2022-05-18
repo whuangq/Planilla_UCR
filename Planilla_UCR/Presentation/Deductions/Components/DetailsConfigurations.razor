@@ -1,4 +1,4 @@
-﻿@page "/Deductions/Details/{employerEmail}/{subscriptionName}"
+﻿@page "/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations"
 
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
@@ -24,7 +24,7 @@ else
                 <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
             </CardHeaderAvatar>
             <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" Href="@($"/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations")"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" @onclick = "@(e => GoToConfigs(@employerEmail, @subscriptionName))"/>
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent>
@@ -72,7 +72,7 @@ else
 
     private void GoToConfigs(string employerEmail, string subscriptionName)
     {
-        nav.NavigateTo("/Deductions/"+employerEmail +"/"+subscriptionName+"/Configurations");
+       
     }
 
     private void GoToMain()
