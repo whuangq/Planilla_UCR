@@ -35,7 +35,7 @@ else
             </MudTd>
             @*<MudTd DataLabel="Empleador">@context.EmployerEmail</MudTd>*@
             <MudTd DataLabel="Nombre">@context.NameSubscription</MudTd>
-            <MudTd DataLabel="Descripción">@context.NameSubscription</MudTd>
+            <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
             <MudTd DataLabel="Costo">@context.Cost</MudTd>
         </RowTemplate>
         <FooterContent>
@@ -68,7 +68,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //await SubscriptionService.CreateSubscriptionAsync("jeremy@ucr.ac.cr", "Fundación Perritos", 15000, 0);
         Elements = await SubscriptionService.GetAllSubscriptionsAsync();
         _loading = false;
 

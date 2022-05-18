@@ -23,7 +23,7 @@ namespace Infrastructure.Subscriptions.Repositories
 
         public async Task<IEnumerable<SubscriptionDTO>> GetAllAsync()
         {
-            return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.NameSubscription, t.Cost, t.TypeSubscription)).ToListAsync();
+            return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.NameSubscription, t.ProviderName, t.SubscriptionDescription,t.Cost, t.TypeSubscription)).ToListAsync();
         }
 
         public async Task CreateSubscriptionAsync(Subscription subscription)

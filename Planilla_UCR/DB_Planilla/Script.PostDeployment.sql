@@ -16,3 +16,4 @@ VALUES('jeremy@ucr.ac.cr')
 
 select *
 from Subscription
+

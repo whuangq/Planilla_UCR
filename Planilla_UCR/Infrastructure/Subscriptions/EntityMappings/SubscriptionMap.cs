@@ -21,6 +21,12 @@ namespace Infrastructure.Subscriptions.EntityMappings
 
             builder.HasKey(p => new { p.EmployerEmail, p.NameSubscription});
 
+            builder.Property(p => p.ProviderName)
+                .IsRequired();
+
+            builder.Property(p => p.SubscriptionDescription)
+                .IsRequired();
+
             builder.Property(p => p.Cost)
                  .IsRequired();
 
