@@ -1,9 +1,12 @@
-﻿@page "/persons"
+﻿@page "/Create_Employe"
 @using Application.Persons
-@using Application.Employees
 @using Domain.Persons.Entities
+
+@using Application.Employees
+@using Domain.Employees.Entities
+
 @using Presentation.Core.Components
-@using Presentation.Persons.Models
+@using Presentation.Employees.Models
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 @inject IEmployeeService EmployeeService
@@ -109,7 +112,7 @@
             await PersonService.CreatePersonAsync(personInfo);
             await EmployeeService.CreateEmployeeAsync(personInfo.Email);
             snackHandler._saving = false;
-            ShowSnackNotification("Cuenta para"+personInfo.Email+" creada", Severity.Success);
+            ShowSnackNotification("Empleado "+personInfo.Name+" creado", Severity.Success);
         }
         snackHandler._saving = false;
     }

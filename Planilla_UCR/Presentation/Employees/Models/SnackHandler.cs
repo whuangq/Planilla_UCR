@@ -1,5 +1,5 @@
 ﻿
-namespace Presentation.Persons.Models
+namespace Presentation.Employees.Models
 {
     internal class SnackHandler
     {
