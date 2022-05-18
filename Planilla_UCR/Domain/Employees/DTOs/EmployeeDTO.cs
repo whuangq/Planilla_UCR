@@ -9,25 +9,11 @@ namespace Domain.Employees.DTOs
 {
     public class EmployeesDTO
     {
-        public String Email { get; }
-        public String Name { get; }
-        public String LastName1 { get; }
-        public String LastName2 { get; }
-        public int Ssn { get; }
-        public String BankAccount { get; }
-        public String Adress { get; }
-        public String PhoneNumber { get; }
+        public String Email { get; set; }
 
-        public EmployeesDTO(String email, String name, String lastName1, String lastName2, int id, String bankAccount, String adress, String phoneNumber)
+        public EmployeesDTO(String email)
         {
             Email = email;
-            Name = name;
-            LastName1 = lastName1;
-            LastName2 = lastName2;
-            Ssn = id;
-            BankAccount = bankAccount;
-            Adress = adress;
-            PhoneNumber = phoneNumber;
         }
     }
 }

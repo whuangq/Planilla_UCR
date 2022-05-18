@@ -1,11 +1,5 @@
-﻿using Domain.Core.Repositories;
-using Domain.Employees.DTOs;
-using Domain.Employees.Entities;
-using Domain.Employees.Repositories;
+﻿using Domain.Employees.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Employees.Implementations
@@ -19,9 +13,9 @@ namespace Application.Employees.Implementations
             _employeeRepository = employeeRepository;
         }
 
-        public async Task CreateEmployeeAsync(String email, int id, String name, String bankAccount)
+        public async Task CreateEmployeeAsync(String email)
         {
-            await _employeeRepository.CreateAsync(email, id, name, bankAccount);
+            await _employeeRepository.CreateEmployeeAsync(email);
         }
     }
 }

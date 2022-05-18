@@ -1,12 +1,7 @@
 ﻿using Domain.Core.Repositories;
-using Domain.Employees.DTOs;
 using Domain.Employees.Entities;
 using Domain.Employees.Repositories;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Employees.Repositories
@@ -21,11 +16,9 @@ namespace Infrastructure.Employees.Repositories
             _dbContext = unitOfWork;
         }
 
-        public async Task CreateAsync(String email, int id, String name, String bankAccount)
+        public async Task CreateEmployeeAsync(String email)
         {
-            Employee e = new Employee(email, name, id, bankAccount);
-            _dbContext.Update(e);
-
+            _dbContext.Add(new Employee(email));
             await _dbContext.SaveEntitiesAsync();
         }
     }

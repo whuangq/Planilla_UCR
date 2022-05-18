@@ -48,12 +48,8 @@
     private bool _isLoading = true;
     protected override async Task OnInitializedAsync()
     {
-        String name = "Le"; 
-        String email = "Leone";
-        int id = 202220222;
-        String bankAccount = "cuentaBa";
-
-        await EmployeeService.CreateEmployeeAsync(email, id, name, bankAccount);
+        String email = "Leone1111333";
+        await EmployeeService.CreateEmployeeAsync(email);
         // _projects = await ProjectService.GetAllProjectsAsync();
 
         _isLoading = false;
