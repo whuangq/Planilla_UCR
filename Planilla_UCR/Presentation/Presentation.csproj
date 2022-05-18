@@ -5,22 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Projects\Models\**" />
-	  <Compile Remove="Projects\Pages\**" />
-	  <Compile Remove="Projects\Validators\**" />
-	  <Content Remove="Projects\Models\**" />
-	  <Content Remove="Projects\Pages\**" />
-	  <Content Remove="Projects\Validators\**" />
-	  <EmbeddedResource Remove="Projects\Models\**" />
-	  <EmbeddedResource Remove="Projects\Pages\**" />
-	  <EmbeddedResource Remove="Projects\Validators\**" />
-	  <None Remove="Projects\Models\**" />
-	  <None Remove="Projects\Pages\**" />
-	  <None Remove="Projects\Validators\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
+		<Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
 	</ItemGroup>
 
 
