@@ -1,9 +1,6 @@
-﻿using Domain.Core.Entities;
-using Domain.Core.ValueObjects;
-using Domain.Employees.ValueObjects;
-using System;
-namespace Domain.Employees.Entities
+﻿using System;
 
+namespace Domain.Employees.Entities
 {
     public class Employee
     {

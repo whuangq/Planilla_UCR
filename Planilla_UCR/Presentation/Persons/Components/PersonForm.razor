@@ -1,10 +1,12 @@
 ﻿@page "/persons"
 @using Application.Persons
+@using Application.Employees
 @using Domain.Persons.Entities
 @using Presentation.Core.Components
 @using Presentation.Persons.Models
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
+@inject IEmployeeService EmployeeService
 
 @*Navigation footprint *@
 @{
@@ -105,8 +107,9 @@
         if (form.IsValid && ValidateInfo(personInfo))
         {
             await PersonService.CreatePersonAsync(personInfo);
+            await EmployeeService.CreateEmployeeAsync(personInfo.Email);
             snackHandler._saving = false;
-            ShowSnackNotification("Cuenta para"+personInfo.Name+" creada", Severity.Success);
+            ShowSnackNotification("Cuenta para"+personInfo.Email+" creada", Severity.Success);
         }
         snackHandler._saving = false;
     }
