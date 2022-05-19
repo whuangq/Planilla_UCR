@@ -1,11 +1,5 @@
-﻿using Domain.Core.Repositories;
-using Domain.Accounts.DTOs;
-using Domain.Accounts.Entities;
+﻿using Domain.Accounts.Entities;
 using Domain.Accounts.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Accounts.Implementations
@@ -19,9 +13,9 @@ namespace Application.Accounts.Implementations
             _accountRepository = accountRepository;
         }
 
-        public async Task CreateAccountAsync(string email, string password)
+        public async Task CreateAccountAsync(Account accountInfo)
         {
-            await _accountRepository.CreateAccountAsync(email, password);
+            await _accountRepository.CreateAccountAsync(accountInfo);
         }
     }
 }

@@ -1,18 +1,13 @@
-﻿using Domain.Core.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+
 
 namespace Domain.Accounts.DTOs
 {
     public class AccountsDTO
     {
-        public String Email { get; }
-        public String Password { get; }
+        public String Email { get; set; }
+        public String Password { get; set; }
        
-
         public AccountsDTO(string email, string password)
         {
             Email = email;
