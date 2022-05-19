@@ -21,19 +21,11 @@ else
     </MudItem>
     <MudTable Items="@Elements.Take(4)" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
         <HeaderContent>
-            <MudTh></MudTh>
-            @*<MudTh>Empleador</MudTh>*@
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
             <MudTh>Costo</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Type">
-                <div class="pic">
-                    <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
-                </div>
-            </MudTd>
-            @*<MudTd DataLabel="Empleador">@context.EmployerEmail</MudTd>*@
             <MudTd DataLabel="Nombre">
                 <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.NameSubscription}/Configurations")">
                     @context.NameSubscription
@@ -62,8 +54,6 @@ else
 
     public string project { get; set; }
 
-    [Parameter] public string? image { get; set; }
-
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: ""),
@@ -78,7 +68,6 @@ else
         Elements = await SubscriptionService.GetAllSubscriptionsAsync();
         _loading = false;
 
-        image = "./img/default_image.jpg";
     }
 
     private void DeleteDeductions()

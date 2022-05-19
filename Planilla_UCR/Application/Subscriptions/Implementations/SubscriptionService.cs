@@ -1,11 +1,6 @@
-﻿using Domain.Core.Repositories;
-using Domain.Subscriptions.DTOs;
-using Domain.Subscriptions.Entities;
+﻿using Domain.Subscriptions.DTOs;
 using Domain.Subscriptions.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Subscriptions.Implementations
@@ -21,7 +16,7 @@ namespace Application.Subscriptions.Implementations
 
         public async Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync()
         {
-            return await _subscriptionRepository.GetAllAsync();
+            return await _subscriptionRepository.GetAllSubscriptionsAsync();
         }
     }
 }

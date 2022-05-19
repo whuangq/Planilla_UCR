@@ -31,7 +31,7 @@ else
                 </MudItem>
 
                 <MudItem xs="6">
-                    <MudTextField @bind-Value="subscription.ProviderName"  Label="Organizacion" Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField @bind-Value="subscription.ProviderName"  Label="Organización" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
 
                 <MudItem xs="12">
@@ -73,7 +73,6 @@ else
     MudForm form;
     SnackHandler snackHandler = new SnackHandler();
 
-    public string image { get; set; }
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string subscriptionName { get; set; }
@@ -90,7 +89,6 @@ else
     {
         subscription.EmployerEmail = employerEmail;
         subscription.NameSubscription = subscriptionName;
-        image = "./img/default_image.jpg";
         _loading = false;
     }
 
@@ -103,7 +101,7 @@ else
         if (form.IsValid)
         {
             snackHandler._saving = false;
-            ShowSnackNotification("Deduccion "+subscription.NameSubscription+" modificada", Severity.Success);
+            ShowSnackNotification("Deducción "+subscription.NameSubscription+" modificada", Severity.Success);
             CleanForm();
         }
        

@@ -6,9 +6,6 @@
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
-
-@*<MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="SubscriptionDTO">*@
-
 @if (_loading)
 {
     <h4 class="text-danger">Loading deductions :)</h4>
@@ -26,20 +23,13 @@ else
             <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
         </MudSelect>
     </MudItem>
-    @*<MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">*@
     <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable">
         <HeaderContent>
-            <MudTh></MudTh>
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
             <MudTh>Costo</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Type">
-                <div class="pic">
-                    <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
-                </div>
-            </MudTd>
             <MudTd DataLabel="Nombre">
                 <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{context.EmployerEmail}/{context.NameSubscription}")">
                     @context.NameSubscription
@@ -69,7 +59,6 @@ else
 
     public string project { get; set; }
 
-    public string image { get; set; }
 
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
@@ -83,8 +72,6 @@ else
     {
         Elements = await SubscriptionService.GetAllSubscriptionsAsync();
         _loading = false;
-
-        image = "./img/default_image.jpg";
     }
 
     private void GoToCreate()

@@ -12,61 +12,77 @@
 
 <MudGrid>
     @*Text fields *@
-    <MudItem xs="12" sm="8">
-        <MudPaper  Height="250px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
+    <MudItem xs="12" sm="12">
+        <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
             <MudText Align="Align.Center" Typo="Typo.h6">Añadir deducción</MudText>
             <MudForm @ref="form">
             <MudGrid>
-            <MudItem xs="12">
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="8">
                 <MudTextField @bind-Value="subscriptionInfo.NameSubscription" Label="Nombre" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
+            <MudItem xs="2">
+            </MudItem>
 
-            <MudItem xs="6">
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="4">
                 <MudTextField @bind-Value="subscriptionInfo.Cost" Label="Costo" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
+
             
-            <MudItem xs="6">
+            <MudItem xs="4">
                 <MudSelect  @bind-Value="project" Label="Proyecto">
                     <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
                     <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
                 </MudSelect>
             </MudItem>
-
-            <MudItem xs="12">
-                <MudTextField @bind-Value="subscriptionInfo.ProviderName"  Label="Organizacion" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+            <MudItem xs="2">
             </MudItem>
 
-            <MudItem xs="12">
-                <MudTextField @bind-Value="subscriptionInfo.SubscriptionDescription" Label="Descripcion" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="8">
+                <MudTextField @bind-Value="subscriptionInfo.ProviderName"  Label="Organización" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
 
-            <MudItem xs="12" sm="6" md="4">
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="8">
+                <MudTextField @bind-Value="subscriptionInfo.SubscriptionDescription" Label="Descripción" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="2">
+            </MudItem>
+            @*Create buton *@
+            <MudItem xs="8" >
                 <MudButton Disabled="@snackHandler._saving" OnClick="SaveDeduction" Variant="Variant.Filled" Color="Color.Secondary">
                     @if (snackHandler._saving)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                        <MudText Class="ms-2">Guardando</MudText>
+                        <MudText Class="ms-2">Procesando</MudText>
                     }
                     else
                     {
                         <MudText>Crear</MudText>
                     }
                 </MudButton>
+                <MudButton Disabled="true"> </MudButton>
+                @*Clear buton *@
+                <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
+                        <MudText>Limpiar</MudText>
+                </MudButton>
             </MudItem>
-            <MudItem xs="12" sm="6" md="4">
-                        <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
-                                <MudText>Limpiar</MudText>
-                        </MudButton>
-            </MudItem>
+            <MudItem xs="2"></MudItem>
 
             </MudGrid>
         </MudForm>
         </MudPaper>
-    </MudItem>
-    @*File uploader *@
-    <MudItem xs="3">
-            <FileUploader>
-            </FileUploader>   
     </MudItem>
 </MudGrid>
 
@@ -97,7 +113,7 @@
         if (form.IsValid)
         {
             snackHandler._saving = false;
-            ShowSnackNotification("Deduccion "+subscriptionInfo.NameSubscription+" creada", Severity.Success);
+            ShowSnackNotification("Deducción "+subscriptionInfo.NameSubscription+" creada", Severity.Success);
             CleanForm();
         }
        

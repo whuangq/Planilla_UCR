@@ -1,12 +1,9 @@
 ﻿using Domain.Core.Repositories;
 using Domain.Subscriptions.DTOs;
 using Domain.Subscriptions.Repositories;
-using Domain.Subscriptions.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Subscriptions.Repositories
@@ -21,7 +18,7 @@ namespace Infrastructure.Subscriptions.Repositories
             _dbContext = unitOfWork;
         }
 
-        public async Task<IEnumerable<SubscriptionDTO>> GetAllAsync()
+        public async Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync()
         {
             return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.NameSubscription, t.ProviderName, t.SubscriptionDescription,t.Cost, t.TypeSubscription)).ToListAsync();
         }
