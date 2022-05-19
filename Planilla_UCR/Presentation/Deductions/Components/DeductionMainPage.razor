@@ -1,7 +1,7 @@
 ﻿@page "/Deductions"
 @using Domain.Subscriptions.DTOs
-@using Application.Subscriptions
 @using Domain.Subscriptions.Entities
+@using Application.Subscriptions
 @using Presentation.Core.Components
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
@@ -23,7 +23,7 @@ else
             <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
         </MudSelect>
     </MudItem>
-    <MudTable Items="@Elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable">
+    <MudTable Items="@Elements" RowsPerPage="6" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable">
         <HeaderContent>
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
@@ -45,6 +45,9 @@ else
                 </MudTd>
             </MudTFootRow>
         </FooterContent>
+        <PagerContent>
+                <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+        </PagerContent>
     </MudTable>
 }
 
@@ -82,5 +85,10 @@ else
     private void GoToConfigs()
     {
         nav.NavigateTo("/Deductions/Configurations");
+    }
+
+    private void PageChanged(int i)
+    {
+        mudTable.NavigateTo(i - 1);
     }
 }
