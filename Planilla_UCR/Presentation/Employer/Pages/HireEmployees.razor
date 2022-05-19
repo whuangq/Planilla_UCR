@@ -7,61 +7,84 @@
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeService
 
-@if (flag)
-{
-    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Proyectos", href: "#"),
-        new BreadcrumbItem("Empleados", href: "#"),
-    };
-
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+@if(_loading){
 
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-        <MudText Align="Align.Center" Typo="Typo.h6">Contratar empleados</MudText>
-        <MudTable @ref="@_table" Items="@_elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
-             <HeaderContent>
-                    <MudTh>Foto de perfil</MudTh>
-                    <MudTh>Nombre</MudTh>
-                    <MudTh>Cedula</MudTh>
-                    <MudTh></MudTh>
-                </HeaderContent>
-
-                <RowTemplate>
-                    <MudTd DataLabel="IMG">IMG</MudTd>
-                    <MudTd DataLabel="Nombre">@context.Email</MudTd>
-                    <MudTd DataLabel="Cedula">Cedula1</MudTd>
-                     <MudTd DataLabel="">
-                    <MudSpacer></MudSpacer>
-                        <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email))" Color="Color.Secondary">
-                            <MudText>
-                            Contratar
-                            </MudText> 
-                        </MudButton>
-                    </MudTd>
-                </RowTemplate>
-            <PagerContent>
-                <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
-            </PagerContent>
-        </MudTable>
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+       
     </MudPaper>
-}
-else
-{
-    <HireEmployeesError></HireEmployeesError>
+}else{
+    @if (!empty && !_loading)
+    {
+        List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Proyectos", href: "#"),
+            new BreadcrumbItem("Empleados", href: "#"),
+        };
+
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+        <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudTable @ref="@_table" Items="@_elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<EmployeeDTO,bool>(FilterFunc1)">
+                    <ToolBarContent>
+                         <MudText Align="Align.Center" Typo="Typo.h6">Contratar empleados</MudText>
+                        <MudSpacer />
+                        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>Foto de perfil</MudTh>
+                        <MudTh>Nombre</MudTh>
+                        <MudTh>Cedula</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+
+                    <RowTemplate>
+                        <MudTd DataLabel="IMG">IMG</MudTd>
+                        <MudTd DataLabel="Nombre">@context.Email</MudTd>
+                        <MudTd DataLabel="Cedula">Cedula1</MudTd>
+                         <MudTd DataLabel="">
+                        <MudSpacer></MudSpacer>
+                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email))" Color="Color.Secondary">
+                                <MudText>
+                                Contratar
+                                </MudText> 
+                            </MudButton>
+                        </MudTd>
+                    </RowTemplate>
+                <PagerContent>
+                    <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+                </PagerContent>
+            </MudTable>
+        </MudPaper>
+    }
+    else
+    {
+        <HireEmployeesError></HireEmployeesError>
+    }
 }
 
 @code {
     private bool _hidePosition;
-    private bool _loading;
-    private bool flag = true;
-    string employeeEmail = "";
+    private bool _loading = true;
+    private bool empty = true;
+    string searchString1 = "";
     private IEnumerable<EmployeeDTO> _elements = new List<EmployeeDTO>();
     private MudTable<EmployeeDTO> _table;
 
     protected override async Task OnInitializedAsync()
     {
         _elements = await EmployeeService.GetAllEmployeesAsync();
+        if (_elements.Length() == 0)
+        {
+            empty = true;
+        }
+        else
+        {
+            empty = false;
+        }
+        _loading = false;
     }
 
     private void GoToCreateEmployee()
@@ -71,12 +94,8 @@ else
 
     private void GoToContractEmployee(String email)
     {
+        // TODO send parameters to contract
        nav.NavigateTo("/Contract/"+email);
-    }
-
-    private void test(int email)
-    {
-        nav.NavigateTo("/Contract/"+email);
     }
 
     private void PageChanged(int i)
@@ -84,5 +103,14 @@ else
         _table.NavigateTo(i - 1);
     }
 
+    private bool FilterFunc1(EmployeeDTO element) => FilterFunc(element, searchString1);
 
+    private bool FilterFunc(EmployeeDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
 }
