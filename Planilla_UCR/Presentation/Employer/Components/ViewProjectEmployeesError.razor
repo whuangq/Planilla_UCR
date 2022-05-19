@@ -16,7 +16,6 @@
     <br />
     <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados contratados</MudText>
     <br />
-    <br />
  
    <MudToolBar DisableGutters="true" Class="gap-4">
         <MudButton></MudButton>
@@ -24,7 +23,7 @@
         @*Create button *@
         <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Secondary">
             <MudText> 
-            Contratae empleados
+            Contratar empleados
             </MudText> 
         </MudButton>
         <MudSpacer></MudSpacer>
@@ -34,6 +33,6 @@
 @code {
    private void GoToCreateEmployee()
     {
-        nav.NavigateTo("/Asociate_Employees");
+        nav.NavigateTo("/Hire_Employees");
     }
 }
