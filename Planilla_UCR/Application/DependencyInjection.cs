@@ -1,11 +1,10 @@
-﻿using Application.Accounts;
+﻿using Application.Persons;
+using Application.Persons.Implementations;
+using Application.Employees;
+using Application.Employees.Implementations;
+using Application.Accounts;
 using Application.Accounts.Implementations;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application
 {
@@ -13,6 +12,8 @@ namespace Application
     {
         public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
         {
+            services.AddTransient<IPersonService, PersonService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IAccountService, AccountService>();
             return services;
         }
