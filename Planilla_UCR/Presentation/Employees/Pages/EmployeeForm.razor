@@ -1,15 +1,13 @@
 ﻿@page "/Create_Employee"
+
 @using Application.Persons
 @using Domain.Persons.Entities
-
 @using Application.Accounts
 @using Domain.Accounts.Entities
 @using Domain.Accounts.DTOs
 @using Presentation.Core.Components
 @using Presentation.Accounts.Models
-@using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
-
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 @inject IAccountService AccountService
@@ -25,7 +23,6 @@
 }
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
- 
 <MudGrid>
     <MudItem xs="10" sm="12">
         <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
@@ -40,7 +37,7 @@
                     </MudItem>
 
                     <MudItem xs="4">
-                        <MudTextField @bind-Value="personInfo.Email" Label="Email" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
+                        <MudTextField @bind-Value="personInfo.Email" Label="Email" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"  Validation="@(new EmailAddressAttribute() {ErrorMessage = "Por favor, digite un correo válido"})"></MudTextField>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
 
@@ -60,7 +57,7 @@
                     </MudItem>
 
                     <MudItem xs="4">
-                        <MudTextField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
+                        <MudNumericField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido" HideSpinButtons="true" Min = "0"> </MudNumericField>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
 
@@ -78,20 +75,10 @@
                     </MudItem>
                     <MudItem xs="2"></MudItem>
 
-                    <MudItem xs="2"></MudItem>
-                    <MudItem xs="4">
-                    <MudTextField @bind-Value="accountInfo.Password" Label="Contraseña" Variant="Variant.Outlined" @ref="pwField1" InputType="InputType.Password"  Required="true" RequiredError="Campo requerido" 
-                    Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" ></MudTextField>
-                    </MudItem>
-
-                    <MudItem xs="4">
-                    <MudTextField T="string" Label="Confirmación de Contraseña" Variant="Variant.Outlined" InputType="InputType.Password"  Validation="@(new Func<string, string>(PasswordMatch))" Required="true" RequiredError="Campo requerido" ></MudTextField>
-                    </MudItem>
-                    <MudItem xs="2"></MudItem>
-
                     @*Create buton *@
                     <MudItem xs="2"></MudItem>
-                    <MudItem xs="6" sm="6" md="4">
+                    <MudItem xs="8" >
+                    
                         <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
                             @if (snackHandler._saving)
                             {
@@ -100,15 +87,15 @@
                             }
                             else
                             {
-                                <MudText>Crear</MudText>
+                                <MudText>Registrar</MudText>
                             }
                         </MudButton>
-                    
                         <MudButton Disabled="true"> </MudButton>
                         @*Clear buton *@
                         <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
                                 <MudText>Limpiar</MudText>
                         </MudButton>
+                        
                     </MudItem>
                     <MudItem xs="2"></MudItem>
                     
@@ -120,7 +107,6 @@
 
 @code {
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
-    MudTextField<string> pwField1;
     Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
@@ -129,82 +115,17 @@
     {
         snackHandler._saving = true;
         await form.Validate();
-        if (form.IsValid && ValidateInfo(personInfo))
+        if (form.IsValid)
         {
             await PersonService.CreatePersonAsync(personInfo);
             accountInfo.Email = personInfo.Email;
+            accountInfo.Password = personInfo.Name +"_"+ personInfo.Ssn.ToString();
             await AccountService.CreateAccountAsync(accountInfo);
             snackHandler._saving = false;
-            ShowSnackNotification("Persona "+personInfo.Name+" creado", Severity.Success);
+            ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);
         }
         snackHandler._saving = false;
     }
-
-    bool ValidateSsn(Person personInfo)
-    {
-        bool valid = true;
-        if (personInfo.Ssn == 0 || personInfo.Ssn < 0)
-        {
-            ShowSnackNotification("Número de cédula incorrecta", Severity.Error);
-            valid = false;
-        }
-        return valid;
-    }
-
-    bool ValidateEmail(Person personInfo)
-    {
-        bool valid = true;
-
-        valid = personInfo.Email.Contains('@');
-        if (!valid)
-        {
-            ShowSnackNotification("El email debe contener un @", Severity.Error);
-        }
-        return valid;
-    }
-
-    bool ValidateInfo(Person personInfo)
-    {
-        bool ssn = ValidateSsn(personInfo);
-        bool email = ValidateEmail(personInfo);
-        return ssn && email;
-    }
-
-
-    private IEnumerable<string> PasswordStrength(string pw)
-    {
-
-        if (string.IsNullOrWhiteSpace(pw))
-        {
-            yield return "Contraseña es requerida!";
-            yield break;
-        }
-        if (pw.Length < 8)
-        {
-            yield return "La contraseña debe tener al menos 8 caracteres";
-        }
-        if (!Regex.IsMatch(pw, @"[A-Z]"))
-        {
-            yield return "Debe contener al menos una letra mayúscula";
-        }
-        if (!Regex.IsMatch(pw, @"[a-z]"))
-        {
-            yield return "Debe contener al menos una letra minúscula";
-        }
-
-        if (!Regex.IsMatch(pw, @"[0-9]"))
-        {
-            yield return "Debe contener al menos un dígito";
-        }
-    }
-
-    private string PasswordMatch(string arg)
-    {
-        if (pwField1.Value != arg)
-            return "Contraseñas no coinciden";
-        return null;
-    }
-
 
     void ShowSnackNotification(string message, Severity severity)
     {
