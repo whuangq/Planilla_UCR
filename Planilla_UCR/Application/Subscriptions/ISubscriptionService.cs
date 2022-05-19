@@ -10,8 +10,5 @@ namespace Application.Subscriptions
     public interface ISubscriptionService
     {
         Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync();
-        Task CreateSubscriptionAsync(Subscription subscription);
-
-        Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription);
     }
 }

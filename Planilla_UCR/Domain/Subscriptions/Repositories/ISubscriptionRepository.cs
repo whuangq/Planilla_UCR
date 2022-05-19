@@ -12,7 +12,5 @@ namespace Domain.Subscriptions.Repositories
     public interface ISubscriptionRepository
     {
         Task<IEnumerable<SubscriptionDTO>> GetAllAsync();
-        Task CreateSubscriptionAsync(Subscription subscription);
-        Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription);
     }
 }

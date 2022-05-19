@@ -25,22 +25,5 @@ namespace Infrastructure.Subscriptions.Repositories
         {
             return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.NameSubscription, t.ProviderName, t.SubscriptionDescription,t.Cost, t.TypeSubscription)).ToListAsync();
         }
-
-        public async Task CreateSubscriptionAsync(Subscription subscription)
-        {
-            _dbContext.Subscriptions.Add(subscription);
-            await _dbContext.SaveEntitiesAsync();
-        }
-
-        public async Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription)
-        {
-            IList<Subscription> subscriptionResult = await _dbContext.Subscriptions.Where(e => e.EmployerEmail == employerEmail && e.NameSubscription == nameSubscription).ToListAsync();
-            Subscription subscription = null;
-            if (subscriptionResult.Length() > 0)
-            {
-                subscription = subscriptionResult.First();
-            }
-            return subscription;
-        }
     }
 }

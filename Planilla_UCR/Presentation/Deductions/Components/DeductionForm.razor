@@ -96,7 +96,6 @@
         await form.Validate();
         if (form.IsValid)
         {
-            await SubscriptionService.CreateSubscriptionAsync(subscriptionInfo);
             snackHandler._saving = false;
             ShowSnackNotification("Deduccion "+subscriptionInfo.NameSubscription+" creada", Severity.Success);
             CleanForm();
@@ -131,5 +130,4 @@
         subscriptionInfo.Cost = 0;
         project = "";
     }
-     
 }

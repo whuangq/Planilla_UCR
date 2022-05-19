@@ -9,7 +9,7 @@
 
 @if (_loading)
 {
-    <h4 class="text-danger">Loading proyects :)</h4>
+    <h4 class="text-danger">Loading deduction :)</h4>
 }
 else
 {
@@ -24,7 +24,7 @@ else
                 <img src="@image" asp-append-version="true" style="object-fit: fill;"  width="200" height="150"/>
             </CardHeaderAvatar>
             <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" Href="@($"/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations")"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
             </CardHeaderActions>
         </MudCardHeader>
         <MudCardContent>
@@ -48,7 +48,7 @@ else
     private bool _hidePosition;
     private bool _loading = true;
     private IEnumerable<SubscriptionDTO> Elements;
-    public Subscription subscription;
+    public Subscription subscription = new Subscription("","","CCSS","Deducción1",2000,0);
 
     public string image { get; set; }
 
@@ -65,14 +65,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        subscription = await SubscriptionService.GetSubscription(employerEmail, subscriptionName);
+        subscription.EmployerEmail = employerEmail;
+        subscription.NameSubscription = subscriptionName;
         image = "./img/default_image.jpg";
         _loading = false;
     }
 
-    private void GoToConfigs(string employerEmail, string subscriptionName)
+    private void GoToConfigs()
     {
-        nav.NavigateTo("/Deductions/"+employerEmail +"/"+subscriptionName+"/Configurations");
+        nav.NavigateTo($"/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations");
     }
 
     private void GoToMain()

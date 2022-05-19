@@ -11,7 +11,7 @@
 
 @if (_loading)
 {
-    <h4 class="text-danger">Loading proyects :)</h4>
+    <h4 class="text-danger">Loading deductions :)</h4>
 }
 else
 {
@@ -44,7 +44,6 @@ else
                 <MudLink Href="@($"/Deductions/Details/{context.EmployerEmail}/{context.NameSubscription}")">
                     @context.NameSubscription
                 </MudLink>
-                
             </MudTd>
             <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
             <MudTd DataLabel="Costo">@context.Cost</MudTd>

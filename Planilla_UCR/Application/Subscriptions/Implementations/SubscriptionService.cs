@@ -23,14 +23,5 @@ namespace Application.Subscriptions.Implementations
         {
             return await _subscriptionRepository.GetAllAsync();
         }
-
-        public async Task CreateSubscriptionAsync(Subscription subscription)
-        {
-            await _subscriptionRepository.CreateSubscriptionAsync(subscription);
-        }
-
-        public async Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription) {
-            return await _subscriptionRepository.GetSubscription(employerEmail, nameSubscription);
-        }
     }
 }
