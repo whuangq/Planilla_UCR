@@ -1,6 +1,7 @@
 ﻿@page "/Hire_Employees"
 @using Application.Employees
 @using Domain.Employees.Entities
+@using Domain.Employees.DTOs
 @using Presentation.Core.Components
 @using Presentation.Employer.Components
 @inject NavigationManager nav
@@ -55,8 +56,13 @@ else
     private bool _loading;
     private bool flag = true;
     string employeeEmail = "";
-    private IEnumerable<Employee> _elements  = new List<Employee>() {new Employee("email2"), new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3")};   
-    private MudTable<Employee> _table;
+    private IEnumerable<EmployeeDTO> _elements = new List<EmployeeDTO>();
+    private MudTable<EmployeeDTO> _table;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _elements = await EmployeeService.GetAllEmployeesAsync();
+    }
 
     private void GoToCreateEmployee()
     {
@@ -73,8 +79,10 @@ else
         nav.NavigateTo("/Contract/"+email);
     }
 
-        private void PageChanged(int i)
+    private void PageChanged(int i)
     {
         _table.NavigateTo(i - 1);
     }
+
+
 }
