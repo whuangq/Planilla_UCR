@@ -5,17 +5,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Deductions\Pages\**" />
-	  <Compile Remove="Deductions\Validators\**" />
-	  <Content Remove="Deductions\Pages\**" />
-	  <Content Remove="Deductions\Validators\**" />
-	  <EmbeddedResource Remove="Deductions\Pages\**" />
-	  <EmbeddedResource Remove="Deductions\Validators\**" />
-	  <None Remove="Deductions\Pages\**" />
-	  <None Remove="Deductions\Validators\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
 	</ItemGroup>
 
@@ -41,8 +30,4 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Application\Application.csproj" />
-		<ProjectReference Include="..\Domain\Domain.csproj" />
-	</ItemGroup>
-
 </Project>
