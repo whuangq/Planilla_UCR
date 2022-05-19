@@ -3,7 +3,7 @@
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
-
+@inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
 
 @if (_loading)
@@ -76,7 +76,24 @@ else
 
     private void DeleteDeductions()
     {
-        
+        string message = "¿Desea borrar las deduciones seleccionadas?";
+        Snackbar.Add(message, Severity.Warning, config =>
+        {
+            config.Action = "Confirmar";
+            config.RequireInteraction = true;
+            config.ShowCloseIcon = false;
+            config.Onclick = snackbar =>
+            {
+                DeleteDeductionsUpdate();
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+    private void DeleteDeductionsUpdate()
+    {
+        Snackbar.Add("Deducciones borradas", Severity.Success);
+        StateHasChanged();
     }
 
     private void PageChanged(int i)
