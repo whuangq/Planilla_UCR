@@ -1,4 +1,4 @@
-﻿@page "/Create_Employee"
+﻿@page "/Register_Form"
 @using Application.Persons
 @using Domain.Persons.Entities
 
@@ -25,73 +25,59 @@
 }
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
- 
 <MudGrid>
-    <MudItem xs="10" sm="12">
-        <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-            <MudSpacer></MudSpacer>
-            <MudText Align="Align.Center" Typo="Typo.h6">Información del empleado</MudText>
+    <MudItem xs="12" sm="8">
+        <MudPaper  Height="220px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudText Align="Align.Center" Typo="Typo.h6">Información personal</MudText>
             <MudForm @ref="form">
                     <MudGrid>
                     @*Small fields *@
-                    <MudItem xs="2"></MudItem>
-                    <MudItem xs="4">
+                    <MudItem xs="6">
                         <MudTextField @bind-Value="personInfo.Name" Label="Nombre" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
 
-                    <MudItem xs="4">
+                    <MudItem xs="6">
                         <MudTextField @bind-Value="personInfo.Email" Label="Email" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
-                    <MudItem xs="2"></MudItem>
 
-                    <MudItem xs="2"></MudItem>
-                    <MudItem xs="4">
+                    <MudItem xs="6">
                         <MudTextField @bind-Value="personInfo.LastName1" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
 
-                    <MudItem xs="4">
+                    <MudItem xs="6">
                         <MudTextField @bind-Value="personInfo.LastName2" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
-                    <MudItem xs="2"></MudItem>
 
-                    <MudItem xs="2"></MudItem>
-                     <MudItem xs="4">
+                     <MudItem xs="6">
                         <MudTextField @bind-Value="personInfo.PhoneNumber" Label="Teléfono" Variant="Variant.Outlined" ></MudTextField>
                     </MudItem>
 
-                    <MudItem xs="4">
+                    <MudItem xs="6">
                         <MudTextField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
-                    <MudItem xs="2"></MudItem>
 
                     @*Large fields *@
-                    <MudItem xs="2"></MudItem>
-                    <MudItem xs="8">
+                    <MudItem xs="12">
                         <MudTextField @bind-Value="personInfo.Adress" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
-                    <MudItem xs="2"></MudItem>
 
-                    <MudItem xs="2"></MudItem>
-                    <MudItem xs="8">
+                    <MudItem xs="12">
                         <MudTextField @bind-Value="personInfo.BankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     <MudDivider />
                     </MudItem>
-                    <MudItem xs="2"></MudItem>
 
-                    <MudItem xs="2"></MudItem>
-                    <MudItem xs="4">
-                    <MudTextField @bind-Value="accountInfo.Password" Label="Contraseña" Variant="Variant.Outlined" @ref="pwField1" InputType="InputType.Password"  Required="true" RequiredError="Campo requerido" 
-                    Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" ></MudTextField>
+                    <MudItem xs="6">
+                       <MudTextField @bind-Value="accountInfo.Password" Label="Contraseña" Variant="Variant.Outlined" @ref="pwField1" InputType="InputType.Password"  Required="true" RequiredError="Campo requerido" 
+                            Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" ></MudTextField>
                     </MudItem>
 
-                    <MudItem xs="4">
-                    <MudTextField T="string" Label="Confirmación de Contraseña" Variant="Variant.Outlined" InputType="InputType.Password"  Validation="@(new Func<string, string>(PasswordMatch))" Required="true" RequiredError="Campo requerido" ></MudTextField>
+                   <MudItem xs="6">
+                       <MudTextField T="string" Label="Confirmación de Contraseña" Variant="Variant.Outlined" InputType="InputType.Password"  Validation="@(new Func<string, string>(PasswordMatch))" Required="true" RequiredError="Campo requerido" ></MudTextField>
                     </MudItem>
-                    <MudItem xs="2"></MudItem>
+
 
                     @*Create buton *@
-                    <MudItem xs="2"></MudItem>
-                    <MudItem xs="6" sm="6" md="4">
+                    <MudItem xs="12" sm="6" md="4">
                         <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
                             @if (snackHandler._saving)
                             {
@@ -103,19 +89,26 @@
                                 <MudText>Crear</MudText>
                             }
                         </MudButton>
-                    
-                        <MudButton Disabled="true"> </MudButton>
-                        @*Clear buton *@
+                    </MudItem>
+
+                     @*Clear buton *@
+                    <MudItem xs="12" sm="6" md="4">
                         <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
                                 <MudText>Limpiar</MudText>
                         </MudButton>
                     </MudItem>
-                    <MudItem xs="2"></MudItem>
-                    
+
                 </MudGrid>
             </MudForm>
         </MudPaper>
     </MudItem>
+
+    @*File uploader *@
+    <MudItem xs="3">
+        <FileUploader>
+        </FileUploader>   
+    </MudItem>
+
 </MudGrid>
 
 @code {

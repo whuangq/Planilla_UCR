@@ -1,4 +1,10 @@
-﻿using System;
+﻿
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 
 namespace Domain.Persons.DTOs
 {
@@ -13,8 +19,8 @@ namespace Domain.Persons.DTOs
         public String Adress { get; set; }
         public String PhoneNumber { get; set; }
 
-        public PersonsDTO(String email, String name, String lastName1, String lastName2, int id, String bankAccount,
-                          String adress, String phoneNumber)
+        public PersonsDTO(String email, String name, String lastName1, String lastName2, int id,
+                            String bankAccount, String adress, String phoneNumber)
         {
             Email = email;
             Name = name;

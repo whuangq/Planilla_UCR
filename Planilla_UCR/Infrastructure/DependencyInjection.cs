@@ -1,10 +1,12 @@
-﻿using Domain.Core.Repositories;
+﻿using Infrastructure.Persons;
+using Domain.Core.Repositories;
 using Infrastructure.Accounts;
 using Infrastructure.Accounts.Repositories;
 using Domain.Accounts.Repositories;
 using Infrastructure.Persons;
 using Infrastructure.Persons.Repositories;
 using Domain.Persons.Repositories;
+
 using Infrastructure.Employees;
 using Infrastructure.Employees.Repositories;
 using Domain.Employees.Repositories;

@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Domain.Accounts.Entities;
 
 namespace Domain.Accounts.Repositories
 {
     public interface IAccountRepository
     {
-        Task CreateAccountAsync(string email, string password);
+        Task CreateAccountAsync(Account accountInfo);
     }
 }

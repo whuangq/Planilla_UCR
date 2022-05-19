@@ -1,12 +1,8 @@
 ﻿using Domain.Core.Repositories;
-using Domain.Accounts.DTOs;
 using Domain.Accounts.Entities;
 using Domain.Accounts.Repositories;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Accounts.Repositories
@@ -21,13 +17,17 @@ namespace Infrastructure.Accounts.Repositories
             _dbContext = unitOfWork;
         }
 
-        public async Task CreateAccountAsync(string email, string password)
+        public async Task CreateAccountAsync(Account accountInfo)
         {
-            Account a = new Account(email, password);
-            _dbContext.Add(a);
-
-            await _dbContext.SaveEntitiesAsync();
+            try
+            {
+                _dbContext.Accounts.Add(accountInfo);
+                await _dbContext.SaveEntitiesAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Repeated key error" + ex.Message);
+            } 
         }
-
     }
 }

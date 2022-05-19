@@ -5,11 +5,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
-		<Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
+	  <Compile Remove="Employees\Components\**" />
+	  <Content Remove="Employees\Components\**" />
+	  <EmbeddedResource Remove="Employees\Components\**" />
+	  <None Remove="Employees\Components\**" />
 	</ItemGroup>
-
-
+	
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
@@ -34,10 +35,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Employees\Components\" />
 	</ItemGroup>
 
 </Project>
