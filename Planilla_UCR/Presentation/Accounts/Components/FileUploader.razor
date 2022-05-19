@@ -1,24 +1,23 @@
 ﻿@inject ISnackbar Snackbar
 
-<br />
-<MudText Align="Align.Center" Typo="Typo.h6">Foto de perfil</MudText>
-<MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Height="150px" Outlined="true" Class="@DragClass">
+<MudPaper @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Weight="100px" Height="100px" Outlined="true" Class="@DragClass">
     @if (!Clearing)
     {
-        <InputFile OnChange="OnInputFileChanged" multiple  class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" />
+        <InputFile OnChange="OnInputFileChanged" multiple class="absolute mud-width-full mud-height-full overflow-hidden z-2" style="opacity:0;" />
     }
-    <MudText Typo="Typo.body1">Arrastra la imagen, o haz click aquí</MudText>
+    <MudText Typo="Typo.h6">Arrastra la imagen, o haz click aquí</MudText>
     @foreach (var file in fileNames)
     {
         <MudChip Color="Color.Dark" Text="@file" />
     }
 </MudPaper>
+
 <MudToolBar DisableGutters="true" Class="gap-4">
- <MudSpacer></MudSpacer>
-<MudButton OnClick="Upload" Disabled="@(!fileNames.Any())" Color="Color.Secondary" Variant="Variant.Filled" class= "align-center">Subir</MudButton>
-<MudSpacer></MudSpacer>
-<MudButton OnClick="Clear" Disabled="@(!fileNames.Any())" Color="Color.Error" Variant="Variant.Filled" class= "align-center">Limpiar</MudButton>
-<MudSpacer></MudSpacer>
+    <MudSpacer></MudSpacer>
+    <MudButton OnClick="Upload" Disabled="@(!fileNames.Any())" Color="Color.Secondary" Variant="Variant.Filled" class="align-center">Subir</MudButton>
+    <MudSpacer></MudSpacer>
+    <MudButton OnClick="Clear" Disabled="@(!fileNames.Any())" Color="Color.Error" Variant="Variant.Filled" class="align-center">Limpiar</MudButton>
+    <MudSpacer></MudSpacer>
 </MudToolBar>
 
 @code {
@@ -31,7 +30,7 @@
     {
         ClearDragClass();
         var files = e.GetMultipleFiles();
-        foreach(var file in files)
+        foreach (var file in files)
         {
             fileNames.Add(file.Name);
         }
@@ -42,7 +41,7 @@
         Clearing = true;
         fileNames.Clear();
         ClearDragClass();
-        await Task.Delay(0);
+        await Task.Delay(100);
         Clearing = false;
     }
     private void Upload()
