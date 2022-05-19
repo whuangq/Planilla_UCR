@@ -1,11 +1,10 @@
 ﻿@using Application.Employees
 @using Domain.Employees.Entities
 @using Presentation.Core.Components
-@using Presentation.HireEmployees
+@using Presentation.Employer
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
-@*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
@@ -15,7 +14,7 @@
 }
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <br />
-    <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados registrados</MudText>
+    <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados contratados</MudText>
     <br />
     <br />
  
@@ -25,7 +24,7 @@
         @*Create button *@
         <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Secondary">
             <MudText> 
-            Crear empleado
+            Contratae empleados
             </MudText> 
         </MudButton>
         <MudSpacer></MudSpacer>
@@ -33,9 +32,8 @@
     </MudToolBar>
 
 @code {
-
    private void GoToCreateEmployee()
     {
-        nav.NavigateTo("/Create_Employee");
+        nav.NavigateTo("/Asociate_Employees");
     }
 }
