@@ -35,7 +35,7 @@ else
             </MudTd>
             @*<MudTd DataLabel="Empleador">@context.EmployerEmail</MudTd>*@
             <MudTd DataLabel="Nombre">
-                <MudLink Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.NameSubscription}/Configurations")">
+                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.NameSubscription}/Configurations")">
                     @context.NameSubscription
                 </MudLink>
             </MudTd>
