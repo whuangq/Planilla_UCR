@@ -1,6 +1,8 @@
 ﻿using Domain.Persons.Repositories;
 using Domain.Persons.Entities;
+using Domain.Persons.DTOs;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Application.Persons.Implementations
 {
@@ -16,6 +18,11 @@ namespace Application.Persons.Implementations
         public async Task CreatePersonAsync(Person personInfo)
         {
             await _personRepository.CreatePersonAsync(personInfo);
+        }
+
+        public async Task<IEnumerable<Person>> GetAllEmployees()
+        {
+            return await _personRepository.GetAllEmployees();
         }
     }
 }

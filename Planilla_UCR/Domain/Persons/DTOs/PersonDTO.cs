@@ -2,7 +2,7 @@
 
 namespace Domain.Persons.DTOs
 {
-    public class PersonsDTO
+    public class PersonDTO
     {
         public String Email { get; set; }
         public String Name { get; set; }
@@ -13,7 +13,7 @@ namespace Domain.Persons.DTOs
         public String Adress { get; set; }
         public String PhoneNumber { get; set; }
 
-        public PersonsDTO(String email, String name, String lastName1, String lastName2, int id, String bankAccount,
+        public PersonDTO(String email, String name, String lastName1, String lastName2, int id, String bankAccount,
                           String adress, String phoneNumber)
         {
             Email = email;
