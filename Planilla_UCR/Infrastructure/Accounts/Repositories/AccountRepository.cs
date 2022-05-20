@@ -1,6 +1,8 @@
 ﻿using Domain.Core.Repositories;
 using Domain.Accounts.Entities;
 using Domain.Accounts.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -28,6 +30,12 @@ namespace Infrastructure.Accounts.Repositories
             {
                 Debug.WriteLine("Repeated key error" + ex.Message);
             } 
+        }
+
+        public async Task InsertAccountData(Account accountData)
+        {
+            System.FormattableString query = $"EXECUTE InsertAccount @EmailAccount = {accountData.Email}, @PasswordAccount = {accountData.Password}";
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
     }
 }

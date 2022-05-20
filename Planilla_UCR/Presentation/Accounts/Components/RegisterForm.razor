@@ -75,7 +75,6 @@
                        <MudTextField T="string" Label="Confirmación de Contraseña" Variant="Variant.Outlined" InputType="InputType.Password"  Validation="@(new Func<string, string>(PasswordMatch))" Required="true" RequiredError="Campo requerido" ></MudTextField>
                     </MudItem>
 
-
                     @*Create buton *@
                     <MudItem xs="12" sm="6" md="4">
                         <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
@@ -115,6 +114,7 @@
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
     MudTextField<string> pwField1;
     Account accountInfo = new Account("","");
+    Account accountData = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
 
@@ -127,6 +127,8 @@
             await PersonService.CreatePersonAsync(personInfo);
             accountInfo.Email = personInfo.Email;
             await AccountService.CreateAccountAsync(accountInfo);
+            accountData.Email = personInfo.Email;
+            await AccountService.InsertAccountData(accountInfo);
             snackHandler._saving = false;
             ShowSnackNotification("Persona "+personInfo.Name+" creado", Severity.Success);
         }

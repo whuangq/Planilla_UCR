@@ -13,5 +13,6 @@ namespace Domain.Accounts.Repositories
     public interface IAccountRepository
     {
         Task CreateAccountAsync(Account accountInfo);
+        Task InsertAccountData(Account accountData);
     }
 }
