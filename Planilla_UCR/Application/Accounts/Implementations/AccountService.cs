@@ -17,5 +17,11 @@ namespace Application.Accounts.Implementations
         {
             await _accountRepository.CreateAccountAsync(accountInfo);
         }
+
+        public async Task InsertAccountData(Account accountData)
+        {
+
+            await _accountRepository.InsertAccountData(accountData);
+        }
     }
 }

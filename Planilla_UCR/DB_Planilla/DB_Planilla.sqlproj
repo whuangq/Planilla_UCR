@@ -67,5 +67,6 @@
     <Build Include="AgreementType.sql" />
     <Build Include="Agreement.sql" />
     <Build Include="Acquire.sql" />
+    <Build Include="InsertAccount.sql" />
   </ItemGroup>
 </Project>
