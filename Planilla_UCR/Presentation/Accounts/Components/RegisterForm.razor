@@ -1,7 +1,12 @@
 ﻿@page "/Register_Form"
 @using Application.Persons
 @using Domain.Persons.Entities
-
+@using Application.Employers
+@using Domain.Employers.Entities
+@using Domain.Employers.DTOs
+@using Application.Employees
+@using Domain.Employees.Entities 
+@using Domain.Employees.DTOs
 @using Application.Accounts
 @using Domain.Accounts.Entities
 @using Domain.Accounts.DTOs
@@ -13,6 +18,8 @@
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 @inject IAccountService AccountService
+@inject IEmployerService EmployerService
+@inject IEmployeeService EmployeeService
 
 
 @*Navigation footprint *@
@@ -26,57 +33,80 @@
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 <MudGrid>
-    <MudItem xs="12" sm="8">
-        <MudPaper  Height="220px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
+    <MudItem xs="10" sm="12">
+        <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudSpacer></MudSpacer>
             <MudText Align="Align.Center" Typo="Typo.h6">Información personal</MudText>
             <MudForm @ref="form">
                     <MudGrid>
                     @*Small fields *@
-                    <MudItem xs="6">
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.Name" Label="Nombre" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
-
-                    <MudItem xs="6">
+                    <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.Email" Label="Email" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
+                    <MudItem xs="2"></MudItem>
 
-                    <MudItem xs="6">
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.LastName1" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
-
-                    <MudItem xs="6">
+                    <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.LastName2" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
+                    <MudItem xs="2"></MudItem>
 
-                     <MudItem xs="6">
+                     <MudItem xs="2"></MudItem>
+                     <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.PhoneNumber" Label="Teléfono" Variant="Variant.Outlined" ></MudTextField>
                     </MudItem>
 
-                    <MudItem xs="6">
+                    <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
+                      <MudItem xs="2"></MudItem>
 
                     @*Large fields *@
-                    <MudItem xs="12">
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="8">
                         <MudTextField @bind-Value="personInfo.Adress" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
+                    <MudItem xs="2"></MudItem>
 
-                    <MudItem xs="12">
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="8">
                         <MudTextField @bind-Value="personInfo.BankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     <MudDivider />
                     </MudItem>
-
-                    <MudItem xs="6">
+                    <MudItem xs="2"></MudItem>
+                   
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="4">
                        <MudTextField @bind-Value="accountInfo.Password" Label="Contraseña" Variant="Variant.Outlined" @ref="pwField1" InputType="InputType.Password"  Required="true" RequiredError="Campo requerido" 
                             Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" ></MudTextField>
-                    </MudItem>
-
-                   <MudItem xs="6">
+                   </MudItem>
+                    
+                   <MudItem xs="4">
                        <MudTextField T="string" Label="Confirmación de Contraseña" Variant="Variant.Outlined" InputType="InputType.Password"  Validation="@(new Func<string, string>(PasswordMatch))" Required="true" RequiredError="Campo requerido" ></MudTextField>
                     </MudItem>
+                    <MudItem xs="2"></MudItem>
+
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="4">
+                        <MudSelect  @bind-Value="Rol" Label="Rol">
+                        <MudSelectItem Value="@("RolEmployee")">Empleado</MudSelectItem>
+                        <MudSelectItem Value="@("RolEmployer")">Empleador</MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
 
                     @*Create buton *@
-                    <MudItem xs="12" sm="6" md="4">
+                    <MudItem xs="2"></MudItem>
+                    <MudButton Disabled="true"> </MudButton>
+                    <MudItem xs="2"></MudItem>
+                    <MudItem xs="8">
                         <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
                             @if (snackHandler._saving)
                             {
@@ -88,15 +118,14 @@
                                 <MudText>Crear</MudText>
                             }
                         </MudButton>
-                    </MudItem>
+                    <MudButton Disabled="true"> </MudButton>
 
                      @*Clear buton *@
-                    <MudItem xs="12" sm="6" md="4">
                         <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
                                 <MudText>Limpiar</MudText>
                         </MudButton>
                     </MudItem>
-
+                     <MudItem xs="2"></MudItem>
                 </MudGrid>
             </MudForm>
         </MudPaper>
@@ -104,8 +133,6 @@
 
     @*File uploader *@
     <MudItem xs="3">
-        <FileUploader>
-        </FileUploader>   
     </MudItem>
 
 </MudGrid>
@@ -117,18 +144,25 @@
     Account accountData = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
+    String Rol;
+
 
     async Task SavePersonInfo()
     {
         snackHandler._saving = true;
         await form.Validate();
-        if (form.IsValid && ValidateInfo(personInfo))
-        {
+        if (form.IsValid && ValidateInfo(personInfo)){
             await PersonService.CreatePersonAsync(personInfo);
             accountInfo.Email = personInfo.Email;
             await AccountService.CreateAccountAsync(accountInfo);
             accountData.Email = personInfo.Email;
             await AccountService.InsertAccountData(accountInfo);
+            if (Rol.Equals("RolEmployee")){
+                await EmployeeService.CreateEmployeeAsync(personInfo.Email);
+            }
+            else{
+                await EmployerService.CreateEmployerAsync(personInfo.Email);
+            }
             snackHandler._saving = false;
             ShowSnackNotification("Persona "+personInfo.Name+" creado", Severity.Success);
         }
