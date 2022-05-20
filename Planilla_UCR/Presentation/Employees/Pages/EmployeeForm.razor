@@ -5,12 +5,14 @@
 @using Application.Accounts
 @using Domain.Accounts.Entities
 @using Domain.Accounts.DTOs
+@using Application.Employees
 @using Presentation.Core.Components
 @using Presentation.Accounts.Models
 @using System.ComponentModel.DataAnnotations
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 @inject IAccountService AccountService
+@inject IEmployeeService EmployeeService
 
 
 @*Navigation footprint *@
@@ -115,16 +117,30 @@
     {
         snackHandler._saving = true;
         await form.Validate();
-        if (form.IsValid)
+        if (form.IsValid && ValidateSsn(personInfo))
         {
             await PersonService.CreatePersonAsync(personInfo);
             accountInfo.Email = personInfo.Email;
             accountInfo.Password = personInfo.Name +"_"+ personInfo.Ssn.ToString();
             await AccountService.CreateAccountAsync(accountInfo);
+            await EmployeeService.CreateEmployeeAsync(personInfo.Email);
             snackHandler._saving = false;
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);
+            ShowSnackNotification("Se utilizó la contraseña por defecto: Nombre_Cedula", Severity.Info);
+
         }
         snackHandler._saving = false;
+    }
+    
+    bool ValidateSsn(Person personInfo)
+    {
+        bool valid = true;
+        if (personInfo.Ssn == 0 || personInfo.Ssn < 0)
+        {
+            ShowSnackNotification("Número de cédula incorrecta", Severity.Error);
+            valid = false;
+        }
+        return valid;
     }
 
     void ShowSnackNotification(string message, Severity severity)
