@@ -1,0 +1,103 @@
+﻿@page "/Deductions/Configurations"
+@using Domain.Subscriptions.DTOs
+@using Application.Subscriptions
+@using Domain.Subscriptions.Entities
+@using Presentation.Core.Components
+@inject ISnackbar Snackbar
+@inject ISubscriptionService SubscriptionService
+
+@if (_loading)
+{
+    <h4 class="text-danger">Loading deductions :)</h4>
+}
+else
+{
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    <MudItem xs="2">
+        <MudSelect  @bind-Value="project" Label="Proyecto">
+            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
+            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    <MudTable @ref="mudTable" Items="@Elements" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Nombre</MudTh>
+            <MudTh>Descripción</MudTh>
+            <MudTh>Costo</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nombre">
+                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.NameSubscription}/Configurations")">
+                    @context.NameSubscription
+                </MudLink>
+            </MudTd>
+            <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
+            <MudTd DataLabel="Costo">@context.Cost</MudTd>
+        </RowTemplate>
+        <FooterContent>
+            <MudTd colspan="5">Select All</MudTd>
+        </FooterContent>
+        <PagerContent>
+            <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+        </PagerContent>
+    </MudTable>
+    <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.NameSubscription).Select(x=>x.NameSubscription)))</MudText>
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudSpacer></MudSpacer>
+        <MudButton Variant="Variant.Filled" OnClick="DeleteDeductions" Color="Color.Error">Borrar</MudButton>
+    </MudToolBar>
+}
+
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private HashSet<SubscriptionDTO> selectedItems1 = new HashSet<SubscriptionDTO>();
+    private IEnumerable<SubscriptionDTO> Elements;
+    private MudTable<SubscriptionDTO> mudTable;
+
+    public string project { get; set; }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: "deductions"),
+        new BreadcrumbItem("Configuraciones", href: "configdeductions"),
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        _loading = false;
+
+    }
+
+    private void DeleteDeductions()
+    {
+        string message = "¿Desea borrar las deduciones seleccionadas?";
+        Snackbar.Add(message, Severity.Warning, config =>
+        {
+            config.Action = "Confirmar";
+            config.RequireInteraction = true;
+            config.ShowCloseIcon = false;
+            config.Onclick = snackbar =>
+            {
+                DeleteDeductionsUpdate();
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+    private void DeleteDeductionsUpdate()
+    {
+        Snackbar.Add("Deducciones borradas", Severity.Success);
+        StateHasChanged();
+    }
+
+    private void PageChanged(int i)
+    {
+        mudTable.NavigateTo(i - 1);
+    }
+}

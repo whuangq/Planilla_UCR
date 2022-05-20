@@ -1,0 +1,149 @@
+﻿@page "/Deductions/New"
+@using Domain.Subscriptions.DTOs
+@using Domain.Subscriptions.Entities
+@using Application.Subscriptions
+@using Presentation.Deductions.Models
+@using Presentation.Core.Components
+
+@inject ISubscriptionService SubscriptionService
+@inject ISnackbar Snackbar
+
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+<MudGrid>
+    @*Text fields *@
+    <MudItem xs="12" sm="12">
+        <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudText Align="Align.Center" Typo="Typo.h6">Añadir deducción</MudText>
+            <MudForm @ref="form">
+            <MudGrid>
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="8">
+                <MudTextField @bind-Value="subscriptionInfo.NameSubscription" Label="Nombre" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+            </MudItem>
+
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="4">
+                <MudTextField @bind-Value="subscriptionInfo.Cost" Label="Costo" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+            </MudItem>
+
+            
+            <MudItem xs="4">
+                <MudSelect  @bind-Value="project" Label="Proyecto">
+                    <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
+                    <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="2">
+            </MudItem>
+
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="8">
+                <MudTextField @bind-Value="subscriptionInfo.ProviderName"  Label="Organización" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="8">
+                <MudTextField @bind-Value="subscriptionInfo.SubscriptionDescription" Label="Descripción" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+            </MudItem>
+
+            <MudItem xs="2">
+            </MudItem>
+            <MudItem xs="2">
+            </MudItem>
+            @*Create buton *@
+            <MudItem xs="8" >
+                <MudButton Disabled="@snackHandler._saving" OnClick="SaveDeduction" Variant="Variant.Filled" Color="Color.Secondary">
+                    @if (snackHandler._saving)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">Procesando</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Crear</MudText>
+                    }
+                </MudButton>
+                <MudButton Disabled="true"> </MudButton>
+                @*Clear buton *@
+                <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
+                        <MudText>Limpiar</MudText>
+                </MudButton>
+            </MudItem>
+            <MudItem xs="2"></MudItem>
+
+            </MudGrid>
+        </MudForm>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code{
+    public string project { get; set; }
+    private bool _isLoading = true;
+    private bool _processing = false;
+
+    SnackHandler snackHandler = new SnackHandler();
+    Subscription subscriptionInfo = new Subscription("jeremy@ucr.ac.cr","","","",0,0);
+    MudForm form;
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: "deductions"),
+        new BreadcrumbItem("Nuevo", href: "newdeduction")
+    };
+
+
+    async Task SaveDeduction()
+    {
+        snackHandler._saving = true;
+        await form.Validate();
+        if (form.IsValid)
+        {
+            snackHandler._saving = false;
+            ShowSnackNotification("Deducción "+subscriptionInfo.NameSubscription+" creada", Severity.Success);
+            CleanForm();
+        }
+       
+        snackHandler._saving = false;
+    }
+
+    void ShowSnackNotification(string message, Severity severity)
+    {
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PreventDuplicates = false;
+        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Configuration.NewestOnTop = true;
+        Snackbar.Add($"{message}", severity, config =>
+        {
+            config.RequireInteraction = false;
+            config.ShowCloseIcon = true;
+            config.Onclick = snackbar =>
+            {
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+
+    void CleanForm()
+    {
+        subscriptionInfo.NameSubscription = "";
+        subscriptionInfo.SubscriptionDescription = "";
+        subscriptionInfo.ProviderName= "";
+        subscriptionInfo.Cost = 0;
+        project = "";
+    }
+}

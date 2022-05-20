@@ -68,4 +68,7 @@
     <Build Include="Agreement.sql" />
     <Build Include="Acquire.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment.sql" />
+  </ItemGroup>
 </Project>
