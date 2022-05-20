@@ -94,17 +94,20 @@
                     <MudItem xs="2"></MudItem>
 
                     <MudItem xs="2"></MudItem>
-                    <MudItem xs="4">
+                    <MudItem xs="8">
                         <MudSelect  @bind-Value="Rol" Label="Rol">
                         <MudSelectItem Value="@("RolEmployee")">Empleado</MudSelectItem>
                         <MudSelectItem Value="@("RolEmployer")">Empleador</MudSelectItem>
                         </MudSelect>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
-
-                    @*Create buton *@
                     <MudItem xs="2"></MudItem>
-                    <MudButton Disabled="true"> </MudButton>
+                    <MudItem xs="8">
+                    <MudCheckBox @bind-Checked="@SendEmail" Label="Enviar email de confirmación" Color="Color.Secondary" Variant="Variant.Outlined"></MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="2"></MudItem>
+                    <MudSpacer></MudSpacer>
+                    @*Create buton *@
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="8">
                         <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
@@ -145,6 +148,7 @@
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
     String Rol;
+    public bool SendEmail { get; set; } = false;
 
 
     async Task SavePersonInfo()
