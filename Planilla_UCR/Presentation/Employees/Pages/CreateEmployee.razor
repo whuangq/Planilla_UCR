@@ -4,16 +4,15 @@
 @using Domain.Persons.Entities
 @using Application.Accounts
 @using Domain.Accounts.Entities
-@using Domain.Accounts.DTOs
+@using Presentation.Accounts.Models
 @using Application.Employees
 @using Presentation.Core.Components
-@using Presentation.Accounts.Models
 @using System.ComponentModel.DataAnnotations
+
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 @inject IAccountService AccountService
 @inject IEmployeeService EmployeeService
-
 
 @*Navigation footprint *@
 @{
@@ -93,8 +92,9 @@
                             }
                         </MudButton>
                         <MudButton Disabled="true"> </MudButton>
+
                         @*Clear buton *@
-                        <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
+                        <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Tertiary">
                                 <MudText>Limpiar</MudText>
                         </MudButton>
                         
@@ -112,7 +112,7 @@
     Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
-
+    
     async Task SavePersonInfo()
     {
         snackHandler._saving = true;
@@ -147,7 +147,7 @@
     {
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PreventDuplicates = false;
-        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Configuration.MaxDisplayedSnackbars = 2;
         Snackbar.Configuration.NewestOnTop = true;
         Snackbar.Add($"{message}", severity, config =>
         {

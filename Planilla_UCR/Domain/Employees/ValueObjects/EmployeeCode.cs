@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Employees.ValueObjects
+﻿namespace Domain.Employees.ValueObjects
 {
     class EmployeeCode 
     {
