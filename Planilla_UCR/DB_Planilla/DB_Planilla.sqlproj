@@ -72,4 +72,7 @@
     <Build Include="Tables\Subscription.sql" />
     <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment.sql" />
+  </ItemGroup>
 </Project>
