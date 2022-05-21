@@ -1,0 +1,94 @@
+﻿@page "/Deductions"
+@using Domain.Subscriptions.DTOs
+@using Domain.Subscriptions.Entities
+@using Application.Subscriptions
+@using Presentation.Core.Components
+@inject NavigationManager nav
+@inject ISubscriptionService SubscriptionService
+
+@if (_loading)
+{
+    <h4 class="text-danger">Loading deductions :)</h4>
+}
+else
+{
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudSpacer></MudSpacer>
+         <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
+    </MudToolBar>
+    <MudItem xs="2">
+        <MudSelect  @bind-Value="project" Label="Proyecto">
+            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
+            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    <MudTable Items="@Elements" RowsPerPage="6" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable">
+        <HeaderContent>
+            <MudTh>Nombre</MudTh>
+            <MudTh>Descripción</MudTh>
+            <MudTh>Costo</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nombre">
+                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{context.EmployerEmail}/{context.NameSubscription}")">
+                    @context.NameSubscription
+                </MudLink>
+            </MudTd>
+            <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
+            <MudTd DataLabel="Costo">@context.Cost</MudTd>
+        </RowTemplate>
+        <FooterContent>
+            <MudTFootRow Class="bold-text">
+                <MudTd>
+                     <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Deducciones</MudButton>
+                </MudTd>
+            </MudTFootRow>
+        </FooterContent>
+        <PagerContent>
+                <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+        </PagerContent>
+    </MudTable>
+}
+
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private int selectedRowNumber = -1;
+    private MudTable<SubscriptionDTO> mudTable;
+    private List<string> clickedEvents = new();
+    private IEnumerable<SubscriptionDTO> Elements;
+
+    public string project { get; set; }
+
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: "deductions"),
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        _loading = false;
+    }
+
+    private void GoToCreate()
+    {
+        nav.NavigateTo("/Deductions/New");
+    }
+
+    private void GoToConfigs()
+    {
+        nav.NavigateTo("/Deductions/Configurations");
+    }
+
+    private void PageChanged(int i)
+    {
+        mudTable.NavigateTo(i - 1);
+    }
+}
