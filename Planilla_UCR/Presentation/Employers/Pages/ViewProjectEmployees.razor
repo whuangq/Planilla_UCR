@@ -1,0 +1,61 @@
+﻿@page "/View_Hired_Employees"
+@using Application.Employees
+@using Domain.Employees.Entities
+@using Presentation.Core.Components
+@using Presentation.Employer.Components
+@inject NavigationManager nav
+@inject IEmployeeService EmployeeService
+
+@*<MudSwitch @bind-Checked="@flag" />*@
+@if (flag)
+{
+    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Proyectos", href: "#"),
+        new BreadcrumbItem("Empleados", href: "#"),
+    };
+
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+        <MudText Align="Align.Center" Typo="Typo.h6">Empleados contratados</MudText>
+        <MudTable @ref="@_table" Items="@_elements" RowsPerPage="6" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+             <HeaderContent>
+                    <MudTh>Foto de perfil</MudTh>
+                    <MudTh>Nombre</MudTh>
+                    <MudTh>Cedula</MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+
+                <RowTemplate>
+                    <MudTd DataLabel="IMG">IMG</MudTd>
+                    <MudTd DataLabel="Nombre">@context.Email</MudTd>
+                    <MudTd DataLabel="Cedula">Cedula1</MudTd>
+                    <MudTd DataLabel="">
+                        <MudSpacer></MudSpacer>
+                    </MudTd>
+                </RowTemplate>
+            <PagerContent>
+                <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+            </PagerContent>
+        </MudTable>
+    </MudPaper>
+}
+else
+{
+    <ViewProjectEmployeesError></ViewProjectEmployeesError>
+}
+
+@code {
+    private bool _hidePosition;
+    private bool _loading;
+    private bool flag = true;
+    string employeeEmail;
+    private MudTable<Employee> _table;
+    private IEnumerable<Employee> _elements = new List<Employee>() { new Employee("email2"), new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3"),new Employee("emaile"),new Employee("emaile3") }; 
+    
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+}

@@ -1,8 +1,8 @@
-﻿using Domain.Persons.Entities;
+﻿using Domain.People.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persons.EntityMappings
+namespace Infrastructure.People.EntityMappings
 {
     internal class PersonMap : IEntityTypeConfiguration<Person>
     {

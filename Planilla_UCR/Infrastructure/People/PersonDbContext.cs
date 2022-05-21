@@ -1,10 +1,10 @@
-﻿using Infrastructure.Persons.EntityMappings;
-using Domain.Persons.Entities;
+﻿using Domain.People.Entities;
 using Infrastructure.Core;
+using Infrastructure.People.EntityMappings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.Persons
+namespace Infrastructure.People
 {
     internal class PersonDbContext : ApplicationDbContext
     {

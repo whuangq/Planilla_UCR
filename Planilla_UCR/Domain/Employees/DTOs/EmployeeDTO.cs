@@ -2,11 +2,11 @@
 
 namespace Domain.Employees.DTOs
 {
-    public class EmployeesDTO
+    public class EmployeeDTO
     {
         public String Email { get; set; }
 
-        public EmployeesDTO(String email)
+        public EmployeeDTO(String email)
         {
             Email = email;
         }
