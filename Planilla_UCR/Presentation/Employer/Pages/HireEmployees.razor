@@ -30,7 +30,7 @@
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
         <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-            <MudTable @ref="@_table" Items="@_elements" RowsPerPage="5" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
+            <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
                     <ToolBarContent>
                          <MudText Align="Align.Center" Typo="Typo.h6">Contratar empleados</MudText>
                         <MudSpacer />
@@ -45,7 +45,7 @@
 
                     <RowTemplate>
                         <MudTd DataLabel="Email">@context.Email</MudTd>
-                        <MudTd DataLabel="Nombre"></MudTd>
+                        <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
                         <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
                          <MudTd DataLabel="">
                         <MudSpacer></MudSpacer>
