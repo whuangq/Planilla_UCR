@@ -10,6 +10,10 @@
 	  <EmbeddedResource Remove="Employees\Components\**" />
 	  <None Remove="Employees\Components\**" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Employers\Pages\ViewProjectEmployees.razor" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
