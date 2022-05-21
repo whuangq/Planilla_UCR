@@ -89,6 +89,7 @@ else
     {
         subscription.EmployerEmail = employerEmail;
         subscription.NameSubscription = subscriptionName;
+        subscription = await SubscriptionService.GetSubscription(employerEmail, subscriptionName);
         _loading = false;
     }
 

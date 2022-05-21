@@ -45,7 +45,7 @@ else
     private bool _hidePosition;
     private bool _loading = true;
     private IEnumerable<SubscriptionDTO> Elements;
-    public Subscription subscription = new Subscription("","","CCSS","Deducción1",2000,0);
+    public Subscription subscription = new Subscription("","","","",0,0);
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string subscriptionName { get; set; }
@@ -62,6 +62,7 @@ else
     {
         subscription.EmployerEmail = employerEmail;
         subscription.NameSubscription = subscriptionName;
+        subscription = await SubscriptionService.GetSubscription(employerEmail, subscriptionName);
         _loading = false;
     }
 
