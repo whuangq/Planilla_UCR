@@ -108,13 +108,23 @@
 
     async Task SaveDeduction()
     {
+        Subscription subscriptionToAdd = subscriptionInfo;
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid)
         {
-            snackHandler._saving = false;
-            ShowSnackNotification("Deducción "+subscriptionInfo.NameSubscription+" creada", Severity.Success);
-            CleanForm();
+            try
+            {
+                await SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
+                snackHandler._saving = false;
+                ShowSnackNotification("Deducción "+subscriptionToAdd.NameSubscription+" creada", Severity.Success);
+                CleanForm();
+            }
+            catch (Exception)
+            {
+                snackHandler._saving = false;
+                ShowSnackNotification("Ya existe una deducción con el nombre "+subscriptionToAdd.NameSubscription, Severity.Error);
+            }
         }
        
         snackHandler._saving = false;

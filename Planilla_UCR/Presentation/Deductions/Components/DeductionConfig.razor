@@ -6,20 +6,20 @@
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
 
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+<MudItem xs="2">
+    <MudSelect  @bind-Value="project" Label="Proyecto">
+        <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
+        <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
+    </MudSelect>
+</MudItem>
 @if (_loading)
 {
-    <h4 class="text-danger">Loading deductions :)</h4>
+    <MudText Typo="Typo.h6">No hay deducciones asociadas al proyecto</MudText>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-    <MudItem xs="2">
-        <MudSelect  @bind-Value="project" Label="Proyecto">
-            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
-            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
-        </MudSelect>
-    </MudItem>
-    <MudTable @ref="mudTable" Items="@Elements" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
         <HeaderContent>
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
@@ -70,8 +70,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         Elements = await SubscriptionService.GetAllSubscriptionsAsync();
-        _loading = false;
-
+        if (Elements.Length() > 0){
+            _loading = false;
+        }
     }
 
     private void DeleteDeductions()

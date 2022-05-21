@@ -1,4 +1,5 @@
 ﻿using Domain.Subscriptions.DTOs;
+using Domain.Subscriptions.Entities;
 using Domain.Subscriptions.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,5 +19,10 @@ namespace Application.Subscriptions.Implementations
         {
             return await _subscriptionRepository.GetAllSubscriptionsAsync();
         }
+        public async Task CreateSubscriptionAsync(Subscription subscription)
+        {
+            await _subscriptionRepository.CreateSubscriptionAsync(subscription);
+        }
+
     }
 }

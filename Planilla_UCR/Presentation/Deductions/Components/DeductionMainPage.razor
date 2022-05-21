@@ -6,23 +6,28 @@
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
-@if (_loading)
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+<MudItem xs="2">
+    <MudSelect  @bind-Value="project" Label="Proyecto">
+        <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
+        <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
+    </MudSelect>
+</MudItem>
+
+@if (_empty)
 {
-    <h4 class="text-danger">Loading deductions :)</h4>
+    <MudText Typo="Typo.h6">No hay deducciones asociadas al proyecto</MudText>
+    <MudTd>
+        <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Deducciones</MudButton>
+    </MudTd>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
          <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
     </MudToolBar>
-    <MudItem xs="2">
-        <MudSelect  @bind-Value="project" Label="Proyecto">
-            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
-            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
-        </MudSelect>
-    </MudItem>
+
     <MudTable Items="@Elements" RowsPerPage="6" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable">
         <HeaderContent>
             <MudTh>Nombre</MudTh>
@@ -54,7 +59,7 @@ else
 
 @code {
     private bool _hidePosition;
-    private bool _loading = true;
+    private bool _empty = true;
     private int selectedRowNumber = -1;
     private MudTable<SubscriptionDTO> mudTable;
     private List<string> clickedEvents = new();
@@ -74,7 +79,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         Elements = await SubscriptionService.GetAllSubscriptionsAsync();
-        _loading = false;
+        if (Elements.Length() > 0){
+            _empty = false;
+        }
     }
 
     private void GoToCreate()
