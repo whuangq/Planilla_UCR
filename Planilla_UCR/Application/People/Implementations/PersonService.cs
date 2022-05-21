@@ -23,5 +23,10 @@ namespace Application.People.Implementations
         {
             return await _personRepository.GetAllEmployees();
         }
+
+        public async Task<IEnumerable<Person>> GetProjectEmployees(string projectName)
+        {
+            return await _personRepository.GetProjectEmployees(projectName);
+        }
     }
 }

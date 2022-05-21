@@ -58,7 +58,7 @@
                     </MudItem>
 
                     <MudItem xs="4">
-                        <MudNumericField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido" HideSpinButtons="true" Min = "0"> </MudNumericField>
+                        <MudNumericField @bind-Value="Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido" HideSpinButtons="true" Min = "0"> </MudNumericField>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
 
@@ -114,9 +114,11 @@
     //Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
-    
+    int? Ssn;
+
     async Task SavePersonInfo()
     {
+        personInfo.Ssn = (int)Ssn;
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid && ValidateSsn(personInfo))
@@ -129,7 +131,6 @@
             snackHandler._saving = false;
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);
             ShowSnackNotification("Se utilizó la contraseña por defecto: Nombre_Cedula", Severity.Info);
-
         }
         snackHandler._saving = false;
     }

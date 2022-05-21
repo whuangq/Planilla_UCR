@@ -3,17 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Compile Remove="Employees\Components\**" />
-	  <Content Remove="Employees\Components\**" />
-	  <EmbeddedResource Remove="Employees\Components\**" />
-	  <None Remove="Employees\Components\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Remove="Employers\Pages\ViewProjectEmployees.razor" />
-	</ItemGroup>
 	
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
