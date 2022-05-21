@@ -7,19 +7,23 @@
 @inject ISubscriptionService SubscriptionService
 
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-<MudItem xs="2">
-    <MudSelect  @bind-Value="project" Label="Proyecto">
-        <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
-        <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
-    </MudSelect>
-</MudItem>
 
 @if (_empty)
 {
-    <MudText Typo="Typo.h6">No hay deducciones asociadas al proyecto</MudText>
-    <MudTd>
-        <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Deducciones</MudButton>
-    </MudTd>
+    <MudText Typo="Typo.h6" Align="Align.Center">No hay deducciones asociadas al proyecto
+    </MudText>
+    <br>
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudButton></MudButton>
+        <MudSpacer></MudSpacer>
+        <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
+            <MudText> 
+            Crear Deducción
+            </MudText> 
+        </MudButton>
+        <MudSpacer></MudSpacer>
+        <MudButton></MudButton>
+    </MudToolBar>
 }
 else
 {
@@ -27,8 +31,12 @@ else
         <MudSpacer></MudSpacer>
          <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
     </MudToolBar>
-
-    <MudTable Items="@Elements" RowsPerPage="6" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable">
+    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<SubscriptionDTO,bool>(FilterFunc1)">
+        <ToolBarContent>
+            <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
@@ -64,7 +72,8 @@ else
     private MudTable<SubscriptionDTO> mudTable;
     private List<string> clickedEvents = new();
     private IEnumerable<SubscriptionDTO> Elements;
-
+    
+    public string searchString1 = "";
     public string project { get; set; }
 
 
@@ -97,5 +106,16 @@ else
     private void PageChanged(int i)
     {
         mudTable.NavigateTo(i - 1);
+    }
+
+    private bool FilterFunc1(SubscriptionDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(SubscriptionDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.NameSubscription.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

@@ -7,19 +7,18 @@
 @inject ISubscriptionService SubscriptionService
 
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-<MudItem xs="2">
-    <MudSelect  @bind-Value="project" Label="Proyecto">
-        <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
-        <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
-    </MudSelect>
-</MudItem>
 @if (_loading)
 {
     <MudText Typo="Typo.h6">No hay deducciones asociadas al proyecto</MudText>
 }
 else
 {
-    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<SubscriptionDTO,bool>(FilterFunc1)">
+        <ToolBarContent>
+            <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
@@ -56,6 +55,7 @@ else
     private IEnumerable<SubscriptionDTO> Elements;
     private MudTable<SubscriptionDTO> mudTable;
 
+    public string searchString1 = "";
     public string project { get; set; }
 
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -89,6 +89,17 @@ else
                 return Task.CompletedTask;
             };
         });
+    }
+
+    private bool FilterFunc1(SubscriptionDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(SubscriptionDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.NameSubscription.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 
     private void DeleteDeductionsUpdate()
