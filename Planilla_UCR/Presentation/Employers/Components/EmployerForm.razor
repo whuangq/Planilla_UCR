@@ -1,15 +1,15 @@
-﻿@page "/Create_Employee"
+﻿@page "/Create_Employer"
 @using Application.Persons
 @using Domain.Persons.Entities
 
-@using Application.Employees
-@using Domain.Employees.Entities
+@using Application.Employers
+@using Domain.Employers.Entities
 
 @using Presentation.Core.Components
-@using Presentation.Employees.Models
+@using Presentation.Employers.Models
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
-@inject IEmployeeService EmployeeService
+@inject IEmployerService EmployerService
 
 @*Navigation footprint *@
 @{
@@ -92,8 +92,6 @@
 
     @*File uploader *@
     <MudItem xs="3">
-        <FileUploader>
-        </FileUploader>   
     </MudItem>
 
 </MudGrid>
@@ -110,7 +108,7 @@
         if (form.IsValid && ValidateInfo(personInfo))
         {
             await PersonService.CreatePersonAsync(personInfo);
-            await EmployeeService.CreateEmployeeAsync(personInfo.Email);
+            await EmployerService.CreateEmployerAsync(personInfo.Email);
             snackHandler._saving = false;
             ShowSnackNotification("Empleado "+personInfo.Name+" creado", Severity.Success);
         }

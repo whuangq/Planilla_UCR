@@ -10,9 +10,9 @@ namespace Application.Persons.Implementations
     {
         private readonly IPersonRepository _personRepository;
 
-        public PersonService(IPersonRepository employeeRepository)
+        public PersonService(IPersonRepository personRepository)
         {
-            _personRepository = employeeRepository;
+            _personRepository = personRepository;
         }
 
         public async Task CreatePersonAsync(Person personInfo)
