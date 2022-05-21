@@ -153,6 +153,8 @@
 
     async Task SavePersonInfo()
     {
+        // Email sender
+        //await AccountService.SendEmail("codigo de confirmación: 222333", "stevenleonel22201@gmail.com");
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid && ValidateInfo(personInfo)){

@@ -14,5 +14,6 @@ namespace Domain.Accounts.Repositories
     {
         Task CreateAccountAsync(Account accountInfo);
         Task InsertAccountData(Account accountData);
+        Task SendEmail(string message, string receiver);
     }
 }

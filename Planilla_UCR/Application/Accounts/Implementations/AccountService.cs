@@ -23,5 +23,10 @@ namespace Application.Accounts.Implementations
 
             await _accountRepository.InsertAccountData(accountData);
         }
+
+        public async Task SendEmail(string message, string receiver)
+        {
+            await _accountRepository.SendEmail(message, receiver);
+        }
     }
 }
