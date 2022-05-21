@@ -1,7 +1,6 @@
 ﻿@using Application.Employees
 @using Domain.Employees.Entities
 @using Presentation.Core.Components
-@using Presentation.Employer
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
@@ -17,7 +16,6 @@
     <br />
     <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados registrados</MudText>
     <br />
-    <br />
  
    <MudToolBar DisableGutters="true" Class="gap-4">
         <MudButton></MudButton>
@@ -26,6 +24,7 @@
         <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Secondary">
             <MudText> 
             Crear empleado
+            Contratar empleados
             </MudText> 
         </MudButton>
         <MudSpacer></MudSpacer>
@@ -37,5 +36,6 @@
    private void GoToCreateEmployee()
     {
         nav.NavigateTo("/Create_Employee");
+        nav.NavigateTo("/Hire_Employees");
     }
 }

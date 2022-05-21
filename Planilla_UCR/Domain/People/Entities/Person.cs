@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain.Persons.Entities
+namespace Domain.People.Entities
 {
     public class Person
     {

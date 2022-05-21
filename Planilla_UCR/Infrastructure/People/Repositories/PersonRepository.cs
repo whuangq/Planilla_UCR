@@ -1,11 +1,13 @@
 ﻿using Domain.Core.Repositories;
-using Domain.Persons.Entities;
-using Domain.Persons.Repositories;
+using Domain.People.Entities;
+using Domain.People.Repositories;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persons.Repositories
+namespace Infrastructure.People.Repositories
 {
     internal class PersonRepository : IPersonRepository
     {
@@ -28,6 +30,12 @@ namespace Infrastructure.Persons.Repositories
             {
                 Debug.WriteLine("Repeated key error" + ex.Message);
             }   
+        }
+
+        public async Task<IEnumerable<Person?>> GetAllEmployees()
+        {
+            var employeeList =  await _dbContext.Persons.FromSqlRaw("EXEC GetAllEmployees").ToListAsync();
+            return employeeList;
         }
     }
 }

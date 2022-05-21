@@ -1,5 +1,5 @@
-﻿using Application.Persons;
-using Application.Persons.Implementations;
+﻿using Application.People;
+using Application.People.Implementations;
 using Application.Employees;
 using Application.Employees.Implementations;
 using Application.Subscriptions;

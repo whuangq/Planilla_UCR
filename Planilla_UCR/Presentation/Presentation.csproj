@@ -5,10 +5,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
+	  <Compile Remove="Employees\Components\**" />
+	  <Content Remove="Employees\Components\**" />
+	  <EmbeddedResource Remove="Employees\Components\**" />
+	  <None Remove="Employees\Components\**" />
 	</ItemGroup>
 
-
+	<ItemGroup>
+	  <Content Remove="Employers\Pages\ViewProjectEmployees.razor" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
@@ -26,12 +32,13 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.11" />
 		<PackageReference Include="Radzen.Blazor" Version="3.11.9" />
 		<PackageReference Include="MudBlazor" Version="5.1.5" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>
-	
+
 </Project>

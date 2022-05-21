@@ -1,6 +1,7 @@
-﻿using Infrastructure.Persons;
-using Infrastructure.Persons.Repositories;
-using Domain.Persons.Repositories;
+﻿using Infrastructure.People;
+using Infrastructure.People.Repositories;
+using Domain.People.Repositories;
+
 using Infrastructure.Employees;
 using Infrastructure.Employees.Repositories;
 using Domain.Employees.Repositories;
@@ -18,6 +19,7 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, string connectionString)
         {
+
             services.AddDbContext<PersonDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IPersonRepository, PersonRepository>();
 
