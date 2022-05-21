@@ -58,9 +58,9 @@
     <Folder Include="Properties" />
     <Folder Include="StoredProcedures" />
     <Folder Include="Tables" />
+    <Folder Include="StoredProcedures\People" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="StoredProcedures\GetAllEmployees.sql" />
     <Build Include="Tables\Account.sql" />
     <Build Include="Tables\Agreement.sql" />
     <Build Include="Tables\AgreementType.sql" />
@@ -70,5 +70,6 @@
     <Build Include="Tables\Person.sql" />
     <Build Include="Tables\Project.sql" />
     <Build Include="Tables\Subscription.sql" />
+    <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
   </ItemGroup>
 </Project>
