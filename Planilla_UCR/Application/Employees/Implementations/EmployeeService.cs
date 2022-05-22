@@ -1,7 +1,5 @@
-﻿using Domain.Employees.DTOs;
-using Domain.Employees.Repositories;
+﻿using Domain.Employees.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Employees.Implementations
@@ -19,12 +17,5 @@ namespace Application.Employees.Implementations
         {
             await _employeeRepository.CreateEmployeeAsync(email);
         }
-
-        public async Task<IEnumerable<EmployeeDTO>> GetAllEmployeesAsync()
-        {
-            return await _employeeRepository.GetAllEmployeesAsync();
-        }
-
-        
     }
 }

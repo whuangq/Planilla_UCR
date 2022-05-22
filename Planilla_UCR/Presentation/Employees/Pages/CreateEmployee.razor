@@ -1,5 +1,4 @@
 ﻿@page "/Create_Employee"
-
 @using Application.People
 @using Domain.People.Entities
 @*@using Application.Accounts
@@ -114,7 +113,7 @@
     //Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
-    int? Ssn;
+    var Ssn;
 
     async Task SavePersonInfo()
     {
@@ -137,8 +136,8 @@
     
     bool ValidateSsn(Person personInfo)
     {
-        bool valid = true;
-        if (personInfo.Ssn == 0 || personInfo.Ssn < 0)
+        bool valid = true; //TODO Validar ""
+        if (personInfo.Ssn == 0 || personInfo.Ssn < 0 || personInfo.Ssn == "")
         {
             ShowSnackNotification("Número de cédula incorrecta", Severity.Error);
             valid = false;
