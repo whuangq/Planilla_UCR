@@ -12,6 +12,6 @@ namespace Domain.Persons.Repositories
     {
         Task CreatePersonAsync(Person personInfo);
 
-        //Task<Person?> GetAccountEmail(String email);
+        //Task<Person?> GetAccountByEmail(String email);
     }
 }
