@@ -71,8 +71,26 @@
     <Build Include="Tables\Project.sql" />
     <Build Include="Tables\Subscription.sql" />
     <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
+    <Folder Include="Tables" />
+    <Folder Include="StoredProcedures" />
+    <Folder Include="StoredProcedures\Account" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\Account.sql" />
+    <Build Include="Tables\Acquire.sql" />
+    <Build Include="Tables\Agreement.sql" />
+    <Build Include="Tables\AgreementType.sql" />
+    <Build Include="Tables\Employee.sql" />
+    <Build Include="Tables\Employer.sql" />
+    <Build Include="Tables\Person.sql" />
+    <Build Include="Tables\Project.sql" />
+    <Build Include="Tables\Subscription.sql" />
+    <Build Include="StoredProcedures\InsertDataToAccountWithPasswordEncripted.sql" />
+    <Build Include="StoredProcedures\EmailCheckLoggin.sql" />
+    <Build Include="StoredProcedures\PasswordCheckLoggin.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
+    <RefactorLog Include="DB_Planilla.refactorlog" />
   </ItemGroup>
 </Project>
