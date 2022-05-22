@@ -1,6 +1,10 @@
 ﻿using Domain.Persons.Repositories;
 using Domain.Persons.Entities;
 using System.Threading.Tasks;
+using System;
+using Domain.Persons.DTOs;
+using Domain.Core.Repositories;
+using System.Collections.Generic;
 
 namespace Application.Persons.Implementations
 {
@@ -17,5 +21,11 @@ namespace Application.Persons.Implementations
         {
             await _personRepository.CreatePersonAsync(personInfo);
         }
+        /*
+        public async Task<Person?> GetAccountEmail(String email)
+        {
+           return await _personRepository.GetAccountEmail(email);
+        }
+        */
     }
 }

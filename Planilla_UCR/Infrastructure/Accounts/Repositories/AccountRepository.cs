@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Infrastructure.Accounts.Repositories;
 
 namespace Infrastructure.Accounts.Repositories
@@ -20,23 +21,32 @@ namespace Infrastructure.Accounts.Repositories
             _dbContext = unitOfWork;
         }
 
-        public async Task CreateAccountAsync(Account accountInfo)
-        {
-            try
-            {
-                _dbContext.Accounts.Add(accountInfo);
-                await _dbContext.SaveEntitiesAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Repeated key error" + ex.Message);
-            } 
-        }
 
         public async Task InsertAccountData(Account accountData)
         {
-            System.FormattableString query = $"EXECUTE InsertAccount @EmailAccount = {accountData.Email}, @PasswordAccount = {accountData.Password}";
+
+            System.FormattableString query = $"EXECUTE InsertDataToAccountWithPasswordEncripted @EmailAccount = {accountData.Email}, @UserPasswordToEncrypt = {accountData.UserPassword}";
             _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
+
+
+        public async Task<IEnumerable<Account?>> CheckEmail(Account accountData)
+        {
+
+            {
+                var email = await _dbContext.Accounts.FromSqlRaw("EXEC EmailCheckLoggin @UserEmail",
+                    new SqlParameter("@UserEmail", accountData.Email)).ToListAsync();
+                return email;
+            }
+        }
+
+        public async Task<IEnumerable<Account?>> CheckPassword(Account accountData)
+        {
+
+            var password = await _dbContext.Accounts.FromSqlRaw("EXEC PasswordCheckLoggin @UserEmail, @UserPassword",
+                new SqlParameter("@UserEmail", accountData.Email), new SqlParameter("@UserPassword", accountData.UserPassword)).ToListAsync();
+            return password;
+
         }
 
         public async Task SendEmail(string message, string receiver)

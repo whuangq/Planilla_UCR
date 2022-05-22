@@ -56,17 +56,25 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="Tables" />
+    <Folder Include="StoredProcedures" />
+    <Folder Include="StoredProcedures\Account" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Person.sql" />
-    <Build Include="Employee.sql" />
-    <Build Include="Employer.sql" />
-    <Build Include="Subscription.sql" />
-    <Build Include="Account.sql" />
-    <Build Include="Project.sql" />
-    <Build Include="AgreementType.sql" />
-    <Build Include="Agreement.sql" />
-    <Build Include="Acquire.sql" />
-    <Build Include="InsertAccount.sql" />
+    <Build Include="Tables\Account.sql" />
+    <Build Include="Tables\Acquire.sql" />
+    <Build Include="Tables\Agreement.sql" />
+    <Build Include="Tables\AgreementType.sql" />
+    <Build Include="Tables\Employee.sql" />
+    <Build Include="Tables\Employer.sql" />
+    <Build Include="Tables\Person.sql" />
+    <Build Include="Tables\Project.sql" />
+    <Build Include="Tables\Subscription.sql" />
+    <Build Include="StoredProcedures\InsertDataToAccountWithPasswordEncripted.sql" />
+    <Build Include="StoredProcedures\EmailCheckLoggin.sql" />
+    <Build Include="StoredProcedures\PasswordCheckLoggin.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="DB_Planilla.refactorlog" />
   </ItemGroup>
 </Project>

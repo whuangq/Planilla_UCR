@@ -1,19 +1,16 @@
-﻿using Domain.Core.Repositories;
-using Domain.Accounts.DTOs;
-using Domain.Accounts.Entities;
-using Domain.Accounts.Repositories;
-using System;
+﻿using Domain.Accounts.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Accounts.Repositories
 {
     public interface IAccountRepository
     {
-        Task CreateAccountAsync(Account accountInfo);
         Task InsertAccountData(Account accountData);
+
+        Task<IEnumerable<Account>> CheckEmail(Account accountData);
+
+        Task<IEnumerable<Account>> CheckPassword(Account accountData);
         Task SendEmail(string message, string receiver);
     }
 }

@@ -13,9 +13,9 @@ namespace Infrastructure.Accounts.EntityMappings
 
             builder.HasKey(p => p.Email);
 
-            builder.Property(p => p.Password)
+            builder.Property(p => p.UserPassword)
                    .IsRequired();
-        }
 
+        }
     }
 }

@@ -84,7 +84,7 @@
                    
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="4">
-                       <MudTextField @bind-Value="accountInfo.Password" Label="Contraseña" Variant="Variant.Outlined" @ref="pwField1" InputType="InputType.Password"  Required="true" RequiredError="Campo requerido" 
+                       <MudTextField @bind-Value="accountData.UserPassword" Label="Contraseña" Variant="Variant.Outlined" @ref="pwField1" InputType="InputType.Password"  Required="true" RequiredError="Campo requerido" 
                             Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" ></MudTextField>
                    </MudItem>
                     
@@ -142,9 +142,8 @@
 
 @code {
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
-    MudTextField<string> pwField1;
-    Account accountInfo = new Account("","");
     Account accountData = new Account("","");
+    MudTextField<string> pwField1;
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
     String Rol;
@@ -159,16 +158,14 @@
         await form.Validate();
         if (form.IsValid && ValidateInfo(personInfo)){
             await PersonService.CreatePersonAsync(personInfo);
-            accountInfo.Email = personInfo.Email;
-            await AccountService.CreateAccountAsync(accountInfo);
-            accountData.Email = personInfo.Email;
-            await AccountService.InsertAccountData(accountInfo);
             if (Rol.Equals("RolEmployee")){
                 await EmployeeService.CreateEmployeeAsync(personInfo.Email);
             }
             else{
                 await EmployerService.CreateEmployerAsync(personInfo.Email);
             }
+            accountData.Email = personInfo.Email;
+            await AccountService.InsertAccountData(accountData);
             snackHandler._saving = false;
             ShowSnackNotification("Persona "+personInfo.Name+" creado", Severity.Success);
         }
@@ -268,6 +265,6 @@
         personInfo.BankAccount = "";
         personInfo.PhoneNumber = "";
         personInfo.Ssn = 0;
-        accountInfo.Password = "";
+        accountData.UserPassword = "";
     }
 }
