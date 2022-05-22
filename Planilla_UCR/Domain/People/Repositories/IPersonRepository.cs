@@ -8,7 +8,7 @@ namespace Domain.People.Repositories
     {
         Task CreatePersonAsync(Person personInfo);
         Task<IEnumerable<Person>> GetAllEmployees();
-
         Task<IEnumerable<Person>> GetProjectEmployees(string projectName);
+        Task<IEnumerable<Person>> GetPersonByEmail(string email);
     }
 }
