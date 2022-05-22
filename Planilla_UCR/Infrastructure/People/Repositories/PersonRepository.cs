@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace Infrastructure.People.Repositories
 {
@@ -38,21 +39,12 @@ namespace Infrastructure.People.Repositories
             return employeeList;
         }
 
-        /*
-        public async Task<Account?> GetAccountEmail(String email)
+        public async Task<IEnumerable<Person?>> GetAllInfoEmployer(Person personInfo)
         {
-            try
-            {
-                var emailUserAccount = _dbContext.Persons.FromSqlRaw("EXEC GetAccountByEmail @EmailAccount= {email}");
-               
-                return emailUserAccount;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Not Registered" + ex.Message);
-            }
+            var employerInfo = await _dbContext.Persons.FromSqlRaw("EXEC GetInfoEmployer @EmailEmployer",
+                  new SqlParameter("@EmailEmployer",personInfo.Email)).ToListAsync();
+            return employerInfo;
         }
-        */
 
     }
 }

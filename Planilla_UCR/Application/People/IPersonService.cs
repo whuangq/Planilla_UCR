@@ -9,5 +9,7 @@ namespace Application.People
         Task CreatePersonAsync(Person personInfo);
 
         Task<IEnumerable<Person>> GetAllEmployees();
+
+        Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo);
     }
 }

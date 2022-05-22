@@ -27,11 +27,12 @@ namespace Application.People.Implementations
         {
             return await _personRepository.GetAllEmployees();
         }
-        /*
-        public async Task<Person?> GetAccountEmail(String email)
+
+        
+        public async  Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo)
         {
-           return await _personRepository.GetAccountEmail(email);
+            return await _personRepository.GetAllInfoEmployer(personInfo);
         }
-        */
+        
     }
 }

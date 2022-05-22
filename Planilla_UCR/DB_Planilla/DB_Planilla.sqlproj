@@ -70,11 +70,14 @@
     <Build Include="Tables\Person.sql" />
     <Build Include="Tables\Project.sql" />
     <Build Include="Tables\Subscription.sql" />
-    <Build Include="StoredProcedures\Account\GetAllEmployees.sql" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\People" />
     <Build Include="StoredProcedures\People\GetInfoEmployer.sql" />
+    <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
+    <Build Include="StoredProcedures\Account\EmailCheckLoggin.sql" />
+    <Build Include="StoredProcedures\Account\InsertDataToAccountWithPasswordEncripted.sql" />
+    <Build Include="StoredProcedures\Account\PasswordCheckLoggin.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
@@ -86,9 +89,6 @@
     <Build Include="Tables\Person.sql" />
     <Build Include="Tables\Project.sql" />
     <Build Include="Tables\Subscription.sql" />
-    <Build Include="StoredProcedures\InsertDataToAccountWithPasswordEncripted.sql" />
-    <Build Include="StoredProcedures\EmailCheckLoggin.sql" />
-    <Build Include="StoredProcedures\PasswordCheckLoggin.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
