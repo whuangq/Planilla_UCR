@@ -1,6 +1,7 @@
-﻿@page "/Register_Form"
+﻿
+@page "/Register_Form"
 @using Application.Persons
-@using Domain.Persons.Entities
+@using Domain.People.Entities
 @using Application.Employers
 @using Domain.Employers.Entities
 @using Domain.Employers.DTOs
@@ -141,6 +142,7 @@
 </MudGrid>
 
 @code {
+    
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
     Account accountData = new Account("","");
     MudTextField<string> pwField1;
@@ -268,4 +270,5 @@
         personInfo.Ssn = 0;
         accountData.UserPassword = "";
     }
+    
 }

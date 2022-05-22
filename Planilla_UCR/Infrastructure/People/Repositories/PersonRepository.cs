@@ -1,16 +1,10 @@
 ﻿using Domain.Core.Repositories;
 using Domain.People.Entities;
 using Domain.People.Repositories;
-using Domain.Persons.Repositories;
-using Domain.Accounts.Entities;
-using Domain.Accounts.Repositories;
-using Application.Accounts;
-using Infrastructure.Accounts;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.People.Repositories
