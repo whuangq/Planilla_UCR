@@ -80,9 +80,6 @@
     private bool _isLoading = true;
     private bool _processing = false;
 
-
-   
-
     async Task ValidateRegisterAccount()
     {
         //FALTA VALIDAR
@@ -97,8 +94,7 @@
        snackHandler._saving = false;
     }
 
-
-    public bool async Task ValidateEmail(Account accountData)
+    async Task<bool> ValidateEmail(Account accountData)
     {
         
         IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
@@ -112,7 +108,6 @@
         }   
         return valid;
     }
-
     
      private void GoToCreateAccount()
     {
