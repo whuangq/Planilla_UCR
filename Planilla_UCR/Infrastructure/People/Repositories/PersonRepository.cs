@@ -1,7 +1,6 @@
 ﻿using Domain.Core.Repositories;
 using Domain.People.Entities;
 using Domain.People.Repositories;
-using Domain.Persons.Entities;
 using Domain.Persons.Repositories;
 using Domain.Accounts.Entities;
 using Domain.Accounts.Repositories;
@@ -15,8 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.People.Repositories
-
-namespace Infrastructure.Persons.Repositories
 {
     internal class PersonRepository : IPersonRepository
     {

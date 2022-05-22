@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Domain.Core.Repositories;
-using Domain.Persons.Entities;
+using Domain.People.Entities;
 using System;
 using System.Collections.Generic;
 
