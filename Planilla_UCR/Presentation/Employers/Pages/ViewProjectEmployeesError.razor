@@ -4,6 +4,7 @@
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
+@page "/View_Project_Employees_Error/{projectName}"
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -14,16 +15,15 @@
 }
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <br />
-    <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados registrados</MudText>
+    <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados contratados en @projectName </MudText>
     <br />
  
    <MudToolBar DisableGutters="true" Class="gap-4">
         <MudButton></MudButton>
         <MudSpacer></MudSpacer>
-        @*Create button *@
-        <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Secondary">
+        <MudButton Variant="Variant.Filled" OnClick="GoToHireEmployee" Color="Color.Secondary">
             <MudText> 
-            Registrar empleado
+            Contratar empleados
             </MudText> 
         </MudButton>
         <MudSpacer></MudSpacer>
@@ -31,9 +31,10 @@
     </MudToolBar>
 
 @code {
-
-   private void GoToCreateEmployee()
+    [Parameter]
+    public string projectName { get; set; }
+    private void GoToHireEmployee()
     {
-        nav.NavigateTo("/Create_Employee");
+        nav.NavigateTo("/Hire_Employees");
     }
 }

@@ -1,10 +1,10 @@
 ﻿@page "/Create_Employee"
-
 @using Application.People
 @using Domain.People.Entities
 @*@using Application.Accounts
 @using Domain.Accounts.Entities*@
 @*@using Presentation.Accounts.Models*@
+@using Domain.Employees.Entities
 @using Application.Employees
 @using Presentation.Employees.Models
 @using Presentation.Core.Components
@@ -114,12 +114,13 @@
     //Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
-    
+
     async Task SavePersonInfo()
     {
         snackHandler._saving = true;
         await form.Validate();
-        if (form.IsValid && ValidateSsn(personInfo))
+        bool validPerson = await validatePersonInfo(personInfo);
+        if (form.IsValid && validPerson)
         {
             await PersonService.CreatePersonAsync(personInfo);
             //accountInfo.Email = personInfo.Email;
@@ -129,14 +130,37 @@
             snackHandler._saving = false;
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);
             ShowSnackNotification("Se utilizó la contraseña por defecto: Nombre_Cedula", Severity.Info);
-
         }
         snackHandler._saving = false;
     }
-    
-    bool ValidateSsn(Person personInfo)
+
+    async Task<bool> validatePersonInfo(Person personInfo)
+    {
+        bool Ssn = ValidateSsn(personInfo);
+        bool Email = await ValidateEmail(personInfo);
+        return Ssn && Email;
+    }
+
+    async Task<bool> ValidateEmail(Person personInfo)
     {
         bool valid = true;
+        IEnumerable<Person> personList = await PersonService.GetPersonByEmail(personInfo.Email);
+        IEnumerable<Employee> employeeList = await EmployeeService.GetEmployeeByEmail(personInfo.Email);
+
+        if (personList.Length() == 0 && employeeList.Length() == 0)
+        {
+            valid=true;
+        }
+        else {
+            valid=false;
+            ShowSnackNotification("El email " + personInfo.Email + " se encuentra en uso", Severity.Error);
+        }   
+        return valid;
+    }
+
+    bool ValidateSsn(Person personInfo)
+    {
+        bool valid = true; 
         if (personInfo.Ssn == 0 || personInfo.Ssn < 0)
         {
             ShowSnackNotification("Número de cédula incorrecta", Severity.Error);
