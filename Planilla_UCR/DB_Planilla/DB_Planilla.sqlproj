@@ -74,6 +74,7 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\Account" />
+    <Build Include="StoredProcedures\Account\GetInfoEmployer.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
