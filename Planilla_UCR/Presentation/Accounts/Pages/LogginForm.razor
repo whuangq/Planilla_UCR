@@ -28,28 +28,14 @@
                 <MudItem xs="2"></MudItem>
                 <MudItem xs="2"></MudItem>
                 <MudItem xs="8">
-                    <MudTextField @bind-Value="accountData.UserPassword" Label="Contraseña" Required="true" RequiredError="Campo requerido"  Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField @bind-Value="accountData.UserPassword" Label="Contraseña" Required="true" RequiredError="Campo requerido" InputType="InputType.Password" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
                 <MudItem xs="2"></MudItem>
 
                 @*Create buton *@
-                <MudItem xs="2"></MudItem>
-                     <MudItem xs="4">
-                        <MudButton Disabled="@snackHandler._saving" OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Secondary">
-                            @if (snackHandler._saving)
-                            {
-                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                <MudText Class="ms-2">Procesando</MudText>
-                            }
-                            else
-                            {
-                                <MudText>Crear Cuenta</MudText>
-                            }
-                        </MudButton>
-                     </MudItem>
-                
-                <MudItem xs="4">
-                <MudItem xs="2"></MudItem><MudButton Disabled="@snackHandler._saving" OnClick="ValidateRegisterAccount" Variant="Variant.Filled" Color="Color.Secondary">
+                 <MudItem xs="2"></MudItem>
+                     <MudItem xs="8">
+                        <MudButton Disabled="@snackHandler._saving" OnClick="ValidateRegisterAccount" Variant="Variant.Filled" Color="Color.Secondary">
                             @if (snackHandler._saving)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -60,84 +46,112 @@
                                 <MudText>Ingresar</MudText>
                             }
                         </MudButton>
-                 </MudItem>
+                     
+                <MudButton Disabled="true"> </MudButton>
+              
+                <MudButton OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Secondary">
+                    <MudText>Crear Cuenta</MudText>
+                 </MudButton>
+               </MudItem>
             </MudGrid>
            </MudForm>
         </MudPaper>
     </MudItem>
-    @*File uploader *@
     <MudItem xs="3">
-        @*FALTA PONER EL REGISTERFORM *@
     </MudItem>
 </MudGrid>
 
 @code{
-    Account accountData = new Account("","");
-    public string email { get; set; }
-    public string password { get; set; }
     MudForm form;
+    Account accountData = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
-    private bool _isLoading = true;
-    private bool _processing = false;
-
+   
     async Task ValidateRegisterAccount()
     {
-        //FALTA VALIDAR
         snackHandler._saving = true;
         await form.Validate();
-        if (form.IsValid)
-        {
-            //CAMBIAR AL QUE SI VALIDA LA INFO 
-            await AccountService.InsertAccountData(accountData);
-            ShowSnackNotification("Usuario ingresado", Severity.Success);
+        if (form.IsValid){
+            IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
+            if (emailChecked.Length() != 0){
+                 IEnumerable<Account> passwordChecked = await AccountService.CheckPassword(accountData);
+                if (passwordChecked.Length() != 0){
+                    ShowSnackNotification("Usuario ingresado", Severity.Success);
+                    //GoToProjects
+                }
+                else{
+                    ShowSnackNotification("Contraseña incorrecta", Severity.Error);
+                }
+            }
+             else {
+                 ShowSnackNotification("No posee una cuenta registrada", Severity.Error);
+            } 
         }
-       snackHandler._saving = false;
+        snackHandler._saving = false;
     }
-
-    async Task<bool> ValidateEmail(Account accountData)
-    {
-        
-        IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
-        bool valid = true;
-        if (emailChecked.Length() != 0)
+ 
+        /*
+         * 
+        async Task<bool> ValidateEmail(Account accountData)
         {
-            valid=true;
-        }
-         else {
-             valid=false;
-        }   
-        return valid;
-    }
-    
-     private void GoToCreateAccount()
-    {
-        nav.NavigateTo("/Register_Form");
-    }
-
-     /*
-      private void GoToProjects()
-        {
-        nav.NavigateTo("/Register_Form");
-    }
-    */
-
-     void ShowSnackNotification(string message, Severity severity)
-    {
-        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
-        Snackbar.Configuration.PreventDuplicates = false;
-        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
-        Snackbar.Configuration.NewestOnTop = true;
-        Snackbar.Add($"{message}", severity, config =>
-        {
-            config.RequireInteraction = false;
-            config.ShowCloseIcon = true;
-            config.Onclick = snackbar =>
+            
+            IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
+            bool valid = true;
+            if (emailChecked.Length() != 0)
             {
-                return Task.CompletedTask;
-            };
-        });
+                valid=true;
+            }
+             else {
+                 valid=false;
+            }   
+            return valid;
+        }
+        */
+       /*
+        async Task<bool> ValidatePassword(Account accountData)
+        {
+            
+            IEnumerable<Account> passwordChecked= await AccountService.CheckPassword(accountData);
+            bool valid = true;
+            if (passwordChecked.Length() != 0)
+            {
+                valid=true;
+            }
+             else {
+                 valid=false;
+            }   
+            return valid;
+        }
+
+        */
+         private void GoToCreateAccount()
+        {
+            nav.NavigateTo("/Register_Form");
+        }
+
+         /*
+          private void GoToProjects()
+            {
+            nav.NavigateTo("/Register_Form");
+        }
+        */
+
+         void ShowSnackNotification(string message, Severity severity)
+        {
+            Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+            Snackbar.Configuration.PreventDuplicates = false;
+            Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+            Snackbar.Configuration.NewestOnTop = true;
+            Snackbar.Add($"{message}", severity, config =>
+            {
+                config.RequireInteraction = false;
+                config.ShowCloseIcon = true;
+                config.Onclick = snackbar =>
+                {
+                    return Task.CompletedTask;
+                };
+            });
+        }
+
+
+
     }
-
-
-
-}
