@@ -20,7 +20,7 @@
             <MudItem xs="2">
             </MudItem>
             <MudItem xs="8">
-                <MudTextField @bind-Value="subscriptionInfo.NameSubscription" Label="Nombre" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+                <MudTextField @bind-Value="subscriptionInfo.SubscriptionName" Label="Nombre" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
             <MudItem xs="2">
             </MudItem>
@@ -33,7 +33,7 @@
 
             
             <MudItem xs="4">
-                <MudSelect  @bind-Value="project" Label="Proyecto">
+                <MudSelect  @bind-Value="subscriptionInfo.ProjectName" Label="Proyecto" Required="true" RequiredError="Campo requerido">
                     <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
                     <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
                 </MudSelect>
@@ -88,19 +88,17 @@
 
 
 @code{
-    public string project { get; set; }
     private bool _isLoading = true;
     private bool _processing = false;
 
     SnackHandler snackHandler = new SnackHandler();
-    Subscription subscriptionInfo = new Subscription("jeremy@ucr.ac.cr","","","",0,0);
+    Subscription subscriptionInfo = new Subscription("jeremy@ucr.ac.cr", "", "", "", "", 0, 0, 1);
     MudForm form;
 
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
         new BreadcrumbItem("Deducciones", href: "deductions"),
         new BreadcrumbItem("Nuevo", href: "newdeduction")
     };
@@ -108,15 +106,26 @@
 
     async Task SaveDeduction()
     {
+        Subscription subscriptionToAdd = subscriptionInfo;
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid)
         {
-            snackHandler._saving = false;
-            ShowSnackNotification("Deducción "+subscriptionInfo.NameSubscription+" creada", Severity.Success);
-            CleanForm();
+            try
+            {
+                await SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
+                snackHandler._saving = false;
+                ShowSnackNotification("Deducción "+subscriptionToAdd.SubscriptionName+" creada", Severity.Success);
+                CleanForm();
+            }
+            catch (Exception)
+            {
+                snackHandler._saving = false;
+                ShowSnackNotification("Ya existe una deducción con el nombre "+subscriptionToAdd.SubscriptionName, Severity.Error);
+                CleanForm();
+            }
         }
-       
+
         snackHandler._saving = false;
     }
 
@@ -140,10 +149,10 @@
 
     void CleanForm()
     {
-        subscriptionInfo.NameSubscription = "";
+        subscriptionInfo.SubscriptionName = "";
+        subscriptionInfo.ProjectName = "";
         subscriptionInfo.SubscriptionDescription = "";
         subscriptionInfo.ProviderName= "";
         subscriptionInfo.Cost = 0;
-        project = "";
     }
 }

@@ -62,6 +62,15 @@
     <Folder Include="StoredProcedures\Employee" />
   </ItemGroup>
   <ItemGroup>
+    <Build Include="Person.sql" />
+    <Build Include="Employee.sql" />
+    <Build Include="Employer.sql" />
+    <Build Include="Subscription.sql" />
+    <Build Include="Account.sql" />
+    <Build Include="Project.sql" />
+    <Build Include="AgreementType.sql" />
+    <Build Include="Agreement.sql" />
+    <Build Include="Subscribes.sql" />
     <Build Include="Tables\Account.sql" />
     <Build Include="Tables\Agreement.sql" />
     <Build Include="Tables\AgreementType.sql" />

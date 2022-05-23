@@ -41,4 +41,23 @@ VALUES('leonel@ucr.ac.cr')
 
 INSERT INTO Employee
 VALUES('mau@ucr.ac.cr')
+INSERT INTO Project
+VALUES('jeremy@ucr.ac.cr',
+'Proyecto 1',
+'Emprendimiento de chocolates',
+15000,
+10,
+'Mensual')
 
+INSERT INTO Project
+VALUES('jeremy@ucr.ac.cr',
+'Proyecto 2',
+'Emprendimiento de candelas',
+15000,
+10,
+'Mensual')
+
+select *
+from Subscription
+
+DROP TABLE Subscription
