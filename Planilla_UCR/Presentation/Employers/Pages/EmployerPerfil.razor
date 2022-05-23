@@ -29,6 +29,37 @@
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
+
+
+        <MudText Align="Align.Center"Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
+
+        <MudPaper Width="100%">
+            <MudList>
+                <MudListItem Icon="@Icons.Filled.Drafts" IconColor="Color.Secondary" /> 
+                <MudText > Email: @employerData.Email"   </MudText>
+
+                <MudText > </MudText>
+                <MudListItem  Icon="@Icons.Filled.Photo" IconColor="Color.Secondary" />
+                <MudText > Nombre: @employerData.Name @employerData.LastName1 @employerData.LastName2  </MudText>
+                <MudText > </MudText>
+                <MudListItem Text="Cédula: "           Icon="@Icons.Filled.Person" IconColor="Color.Secondary" />
+                <MudText >@employerData.Ssn  </MudText>
+                <MudText > </MudText>
+                <MudListItem Text="Cuenta bancaria: "  Icon="@Icons.Filled.CreditCard" IconColor="Color.Secondary" />
+                <MudText >@employerData.BankAccount  </MudText>
+                <MudText > </MudText>
+                <MudListItem Text="Dirección: "        Icon="@Icons.Filled.LocationOn" IconColor="Color.Secondary" />
+                <MudText >@employerData.Adress  </MudText>
+               <MudText > </MudText>
+                <MudListItem Text="Teléfono: "         Icon="@Icons.Filled.ContactPhone" IconColor="Color.Secondary" />
+                <MudText >@employerData.PhoneNumber  </MudText>
+                <MudText > </MudText>
+            </MudList>
+            <MudDivider Vertical=true FlexItem=false/>
+        </MudPaper>
+
+          
+                   
         <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
             <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading">
                     <ToolBarContent>
@@ -44,7 +75,7 @@
                         <MudTh>Telefono</MudTh>
                         <MudTh></MudTh>
                     </HeaderContent>
-
+                    
                     <RowTemplate>
                         <MudTd DataLabel="Email">@context.Email</MudTd>
                         <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
@@ -66,16 +97,18 @@
     private bool _loading = true;
     private bool empty = true;
     Person personInfo = new Person("jeremy@ucr.ac.cr", "", "", "", Int32.Parse("0"), "", "", "");
+    public Person employerData = new Person("jeremy@ucr.ac.cr", "Jeremy", "Vargas", "Artavia", Int32.Parse("118070615"), "BK", "AD", "PN");
     private IEnumerable<Person> _elements = new List<Person>();  
     private MudTable<Person> _table;
-
+    
 
     protected override async Task OnInitializedAsync()
     {
-        //DUDA COMO PASARLE LA INFO? + tabla
         _elements = await PersonService.GetAllInfoEmployer(personInfo);
         if (_elements.Length() == 0){
             empty = true;
+
+           
         }
         else{
             empty = false;
