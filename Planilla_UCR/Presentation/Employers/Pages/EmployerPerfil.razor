@@ -28,37 +28,30 @@
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
-        <MudText Align="Align.Center"Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
+      <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
 
-      <MudPaper Width="100%">
-            <MudList>
-                <MudListItem Icon="@Icons.Filled.Drafts" IconColor="Color.Secondary" Value="@_elements"/> 
-                <MudText> Email:  </MudText>
-                <MudText> </MudText>
+     <MudPaper Width="100%" align-center>
+           <MudList>
+                <MudListItem  Icon="@Icons.Filled.Email" IconColor="Color.Secondary" />
+                 <MudDivider Vertical="true"/>
+                 <MudText Align="Align.Center"> 💌 Email:  @employerData.Email </MudText>
 
                 <MudListItem  Icon="@Icons.Filled.Photo" IconColor="Color.Secondary" />
-                <MudText> Nombre: @employerData.Name @employerData.LastName1 @employerData.LastName2  </MudText>
-                <MudText> </MudText>
+                 <MudText Align="Align.Center"> 🙋‍♂️ Nombre: @employerData.Name @employerData.LastName1 @employerData.LastName2  </MudText>
 
                 <MudListItem  Icon="@Icons.Filled.Person" IconColor="Color.Secondary" />
-                <MudText> Cédula: @employerData.Ssn  </MudText>
-                <MudText> </MudText>
+                <MudText Align="Align.Center">🆔 Cédula: @employerData.Ssn  </MudText>
 
-                <MudListItem Icon="@Icons.Filled.CreditCard" IconColor="Color.Secondary" />
-                <MudText> Cuenta bancaria: @employerData.BankAccount  </MudText>
-                <MudText> </MudText>
+                <MudListItem  Icon="@Icons.Filled.CreditCard" IconColor="Color.Secondary" />
+                <MudText Align="Align.Center">💵 Cuenta bancaria: @employerData.BankAccount  </MudText>
 
-                <MudListItem  Icon="@Icons.Filled.LocationOn" IconColor="Color.Secondary" />
-                <MudText> Dirección: @employerData.Adress  </MudText>
+                <MudListItem  Icon="@Icons.Filled.LocationOn" IconColor="Color.Secondary" /> 
+                 <MudText Align="Align.Center">🏠 Dirección: @employerData.Adress  </MudText>
 
-               <MudText > </MudText>
                 <MudListItem  Icon="@Icons.Filled.ContactPhone" IconColor="Color.Secondary" />
-                <MudText > Teléfono: @employerData.PhoneNumber  </MudText>
-                <MudText > </MudText>
-
-            </MudList>
-            <MudDivider Vertical=true FlexItem=false/>adsa
-        </MudPaper>
+                 <MudText Align="Align.Center"> 📱 Teléfono: @employerData.PhoneNumber  </MudText>
+           </MudList>
+    </MudPaper>
 
                    
         <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
@@ -91,6 +84,10 @@
             </MudTable>
         </MudPaper>
     }
+    else
+    {
+        <MudText Align="Align.Center" Typo="Typo.h4"> Email incorrecto</MudText>
+    }
 }
 
 
@@ -99,16 +96,17 @@
     private bool _loading = true;
     private bool empty = true;
     Person personInfo = new Person("jeremy@ucr.ac.cr", "", "", "", Int32.Parse("0"), "", "", "");
-    public Person employerData = new Person("jeremy@ucr.ac.cr", "Jeremy", "Vargas", "Artavia", Int32.Parse("118070615"), "BK", "AD", "PN");
+    public Person employerData = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
     [Parameter] public string employerEmail { get; set; }
     private IEnumerable<Person> _elements = new List<Person>();  
-  
     private MudTable<Person> _table;
-    
+
 
     protected override async Task OnInitializedAsync()
     {
+        personInfo.Email = "jeremy@ucr.ac.cr";
         _elements = await PersonService.GetAllInfoEmployer(personInfo);
+        employerData = _elements.FirstOrDefault();
         if ( _elements.Length() == 0){
             empty = true;
         }
