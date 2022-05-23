@@ -44,8 +44,8 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{context.EmployerEmail}/{context.NameSubscription}")">
-                    @context.NameSubscription
+                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{context.EmployerEmail}/{context.ProjectName}/{context.SubscriptionName}")">
+                    @context.SubscriptionName
                 </MudLink>
             </MudTd>
             <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
@@ -81,13 +81,12 @@ else
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
         new BreadcrumbItem("Deducciones", href: "deductions"),
     };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        Elements = await SubscriptionService.GetAllDeductionsAsync();
         if (Elements.Length() > 0){
             _empty = false;
         }
@@ -114,7 +113,7 @@ else
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if (element.NameSubscription.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (element.SubscriptionName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
     }

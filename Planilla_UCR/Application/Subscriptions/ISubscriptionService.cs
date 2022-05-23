@@ -6,8 +6,9 @@ namespace Application.Subscriptions
 {
     public interface ISubscriptionService
     {
-        Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync();
+        Task<IEnumerable<SubscriptionDTO>> GetAllDeductionsAsync();
+        Task<IEnumerable<SubscriptionDTO>> GetAllBenefictsAsync();
         Task CreateSubscriptionAsync(Subscription subscription);
-        Task<Subscription>? GetSubscription(string employerEmail, string nameSubscription);
+        Task<Subscription>? GetSubscription(string employerEmail, string projectName, string subscriptionName);
     }
 }

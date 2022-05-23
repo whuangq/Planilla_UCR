@@ -10,18 +10,19 @@ namespace Infrastructure.Subscriptions.EntityMappings
         {
             builder.ToTable("Subscription");
 
-            builder.HasKey(p => new { p.EmployerEmail, p.NameSubscription});
+            builder.HasKey(p => new { p.EmployerEmail, p.ProjectName, p.SubscriptionName});
 
-            builder.Property(p => p.ProviderName)
-                .IsRequired();
+            builder.Property(p => p.ProviderName);
 
-            builder.Property(p => p.SubscriptionDescription)
-                .IsRequired();
+            builder.Property(p => p.SubscriptionDescription);
 
             builder.Property(p => p.Cost)
                  .IsRequired();
 
             builder.Property(p => p.TypeSubscription)
+                   .IsRequired();
+
+            builder.Property(p => p.IsEnabled)
                    .IsRequired();
         }
 

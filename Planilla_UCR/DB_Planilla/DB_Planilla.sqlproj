@@ -66,7 +66,7 @@
     <Build Include="Project.sql" />
     <Build Include="AgreementType.sql" />
     <Build Include="Agreement.sql" />
-    <Build Include="Acquire.sql" />
+    <Build Include="Subscribes.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

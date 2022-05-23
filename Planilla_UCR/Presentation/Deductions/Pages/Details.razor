@@ -1,4 +1,4 @@
-﻿@page "/Deductions/Details/{employerEmail}/{subscriptionName}"
+﻿@page "/Deductions/Details/{employerEmail}/{projectName}/{subscriptionName}"
 
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
@@ -18,7 +18,7 @@ else
     <MudCard>
         <MudCardHeader>
             <CardHeaderContent>    
-                <MudText Typo="Typo.h6" Align="Align.Center">@subscription.NameSubscription</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center">@subscription.SubscriptionName</MudText>
             </CardHeaderContent>
             <CardHeaderActions>
                 <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
@@ -45,30 +45,31 @@ else
     private bool _hidePosition;
     private bool _loading = true;
     private IEnumerable<SubscriptionDTO> Elements;
-    public Subscription subscription = new Subscription("","","","",0,0);
+    public Subscription subscription = new Subscription("","","","","",0,0,1);
 
     [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string projectName { get; set; }
     [Parameter] public string subscriptionName { get; set; }
 
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
         new BreadcrumbItem("Deducciones", href: "deductions")
     };
 
     protected override async Task OnInitializedAsync()
     {
         subscription.EmployerEmail = employerEmail;
-        subscription.NameSubscription = subscriptionName;
-        subscription = await SubscriptionService.GetSubscription(employerEmail, subscriptionName);
+        subscription.SubscriptionName = subscriptionName;
+        subscription.ProjectName = projectName;
+        subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionName);
         _loading = false;
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo($"/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations");
+        nav.NavigateTo($"/Deductions/Details/{employerEmail}/{projectName}/{subscriptionName}/Configurations");
     }
 
     private void GoToMain()

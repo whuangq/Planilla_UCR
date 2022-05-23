@@ -26,8 +26,8 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.NameSubscription}/Configurations")">
-                    @context.NameSubscription
+                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.ProjectName}/{@context.SubscriptionName}/Configurations")">
+                    @context.SubscriptionName
                 </MudLink>
             </MudTd>
             <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
@@ -40,7 +40,7 @@ else
             <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
         </PagerContent>
     </MudTable>
-    <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.NameSubscription).Select(x=>x.NameSubscription)))</MudText>
+    <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
         <MudButton Variant="Variant.Filled" OnClick="DeleteDeductions" Color="Color.Error">Borrar</MudButton>
@@ -62,14 +62,13 @@ else
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
         new BreadcrumbItem("Deducciones", href: "deductions"),
         new BreadcrumbItem("Configuraciones", href: "configdeductions"),
     };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        Elements = await SubscriptionService.GetAllDeductionsAsync();
         if (Elements.Length() > 0){
             _loading = false;
         }
@@ -97,7 +96,7 @@ else
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if (element.NameSubscription.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (element.SubscriptionName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
     }

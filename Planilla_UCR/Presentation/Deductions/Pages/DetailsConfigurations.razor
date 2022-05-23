@@ -1,4 +1,4 @@
-﻿@page "/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations"
+﻿@page "/Deductions/Details/{employerEmail}/{projectName}/{subscriptionName}/Configurations"
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
@@ -22,7 +22,7 @@ else
         <MudItem xs="12" sm="8">
             <MudPaper  Height="250px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
                 <MudText Align="Align.Center" Typo="Typo.h6">Modificar deducción</MudText>
-                <MudText Align="Align.Center" Typo="Typo.h6">@subscription.NameSubscription</MudText>
+                <MudText Align="Align.Center" Typo="Typo.h6">@subscription.SubscriptionName</MudText>
                 <MudForm @ref="form">
                 <MudGrid>
 
@@ -69,40 +69,39 @@ else
     private bool _hidePosition;
     private bool _loading = true;
     private IEnumerable<SubscriptionDTO> Elements;
-    public Subscription subscription = new Subscription("","","CCSS","Deducción1",2000,0);
+    public Subscription subscription = new Subscription("","","","CCSS","Deducción1",2000,0,1);
     MudForm form;
     SnackHandler snackHandler = new SnackHandler();
 
 
     [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string projectName { get; set; }
     [Parameter] public string subscriptionName { get; set; }
 
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
         new BreadcrumbItem("Deducciones", href: "deductions")
     };
 
     protected override async Task OnInitializedAsync()
     {
         subscription.EmployerEmail = employerEmail;
-        subscription.NameSubscription = subscriptionName;
-        subscription = await SubscriptionService.GetSubscription(employerEmail, subscriptionName);
+        subscription.SubscriptionName = subscriptionName;
+        subscription.ProjectName = projectName;
+        subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionName);
         _loading = false;
     }
 
     async Task SaveDeduction()
     {
-        subscription.EmployerEmail = employerEmail;
-        subscription.NameSubscription = subscriptionName;
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid)
         {
             snackHandler._saving = false;
-            ShowSnackNotification("Deducción "+subscription.NameSubscription+" modificada", Severity.Success);
+            ShowSnackNotification("Deducción "+subscription.SubscriptionName+" modificada", Severity.Success);
             CleanForm();
         }
        
