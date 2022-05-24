@@ -21,14 +21,14 @@ namespace Infrastructure.Subscriptions.Repositories
             _dbContext = unitOfWork;
         }
 
-        public async Task<IEnumerable<SubscriptionDTO>> GetAllDeductionsAsync()
+        public async Task<IEnumerable<Subscription>> GetAllDeductionsAsync()
         {
-            return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.ProjectName, t.SubscriptionName, t.ProviderName, t.SubscriptionDescription,t.Cost, 0, 1)).ToListAsync();
+            return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetAllDeductions").ToListAsync();
         }
 
-        public async Task<IEnumerable<SubscriptionDTO>> GetAllBenefictsAsync()
+        public async Task<IEnumerable<Subscription>> GetAllBenefictsAsync()
         {
-            return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.ProjectName, t.SubscriptionName, t.ProviderName, t.SubscriptionDescription, t.Cost, 1, 1)).ToListAsync();
+            return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetAllBenefits").ToListAsync();
         }
 
         public async Task CreateSubscriptionAsync(Subscription subscription)

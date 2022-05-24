@@ -1,4 +1,4 @@
-﻿@page "/Deductions/Configurations"
+﻿@page "/Benefit/Configurations"
 @using Domain.Subscriptions.DTOs
 @using Domain.Subscriptions.Entities
 @using Application.Subscriptions
@@ -10,13 +10,13 @@
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 @if (_loading)
 {
-    <MudText Typo="Typo.h6">No hay deducciones asociadas al proyecto</MudText>
+    <MudText Typo="Typo.h6">No hay beneficios asociadas al proyecto</MudText>
 }
 else
 {
     <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
         <ToolBarContent>
-            <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios</MudText>
             <MudSpacer />
             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
@@ -27,7 +27,7 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.ProjectName}/{@context.SubscriptionName}/Configurations")">
+                <MudLink Color="Color.Secondary" Href="@($"/Benefit/Details/{@context.EmployerEmail}/{@context.ProjectName}/{@context.SubscriptionName}/Configurations")">
                     @context.SubscriptionName
                 </MudLink>
             </MudTd>
@@ -44,7 +44,7 @@ else
     <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
-        <MudButton Variant="Variant.Filled" OnClick="DeleteDeductions" Color="Color.Error">Borrar</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="DeleteBenefit" Color="Color.Error">Borrar</MudButton>
     </MudToolBar>
 }
 
@@ -53,7 +53,7 @@ else
     private bool _hidePosition;
     private bool _loading = true;
     private HashSet<Subscription> selectedItems1 = new HashSet<Subscription>();
-    private IEnumerable<Subscription> Elements = new List<Subscription>();
+    private IEnumerable<Subscription> Elements;
     private MudTable<Subscription> mudTable;
 
     public string searchString1 = "";
@@ -63,21 +63,21 @@ else
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions"),
-        new BreadcrumbItem("Configuraciones", href: "configdeductions"),
+        new BreadcrumbItem("Beneficios", href: "Benefit"),
+        new BreadcrumbItem("Configuraciones", href: "configbenefit"),
     };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllDeductionsAsync();
+        Elements = await SubscriptionService.GetAllBenefictsAsync();
         if (Elements.Length() > 0){
             _loading = false;
         }
     }
 
-    private void DeleteDeductions()
+    private void DeleteBenefit()
     {
-        string message = "¿Desea borrar las deduciones seleccionadas?";
+        string message = "¿Desea borrar los beneficios seleccionados?";
         Snackbar.Add(message, Severity.Warning, config =>
         {
             config.Action = "Confirmar";
@@ -85,7 +85,7 @@ else
             config.ShowCloseIcon = false;
             config.Onclick = snackbar =>
             {
-                DeleteDeductionsUpdate();
+                DeleteBenefitUpdate();
                 return Task.CompletedTask;
             };
         });
@@ -102,9 +102,9 @@ else
         return false;
     }
 
-    private void DeleteDeductionsUpdate()
+    private void DeleteBenefitUpdate()
     {
-        Snackbar.Add("Deducciones borradas", Severity.Success);
+        Snackbar.Add("Beneficios borradas", Severity.Success);
         StateHasChanged();
     }
 

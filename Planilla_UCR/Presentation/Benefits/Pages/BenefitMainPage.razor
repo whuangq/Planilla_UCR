@@ -1,4 +1,4 @@
-﻿@page "/Deductions"
+﻿@page "/Benefit"
 @using Domain.Subscriptions.DTOs
 @using Domain.Subscriptions.Entities
 @using Application.Subscriptions
@@ -10,7 +10,7 @@
 
 @if (_empty)
 {
-    <MudText Typo="Typo.h6" Align="Align.Center">No hay deducciones asociadas al proyecto
+    <MudText Typo="Typo.h6" Align="Align.Center">No hay beneficios asociados al proyecto
     </MudText>
     <br>
     <MudToolBar DisableGutters="true" Class="gap-4">
@@ -18,7 +18,7 @@
         <MudSpacer></MudSpacer>
         <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
             <MudText> 
-            Crear Deducción
+            Crear Beneficio
             </MudText> 
         </MudButton>
         <MudSpacer></MudSpacer>
@@ -33,7 +33,7 @@ else
     </MudToolBar>
     <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
         <ToolBarContent>
-            <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios</MudText>
             <MudSpacer />
             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
@@ -44,7 +44,7 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{context.EmployerEmail}/{context.ProjectName}/{context.SubscriptionName}")">
+                <MudLink Color="Color.Secondary" Href="@($"/Benefit/Details/{context.EmployerEmail}/{context.ProjectName}/{context.SubscriptionName}")">
                     @context.SubscriptionName
                 </MudLink>
             </MudTd>
@@ -54,7 +54,7 @@ else
         <FooterContent>
             <MudTFootRow Class="bold-text">
                 <MudTd>
-                     <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Deducciones</MudButton>
+                     <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Beneficio</MudButton>
                 </MudTd>
             </MudTFootRow>
         </FooterContent>
@@ -71,8 +71,8 @@ else
     private int selectedRowNumber = -1;
     private MudTable<Subscription> mudTable;
     private List<string> clickedEvents = new();
-    private IEnumerable<Subscription> Elements =new List<Subscription>();
-    
+    private IEnumerable<Subscription> Elements;
+
     public string searchString1 = "";
     public string project { get; set; }
 
@@ -81,12 +81,12 @@ else
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions"),
+        new BreadcrumbItem("Beneficios", href: "Benefit"),
     };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllDeductionsAsync();
+        Elements = await SubscriptionService.GetAllBenefictsAsync();
         if (Elements.Length() > 0){
             _empty = false;
         }
@@ -94,12 +94,12 @@ else
 
     private void GoToCreate()
     {
-        nav.NavigateTo("/Deductions/New");
+        nav.NavigateTo("/Benefit/New");
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo("/Deductions/Configurations");
+        nav.NavigateTo("/Benefit/Configurations");
     }
 
     private void PageChanged(int i)

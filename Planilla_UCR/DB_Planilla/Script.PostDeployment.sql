@@ -56,8 +56,3 @@ VALUES('jeremy@ucr.ac.cr',
 15000,
 10,
 'Mensual')
-
-select *
-from Subscription
-
-DROP TABLE Subscription
