@@ -34,3 +34,15 @@ select *
 from Subscription
 
 DROP TABLE Subscription
+
+CREATE PROCEDURE GetAllDeductions
+AS
+BEGIN
+    SELECT * FROM Subscription WHERE TypeSubscription=0 and IsEnabled=1
+END
+
+CREATE PROCEDURE GetAllBenefits
+AS
+BEGIN
+    SELECT * FROM Subscription WHERE TypeSubscription=1 and IsEnabled=1
+END

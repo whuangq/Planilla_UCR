@@ -15,11 +15,11 @@ namespace Application.Subscriptions.Implementations
             _subscriptionRepository = subscriptionRepository;
         }
 
-        public async Task<IEnumerable<SubscriptionDTO>>GetAllDeductionsAsync()
+        public async Task<IEnumerable<Subscription>>GetAllDeductionsAsync()
         {
             return await _subscriptionRepository.GetAllDeductionsAsync();
         }
-        public async Task<IEnumerable<SubscriptionDTO>> GetAllBenefictsAsync()
+        public async Task<IEnumerable<Subscription>> GetAllBenefictsAsync()
         {
             return await _subscriptionRepository.GetAllBenefictsAsync();
         }

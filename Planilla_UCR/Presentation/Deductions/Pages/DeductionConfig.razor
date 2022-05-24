@@ -1,5 +1,4 @@
 ﻿@page "/Deductions/Configurations"
-@using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
@@ -13,7 +12,7 @@
 }
 else
 {
-    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<SubscriptionDTO,bool>(FilterFunc1)">
+    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
         <ToolBarContent>
             <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
             <MudSpacer />
@@ -51,9 +50,9 @@ else
 @code {
     private bool _hidePosition;
     private bool _loading = true;
-    private HashSet<SubscriptionDTO> selectedItems1 = new HashSet<SubscriptionDTO>();
-    private IEnumerable<SubscriptionDTO> Elements;
-    private MudTable<SubscriptionDTO> mudTable;
+    private HashSet<Subscription> selectedItems1 = new HashSet<Subscription>();
+    private IEnumerable<Subscription> Elements;
+    private MudTable<Subscription> mudTable;
 
     public string searchString1 = "";
     public string project { get; set; }
@@ -90,9 +89,9 @@ else
         });
     }
 
-    private bool FilterFunc1(SubscriptionDTO element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(Subscription element) => FilterFunc(element, searchString1);
 
-    private bool FilterFunc(SubscriptionDTO element, string searchString)
+    private bool FilterFunc(Subscription element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;

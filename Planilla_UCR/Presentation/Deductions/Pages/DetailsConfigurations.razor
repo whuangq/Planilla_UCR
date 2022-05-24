@@ -1,5 +1,4 @@
 ﻿@page "/Deductions/Details/{employerEmail}/{projectName}/{subscriptionName}/Configurations"
-@using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
@@ -68,7 +67,7 @@ else
 @code {
     private bool _hidePosition;
     private bool _loading = true;
-    private IEnumerable<SubscriptionDTO> Elements;
+    private IEnumerable<Subscription> Elements;
     public Subscription subscription = new Subscription("","","","CCSS","Deducción1",2000,0,1);
     MudForm form;
     SnackHandler snackHandler = new SnackHandler();
