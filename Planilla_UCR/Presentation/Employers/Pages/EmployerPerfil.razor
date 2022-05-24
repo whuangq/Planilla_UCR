@@ -30,24 +30,6 @@
 
       <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
 
-     <MudPaper Width="100%" align-center>
-           <MudList>
-                
-                 <MudDivider Vertical="true"/>
-                 <MudText Align="Align.Center"> 💌 Email:  @employerData.Email </MudText>
-                 <MudText></MudText>
-                 <MudText Align="Align.Center"> 🙋‍♂️ Nombre: @employerData.Name @employerData.LastName1 @employerData.LastName2  </MudText>
-                 <MudText></MudText>
-                <MudText Align="Align.Center">🆔 Cédula: @employerData.Ssn  </MudText>
-                <MudText></MudText>
-                <MudText Align="Align.Center">💵 Cuenta bancaria: @employerData.BankAccount  </MudText>
-                <MudText></MudText>
-                <MudText Align="Align.Center">🏠 Dirección: @employerData.Adress  </MudText>
-                <MudText></MudText>
-                <MudText Align="Align.Center"> 📱 Teléfono: @employerData.PhoneNumber  </MudText>
-           </MudList>
-    </MudPaper>
-
     <MudPaper Width="100%" align-center>
 
     <MudItem xs="2"> </MudItem>
@@ -87,36 +69,7 @@
     <MudItem xs="2"> </MudItem>
 
     </MudPaper>
-                   
-        <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-            <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading">
-                    <ToolBarContent>
-                         <MudText Align="Align.Center" Typo="Typo.h6">Mi perfil</MudText>
-                        <MudSpacer />
-                    </ToolBarContent>
-                    <HeaderContent>
-                        <MudTh>Email</MudTh>
-                        <MudTh>Nombre completo</MudTh>
-                        <MudTh>Cedula</MudTh>
-                        <MudTh>Cuenta bancaria</MudTh>
-                        <MudTh>Dirección</MudTh>
-                        <MudTh>Telefono</MudTh>
-                        <MudTh></MudTh>
-                    </HeaderContent>
-                    
-                    <RowTemplate>
-                        <MudTd DataLabel="Email">@context.Email</MudTd>
-                        <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
-                        <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
-                        <MudTd DataLabel="Cuenta bancaria">@context.BankAccount</MudTd>
-                        <MudTd DataLabel="Dirección">@context.Adress </MudTd>
-                        <MudTd DataLabel="Telefono">@context.PhoneNumber</MudTd>
-                         <MudTd DataLabel="">
-                        <MudSpacer></MudSpacer> 
-                        </MudTd>
-                    </RowTemplate>
-            </MudTable>
-        </MudPaper>
+      
     }
     else
     {
