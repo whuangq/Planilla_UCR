@@ -1,0 +1,77 @@
+﻿@page "/Deductions/Details/{employerEmail}/{subscriptionName}"
+
+@using Domain.Subscriptions.DTOs
+@using Application.Subscriptions
+@using Domain.Subscriptions.Entities
+@using Presentation.Core.Components
+@inject NavigationManager nav
+@inject ISubscriptionService SubscriptionService
+
+@if (_loading)
+{
+    <h4 class="text-danger">Loading deduction :)</h4>
+}
+else
+{
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>    
+                <MudText Typo="Typo.h6" Align="Align.Center">@subscription.NameSubscription</MudText>
+            </CardHeaderContent>
+            <CardHeaderActions>
+                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText>Organización:</MudText>
+             <MudText Typo="Typo.body2">@subscription.ProviderName</MudText>
+            <MudText>Costo: </MudText>
+            <MudText Typo="Typo.body2">@subscription.Cost</MudText>
+            <MudText>Descripción: </MudText>
+            <MudText Typo="Typo.body2">@subscription.SubscriptionDescription</MudText>
+        </MudCardContent>
+        <MudToolBar DisableGutters="true" Class="gap-4">
+            <MudSpacer></MudSpacer>
+            <MudButton Variant="Variant.Filled" OnClick="GoToMain" Color="Color.Secondary">Volver</MudButton>
+            <MudSpacer></MudSpacer>
+        </MudToolBar>
+    </MudCard>
+}
+
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private IEnumerable<SubscriptionDTO> Elements;
+    public Subscription subscription = new Subscription("","","CCSS","Deducción1",2000,0);
+
+    [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string subscriptionName { get; set; }
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: "deductions")
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        subscription.EmployerEmail = employerEmail;
+        subscription.NameSubscription = subscriptionName;
+        _loading = false;
+    }
+
+    private void GoToConfigs()
+    {
+        nav.NavigateTo($"/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations");
+    }
+
+    private void GoToMain()
+    {
+        nav.NavigateTo("/Deductions");
+    }
+}

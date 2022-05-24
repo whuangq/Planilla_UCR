@@ -1,24 +1,20 @@
 ﻿@page "/Register_Form"
-@using Application.Persons
-@using Domain.Persons.Entities
-@using Application.Employers
-@using Domain.Employers.Entities
-@using Domain.Employers.DTOs
-@using Application.Employees
+@using Domain.People.Entities
 @using Domain.Employees.Entities 
 @using Domain.Employees.DTOs
 @using Application.Accounts
+@using Application.People
+@using Application.Employees
 @using Domain.Accounts.Entities
 @using Domain.Accounts.DTOs
+@using Presentation.Shared.Models
 @using Presentation.Core.Components
-@using Presentation.Accounts.Models
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 @inject IAccountService AccountService
-@inject IEmployerService EmployerService
 @inject IEmployeeService EmployeeService
 
 
@@ -160,7 +156,7 @@
                 await EmployeeService.CreateEmployeeAsync(personInfo.Email);
             }
             else{
-                await EmployerService.CreateEmployerAsync(personInfo.Email);
+                //await EmployerService.CreateEmployerAsync(personInfo.Email);
             }
             if (SendEmail == true) {
                 await AccountService.SendEmail("Ha registrado su cuenta correctamente, bienvenido a Planilla_UCR",personInfo.Email);

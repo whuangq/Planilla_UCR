@@ -1,9 +1,9 @@
-﻿using Application.Persons;
-using Application.Persons.Implementations;
+﻿using Application.People;
+using Application.People.Implementations;
 using Application.Employees;
 using Application.Employees.Implementations;
-using Application.Employers;
-using Application.Employers.Implementations;
+using Application.Subscriptions;
+using Application.Subscriptions.Implementations;
 using Application.Accounts;
 using Application.Accounts.Implementations;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,9 +16,9 @@ namespace Application
         {
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
-            services.AddTransient<IEmployerService, EmployerService>();
+            services.AddTransient<ISubscriptionService, SubscriptionService>();
+            services.AddTransient<ISubscriptionService, SubscriptionService>();
             services.AddTransient<IAccountService, AccountService>();
-
             return services;
         }
     }

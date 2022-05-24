@@ -1,7 +1,10 @@
 ﻿using Domain.Core.Repositories;
 using Domain.Employees.Entities;
 using Domain.Employees.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Employees.Repositories
@@ -20,6 +23,13 @@ namespace Infrastructure.Employees.Repositories
         {
             _dbContext.Add(new Employee(email));
             await _dbContext.SaveEntitiesAsync();
+        }
+
+        public async Task<IEnumerable<Employee?>> GetEmployeeByEmail(string email)
+        {
+            var employeeList = await _dbContext.Employees.FromSqlRaw("EXEC GetEmployeeByEmail @email",
+                new SqlParameter("email", email)).ToListAsync();
+            return employeeList;
         }
     }
 }

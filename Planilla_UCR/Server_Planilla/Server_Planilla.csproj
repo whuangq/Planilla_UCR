@@ -10,13 +10,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Application\Application.csproj" />
-		<ProjectReference Include="..\Domain\Domain.csproj" />
-		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-		<ProjectReference Include="..\Presentation\Presentation.csproj" />
+	  <Folder Include="wwwroot\img\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\img\" />
+	  <ProjectReference Include="..\Application\Application.csproj" />
+	  <ProjectReference Include="..\Domain\Domain.csproj" />
+	  <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+	  <ProjectReference Include="..\Presentation\Presentation.csproj" />
 	</ItemGroup>
 </Project>

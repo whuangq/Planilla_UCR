@@ -1,15 +1,7 @@
 ﻿@page "/"
-
-@using Domain.Accounts.Entities
-@using Domain.Accounts.DTOs
-@using Presentation
-@using Application
-@using Application.Accounts
-@using Application.Accounts.Implementations
 @using Presentation.Authentication
-@inject IAccountService AccountService
 
-<Authenticator email="leo@a" SendAuthenticationState="ReceiveAuthenticationState"></Authenticator>
+<Authenticator email="leonel@ucr.ac.cr" SendAuthenticationState="ReceiveAuthenticationState"></Authenticator>
 
 @if (_loading)
 {
