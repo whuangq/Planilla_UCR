@@ -1,7 +1,10 @@
-﻿@page "/"
+﻿@page "/{email}"
 @using Presentation.Authentication
+@using Presentation.Shared
+@using Presentation.Core.Layout
+@inject NavigationManager nav
 
-<Authenticator email="leosnel@ucr.ac.cr" SendAuthenticationState="ReceiveAuthenticationState"></Authenticator>
+<Authenticator email="leonel.campos@ucr.ac.cr" SendAuthenticationState="ReceiveAuthenticationState"> </Authenticator>
 
 @if (_loading)
 {
@@ -12,19 +15,21 @@ else
     if (authenticationState == true && _loading == false)
     {
         //Authorized
-        <MudText>Visión del producto</MudText>
+        nav.NavigateTo("/Authorized");
     }
     else
     {
         //Unauthorized
-        <MudText>LOGIN</MudText>
-        <MudText>SignOut</MudText>
+        nav.NavigateTo("/");
     }
 }
 
 @code{
-    bool authenticationState = false;
     bool _loading = true;
+    bool authenticationState = false;
+
+    [Parameter]
+    public string email { get; set; }
 
     protected void ReceiveAuthenticationState(bool state)
     {

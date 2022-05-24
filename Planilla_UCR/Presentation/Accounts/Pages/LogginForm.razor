@@ -8,6 +8,9 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 @using Shared.Models
+@using Presentation.Core.Layout.Visitor
+
+@layout VisitorMainLayout
 @inject NavigationManager nav
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
@@ -50,7 +53,7 @@
                 <MudButton Disabled="true"> </MudButton>
               
                 <MudButton OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Transparent">
-                    <MudText>Crear Cuenta</MudText>
+                    <MudText>Registrarse</MudText>
                  </MudButton>
                </MudItem>
             </MudGrid>
@@ -88,70 +91,33 @@
         }
         snackHandler._saving = false;
     }
- 
-        /*
-         * 
-        async Task<bool> ValidateEmail(Account accountData)
-        {
-            
-            IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
-            bool valid = true;
-            if (emailChecked.Length() != 0)
-            {
-                valid=true;
-            }
-             else {
-                 valid=false;
-            }   
-            return valid;
-        }
-        */
-       /*
-        async Task<bool> ValidatePassword(Account accountData)
-        {
-            
-            IEnumerable<Account> passwordChecked= await AccountService.CheckPassword(accountData);
-            bool valid = true;
-            if (passwordChecked.Length() != 0)
-            {
-                valid=true;
-            }
-             else {
-                 valid=false;
-            }   
-            return valid;
-        }
 
-        */
-         private void GoToCreateAccount()
-        {
-            nav.NavigateTo("/Register_Form");
-        }
-
-         /*
-          private void GoToProjects()
-            {
-            nav.NavigateTo("/Register_Form");
-        }
-        */
-
-         void ShowSnackNotification(string message, Severity severity)
-        {
-            Snackbar.Configuration.SnackbarVariant = Variant.Filled;
-            Snackbar.Configuration.PreventDuplicates = false;
-            Snackbar.Configuration.MaxDisplayedSnackbars = 10;
-            Snackbar.Configuration.NewestOnTop = true;
-            Snackbar.Add($"{message}", severity, config =>
-            {
-                config.RequireInteraction = false;
-                config.ShowCloseIcon = true;
-                config.Onclick = snackbar =>
-                {
-                    return Task.CompletedTask;
-                };
-            });
-        }
-
-
-
+    private void GoToCreateAccount()
+    {
+        nav.NavigateTo("/Register_Form");
     }
+
+        /*
+        private void GoToProjects()
+        {
+        nav.NavigateTo("/Register_Form");
+        }
+        */
+
+    void ShowSnackNotification(string message, Severity severity)
+    {
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PreventDuplicates = false;
+        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Configuration.NewestOnTop = true;
+        Snackbar.Add($"{message}", severity, config =>
+        {
+            config.RequireInteraction = false;
+            config.ShowCloseIcon = true;
+            config.Onclick = snackbar =>
+            {
+                return Task.CompletedTask;
+            };
+        });
+    }
+}
