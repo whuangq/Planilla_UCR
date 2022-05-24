@@ -49,5 +49,18 @@ namespace Infrastructure.Accounts.Repositories
             EmailSender emailSender = new();
             await emailSender.Execute(message, receiver);
         }
+
+        public async Task<IEnumerable<Account?>> GetAuthenticationState(AccountsDTO accountData)
+        {
+            var  state = await _dbContext.Accounts.FromSqlRaw("EXEC GetAuthenticationState @email",
+            new SqlParameter("@email", accountData.Email)).ToListAsync();
+            return state;
+        }
+
+        public async Task SetAuthenticationState(AccountsDTO accountData, byte state)
+        {
+            System.FormattableString query = $"EXECUTE SetAuthenticationState @email = {accountData.Email}, @state = {state}";
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
     }
 }

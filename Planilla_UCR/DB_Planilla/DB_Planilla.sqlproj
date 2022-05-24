@@ -70,9 +70,11 @@
     <Build Include="Tables\Person.sql" />
     <Build Include="Tables\Project.sql" />
     <Build Include="Tables\Subscription.sql" />
-    <Build Include="StoredProcedures\InsertDataToAccountWithPasswordEncripted.sql" />
-    <Build Include="StoredProcedures\EmailCheckLoggin.sql" />
-    <Build Include="StoredProcedures\PasswordCheckLoggin.sql" />
+    <Build Include="StoredProcedures\Account\EmailCheckLoggin.sql" />
+    <Build Include="StoredProcedures\Account\InsertDataToAccountWithPasswordEncripted.sql" />
+    <Build Include="StoredProcedures\Account\PasswordCheckLoggin.sql" />
+    <Build Include="StoredProcedures\Account\GetAuthenticationState.sql" />
+    <Build Include="StoredProcedures\Account\SetAuthenticationState.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="DB_Planilla.refactorlog" />

@@ -5,6 +5,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Employers\**" />
+	  <Content Remove="Employers\**" />
+	  <EmbeddedResource Remove="Employers\**" />
+	  <None Remove="Employers\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
 	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
 	</ItemGroup>
@@ -34,10 +41,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Employers\Models\" />
 	</ItemGroup>
 
 </Project>

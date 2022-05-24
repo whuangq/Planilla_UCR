@@ -1,2 +1,42 @@
 ﻿@page "/"
 
+@using Domain.Accounts.Entities
+@using Domain.Accounts.DTOs
+@using Presentation
+@using Application
+@using Application.Accounts
+@using Application.Accounts.Implementations
+@using Presentation.Authentication
+@inject IAccountService AccountService
+
+<Authenticator email="leo@a" SendAuthenticationState="ReceiveAuthenticationState"></Authenticator>
+
+@if (_loading)
+{
+    <MudText> loading</MudText>
+}
+else
+{
+    if (authenticationState == true && _loading == false)
+    {
+        //Authorized
+        <MudText>Visión del producto</MudText>
+    }
+    else
+    {
+        //Unauthorized
+        <MudText>LOGIN</MudText>
+        <MudText>SignOut</MudText>
+    }
+}
+
+@code{
+    bool authenticationState = false;
+    bool _loading = true;
+
+    protected void ReceiveAuthenticationState(bool state)
+    {
+        authenticationState = state;
+        _loading = false;
+    }
+}

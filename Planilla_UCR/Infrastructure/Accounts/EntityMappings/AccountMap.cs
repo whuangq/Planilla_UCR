@@ -16,6 +16,9 @@ namespace Infrastructure.Accounts.EntityMappings
             builder.Property(p => p.UserPassword)
                    .IsRequired();
 
+            builder.Property(p => p.IsAuthenticated)
+                   .IsRequired();
+
         }
     }
 }
