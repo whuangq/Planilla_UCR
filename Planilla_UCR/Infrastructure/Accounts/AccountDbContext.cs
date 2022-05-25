@@ -9,7 +9,7 @@ namespace Infrastructure.Accounts
 {
     public class AccountDbContext : ApplicationDbContext
     {
-        public AccountDbContext(DbContextOptions options, ILogger<AccountDbContext> logger) : base(options, logger)
+        public AccountDbContext(DbContextOptions<AccountDbContext> options, ILogger<AccountDbContext> logger) : base(options, logger)
         {
         }
 
