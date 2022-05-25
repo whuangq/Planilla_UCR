@@ -166,7 +166,6 @@
             else{
                 //await EmployerService.CreateEmployerAsync(personInfo.Email);
                 accountData.Email = personInfo.Email;
-                await AccountService.InsertAccountData(accountData);
                 IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
                 if (emailChecked.Length() != 0)
                 {
@@ -174,6 +173,7 @@
                 }
                 else
                 {
+                    await AccountService.InsertAccountData(accountData);
                     snackHandler._saving = false;
                     ShowSnackNotification("Cuenta para "+personInfo.Name+" registrada", Severity.Success);
                     await AccountService.SetAuthenticationState(accountData,1);
