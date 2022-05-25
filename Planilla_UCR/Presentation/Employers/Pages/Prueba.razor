@@ -1,0 +1,16 @@
+﻿@page "/Employer_Perfil/Prueba"
+@inject NavigationManager nav
+
+<MudText>@employerEmail </MudText>
+
+
+
+@code{
+    public string employerEmail = "jeremy@ucr.ac.cr";
+
+    protected override void OnParametersSet()
+    {
+        nav.NavigateTo($"/Employer_Perfil/{employerEmail}");
+    }
+
+}

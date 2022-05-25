@@ -30,7 +30,7 @@
 
       <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
 
-    <MudPaper Width="100%" align-center>
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
 
     <MudItem xs="2"> </MudItem>
     <MudItem xs="8" sm="6" md="4">
@@ -67,7 +67,7 @@
     <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.ContactPhone" Color="@Color.Secondary" /> Teléfono: @employerData.PhoneNumber</MudField>
     </MudItem>
     <MudItem xs="2"> </MudItem>
-
+    <MudSpacer></MudSpacer>
     </MudPaper>
       
     }
@@ -82,7 +82,7 @@
     private bool _hidePosition;
     private bool _loading = true;
     private bool empty = true;
-    Person personInfo = new Person("jeremy@ucr.ac.cr", "", "", "", Int32.Parse("0"), "", "", "");
+    Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
     public Person employerData = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
     [Parameter] public string employerEmail { get; set; }
     private IEnumerable<Person> _elements = new List<Person>();  
@@ -91,7 +91,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        personInfo.Email = "jeremy@ucr.ac.cr";
+        personInfo.Email = employerEmail;
         _elements = await PersonService.GetAllInfoEmployer(personInfo);
         employerData = _elements.FirstOrDefault();
         if ( _elements.Length() == 0){
