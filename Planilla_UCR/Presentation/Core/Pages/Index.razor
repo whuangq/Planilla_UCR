@@ -31,9 +31,18 @@ else
     [Parameter]
     public string email { get; set; }
 
+    [CascadingParameter]
+    protected EventCallback<string> setEmail { get; set; }
+
     protected void ReceiveAuthenticationState(bool state)
     {
         authenticationState = state;
         _loading = false;
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await setEmail.InvokeAsync("leonelscamposm@gmail.com");
     }
 }
