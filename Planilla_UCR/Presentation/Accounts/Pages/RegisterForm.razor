@@ -156,20 +156,33 @@
         if (form.IsValid && ValidateInfo(personInfo)){
             await PersonService.CreatePersonAsync(personInfo);
             if (Rol.Equals("RolEmployee")){
-                await EmployeeService.CreateEmployeeAsync(personInfo.Email);
+                //await EmployeeService.CreateEmployeeAsync(personInfo.Email);
+                //accountData.Email = personInfo.Email;
+                //await AccountService.InsertAccountData(accountData);
+                //snackHandler._saving = false;
+                //ShowSnackNotification("Cuenta para "+personInfo.Name+" registrada", Severity.Success);
+                //await AccountService.SetAuthenticationState(accountData, 1);
             }
             else{
                 //await EmployerService.CreateEmployerAsync(personInfo.Email);
+                accountData.Email = personInfo.Email;
+                await AccountService.InsertAccountData(accountData);
+                IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
+                if (emailChecked.Length() != 0)
+                {
+                    ShowSnackNotification("El email ya se encuentra en uso", Severity.Error);
+                }
+                else
+                {
+                    snackHandler._saving = false;
+                    ShowSnackNotification("Cuenta para "+personInfo.Name+" registrada", Severity.Success);
+                    await AccountService.SetAuthenticationState(accountData,1);
+                    nav.NavigateTo($"/Projects/{accountData.Email}");
+                }  
             }
             if (SendEmail == true) {
                 AccountService.SendEmail("Ha registrado su cuenta correctamente, bienvenido a Planilla_UCR",personInfo.Email);
-            }
-            accountData.Email = personInfo.Email;
-            await AccountService.InsertAccountData(accountData);
-            snackHandler._saving = false;
-            ShowSnackNotification("Persona "+personInfo.Name+" creado", Severity.Success);
-            await AccountService.SetAuthenticationState(accountData,1);
-            nav.NavigateTo($"/Projects/{accountData.Email}");
+            } 
         }
         snackHandler._saving = false;
     }
@@ -237,7 +250,6 @@
             return "Contraseñas no coinciden";
         return null;
     }
-
 
     void ShowSnackNotification(string message, Severity severity)
     {
