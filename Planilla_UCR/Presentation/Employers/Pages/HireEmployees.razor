@@ -23,8 +23,8 @@
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Proyectos", href: "#"),
-            new BreadcrumbItem("Empleados", href: "#"),
+            new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+            new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
         };
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -40,7 +40,14 @@
                         <MudTh>Email</MudTh>
                         <MudTh>Nombre completo</MudTh>
                         <MudTh>Cedula</MudTh>
-                        <MudTh></MudTh>
+                        <MudTh> 
+                            <MudSpacer></MudSpacer>
+                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToCreateEmployee(@email, @projectName))" Color="Color.Transparent">
+                                <MudText>
+                                Crear Empleados
+                                </MudText> 
+                            </MudButton>
+                        </MudTh>
                     </HeaderContent>
 
                     <RowTemplate>
@@ -97,9 +104,9 @@
         _loading = false;
     }
 
-    private void GoToCreateEmployee()
+    private void GoToCreateEmployee(string email, string projectName)
     {
-        nav.NavigateTo("/Create_Employee");
+        nav.NavigateTo($"/Create_Employee/{email}/{projectName}");
     }
 
     private void GoToContractEmployee(String email)
