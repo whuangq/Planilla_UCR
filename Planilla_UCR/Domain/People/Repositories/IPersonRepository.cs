@@ -10,5 +10,6 @@ namespace Domain.People.Repositories
         Task<IEnumerable<Person>> GetAllEmployees();
         Task<IEnumerable<Person>> GetProjectEmployees(string projectName);
         Task<IEnumerable<Person>> GetPersonByEmail(string email);
+        Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo);
     }
 }

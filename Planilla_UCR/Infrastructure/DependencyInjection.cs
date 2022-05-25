@@ -23,7 +23,7 @@ namespace Infrastructure
 
             services.AddDbContext<PersonDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IPersonRepository, PersonRepository>();
-
+            
             services.AddDbContext<EmployeeDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 

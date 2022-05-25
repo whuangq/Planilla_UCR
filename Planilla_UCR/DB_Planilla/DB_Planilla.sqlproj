@@ -58,13 +58,21 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
+    <Folder Include="Tables" />
+    <Folder Include="StoredProcedures\People" />
+    <Folder Include="StoredProcedures\Employee" />
     <Folder Include="StoredProcedures\Account" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
-    <Build Include="Tables\Acquire.sql" />
     <Build Include="Tables\Agreement.sql" />
     <Build Include="Tables\AgreementType.sql" />
+    <Build Include="Tables\Acquire.sql" />
+    <Build Include="Tables\Employee.sql" />
+    <Build Include="Tables\Employer.sql" />
+    <Build Include="Tables\Person.sql" />
+    <Build Include="Tables\Project.sql" />
+    <Build Include="Tables\Subscription.sql" />
     <Build Include="Tables\Employee.sql" />
     <Build Include="Tables\Employer.sql" />
     <Build Include="Tables\Person.sql" />
@@ -77,11 +85,20 @@
     <Build Include="StoredProcedures\Account\SetAuthenticationState.sql" />
     <Folder Include="StoredProcedures" />
     <Folder Include="Tables" />
+    <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\People" />
-    <Folder Include="StoredProcedures\Employee" />
+    <Build Include="StoredProcedures\People\GetInfoEmployer.sql" />
+    <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetProjectEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetPersonByEmail.sql" />
+    <Build Include="StoredProcedures\Employee\GetEmployeeByEmail.sql" />
+    <Build Include="StoredProcedures\Account\EmailCheckLoggin.sql" />
+    <Build Include="StoredProcedures\Account\InsertDataToAccountWithPasswordEncripted.sql" />
+    <Build Include="StoredProcedures\Account\PasswordCheckLoggin.sql" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
+    <Build Include="Tables\Acquire.sql" />
     <Build Include="Tables\Agreement.sql" />
     <Build Include="Tables\AgreementType.sql" />
     <Build Include="Tables\Acquire.sql" />
