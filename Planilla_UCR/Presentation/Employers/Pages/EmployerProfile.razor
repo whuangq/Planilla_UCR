@@ -27,48 +27,32 @@
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
-      <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
-
-    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-
-    <MudItem xs="2"> </MudItem>
-    <MudItem xs="8" sm="6" md="4">
-    <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Email" Color="@Color.Secondary" /> Email: @employerData.Email</MudField>
-    </MudItem>
-    <MudItem xs="2"> </MudItem>
-
-    <MudItem xs="2"> </MudItem>
-    <MudItem xs="8" sm="6" md="4">
-    <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Person" Color="@Color.Secondary" /> Nombre: @employerData.Name @employerData.LastName1 @employerData.LastName2</MudField>
-    </MudItem>
-    <MudItem xs="2"> </MudItem>
-
-    <MudItem xs="2"> </MudItem>
-    <MudItem xs="8" sm="6" md="4">
-    <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Photo" Color="@Color.Secondary" /> Cédula: @employerData.Ssn </MudField>
-    </MudItem>
-    <MudItem xs="2"> </MudItem>
-
-    <MudItem xs="2"> </MudItem>
-     <MudItem xs="8" sm="6" md="4">
-    <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.CreditCard" Color="@Color.Secondary" />  Cuenta bancaria: @employerData.BankAccount</MudField>
-    </MudItem>
-    <MudItem xs="2"> </MudItem>
-
-    <MudItem xs="2"> </MudItem>
-    <MudItem xs="8"  sm="6" md="4">
-    <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.LocationOn" Color="@Color.Secondary" /> Dirección: @employerData.Adress</MudField>
-    </MudItem>
-    <MudItem xs="2"> </MudItem>
-
-    <MudItem xs="2"> </MudItem>
-    <MudItem xs="8"  sm="6" md="4">
-    <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.ContactPhone" Color="@Color.Secondary" /> Teléfono: @employerData.PhoneNumber</MudField>
-    </MudItem>
-    <MudItem xs="2"> </MudItem>
-    <MudSpacer></MudSpacer>
-    </MudPaper>
-      
+        <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
+             <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+             <MudGrid>
+                <MudItem xs="4"></MudItem>
+                <MudItem xs="6">
+                <MudItem xs="6">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Email" Color="@Color.Secondary" /> Email: @employerData.Email</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Person" Color="@Color.Secondary" /> Nombre: @employerData.Name @employerData.LastName1 @employerData.LastName2</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Photo" Color="@Color.Secondary" /> Cédula: @employerData.Ssn </MudField>
+                </MudItem>
+                 <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.CreditCard" Color="@Color.Secondary" />  Cuenta bancaria: @employerData.BankAccount</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.LocationOn" Color="@Color.Secondary" /> Dirección: @employerData.Adress</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.ContactPhone" Color="@Color.Secondary" /> Teléfono: @employerData.PhoneNumber</MudField>
+                </MudItem> 
+                </MudItem>
+                </MudGrid>
+             </MudPaper>
     }
     else
     {
