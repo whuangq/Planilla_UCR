@@ -12,22 +12,25 @@
 
 <MudThemeProvider Theme="MyCustomTheme" />
 @code{
-    private static string GreenPredominant = "#00695c";
+    private static string Green = "#00695c";
     private static string White = "#FFFFFF";
+    private static string Gray = "#455A64";
+
 
     MudTheme MyCustomTheme = new MudTheme()
-    {
-        Palette = new Palette()
         {
-            Primary = White,
-            Secondary = GreenPredominant,
-            AppbarBackground = White,            
-            AppbarText = White,
-            DrawerBackground = GreenPredominant,
-            DrawerText = White,
-            DrawerIcon = GreenPredominant,  
-            TextDisabled = White,
-            
+            Palette = new Palette()
+            {
+                Primary = Green,
+                Secondary = Green,
+                AppbarBackground = White,
+                AppbarText = White,
+                DrawerBackground = Green,
+                DrawerText = White,
+                DrawerIcon = Green,
+                TextDisabled = White,
+                Tertiary = Gray
+
         },
         Typography = new Typography()
         {

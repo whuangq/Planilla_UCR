@@ -6,7 +6,7 @@
 @inject ISubscriptionService SubscriptionService
 
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
+{
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
         new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
@@ -33,6 +33,7 @@
 }
 else
 {
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
          <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
@@ -89,6 +90,7 @@ else
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Nombre", href: null, disabled: true),
         new BreadcrumbItem("Deducciones", href: "deductions"),
     };
 

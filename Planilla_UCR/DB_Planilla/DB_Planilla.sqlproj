@@ -56,19 +56,31 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="StoredProcedures" />
+    <Folder Include="Tables" />
+    <Folder Include="StoredProcedures\People" />
+    <Folder Include="StoredProcedures\Employee" />
+    <Folder Include="StoredProcedures\Subscription" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Person.sql" />
-    <Build Include="Employee.sql" />
-    <Build Include="Employer.sql" />
-    <Build Include="Subscription.sql" />
-    <Build Include="Account.sql" />
-    <Build Include="Project.sql" />
-    <Build Include="AgreementType.sql" />
-    <Build Include="Agreement.sql" />
-    <Build Include="Subscribes.sql" />
+    <Build Include="Tables\Account.sql" />
+    <Build Include="Tables\Agreement.sql" />
+    <Build Include="Tables\AgreementType.sql" />
+    <Build Include="Tables\Employee.sql" />
+    <Build Include="Tables\Employer.sql" />
+    <Build Include="Tables\Person.sql" />
+    <Build Include="Tables\Project.sql" />
+    <Build Include="Tables\Subscription.sql" />
+    <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetProjectEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetPersonByEmail.sql" />
+    <Build Include="StoredProcedures\Employee\GetEmployeeByEmail.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StoredProcedures\Subscription\GetAllDeductions.sql" />
+    <None Include="StoredProcedures\Subscription\GetAllBenefits.sql" />
   </ItemGroup>
 </Project>
