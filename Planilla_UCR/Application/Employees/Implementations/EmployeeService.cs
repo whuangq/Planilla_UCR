@@ -1,8 +1,8 @@
-﻿using Domain.Employees.DTOs;
-using Domain.Employees.Repositories;
+﻿using Domain.Employees.Repositories;
+using Domain.Employees.Entities;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Application.Employees.Implementations
 {
@@ -20,11 +20,9 @@ namespace Application.Employees.Implementations
             await _employeeRepository.CreateEmployeeAsync(email);
         }
 
-        public async Task<IEnumerable<EmployeeDTO>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<Employee>> GetEmployeeByEmail(string email)
         {
-            return await _employeeRepository.GetAllEmployeesAsync();
+            return await _employeeRepository.GetEmployeeByEmail(email);
         }
-
-        
     }
 }

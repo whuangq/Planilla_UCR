@@ -58,6 +58,8 @@
     <Folder Include="Properties" />
     <Folder Include="StoredProcedures" />
     <Folder Include="Tables" />
+    <Folder Include="StoredProcedures\People" />
+    <Folder Include="StoredProcedures\Employee" />
     <Folder Include="StoredProcedures\Account" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +77,9 @@
     <Folder Include="StoredProcedures\People" />
     <Build Include="StoredProcedures\People\GetInfoEmployer.sql" />
     <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetProjectEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetPersonByEmail.sql" />
+    <Build Include="StoredProcedures\Employee\GetEmployeeByEmail.sql" />
     <Build Include="StoredProcedures\Account\EmailCheckLoggin.sql" />
     <Build Include="StoredProcedures\Account\InsertDataToAccountWithPasswordEncripted.sql" />
     <Build Include="StoredProcedures\Account\PasswordCheckLoggin.sql" />

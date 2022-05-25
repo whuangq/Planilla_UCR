@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Domain.People.Entities;
-using Domain.People.DTOs;
 using System.Collections.Generic;
 
 namespace Domain.People.Repositories
@@ -9,6 +8,8 @@ namespace Domain.People.Repositories
     {
         Task CreatePersonAsync(Person personInfo);
         Task<IEnumerable<Person>> GetAllEmployees();
+        Task<IEnumerable<Person>> GetProjectEmployees(string projectName);
+        Task<IEnumerable<Person>> GetPersonByEmail(string email);
         Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo);
     }
 }

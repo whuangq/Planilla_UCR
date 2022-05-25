@@ -39,6 +39,20 @@ namespace Infrastructure.People.Repositories
             return employeeList;
         }
 
+        public async Task<IEnumerable<Person?>> GetProjectEmployees(string projectName)
+        {
+            var employeeList = await _dbContext.Persons.FromSqlRaw("EXEC GetProjectEmployees @projectName",
+                new SqlParameter("projectName", projectName)).ToListAsync();
+            return employeeList;
+        }
+
+        public async Task<IEnumerable<Person?>> GetPersonByEmail(string email)
+        {
+            var peopleList = await _dbContext.Persons.FromSqlRaw("EXEC GetPersonByEmail @email",
+                new SqlParameter("email", email)).ToListAsync();
+            return peopleList;
+        }
+
         public async Task<IEnumerable<Person?>> GetAllInfoEmployer(Person personInfo)
         {
             var employerInfo = await _dbContext.Persons.FromSqlRaw("EXEC GetInfoEmployer @EmailEmployer",

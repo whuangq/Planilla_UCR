@@ -1,10 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System;
 
 namespace Domain.People.DTOs
 {
@@ -14,7 +8,7 @@ namespace Domain.People.DTOs
         public String Name { get; set; }
         public String LastName1 { get; set; }
         public String LastName2 { get; set; }
-        public int Ssn { get; }
+        public int Ssn { get; set; }
         public String BankAccount { get; set; }
         public String Adress { get; set; }
         public String PhoneNumber { get; set; }
