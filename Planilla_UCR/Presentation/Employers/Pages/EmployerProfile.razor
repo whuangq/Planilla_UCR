@@ -1,0 +1,88 @@
+﻿@page "/Employer_Profile/{employerEmail}"
+@using Application.Employers
+@using Application.People
+@using Domain.Employers.Entities
+@using Domain.Employers.DTOs
+@using Domain.People.Entities
+@using Presentation.Core.Components
+@inject NavigationManager nav
+@inject IPersonService PersonService
+
+
+@if(_loading) {
+
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+       
+    </MudPaper>
+}else{
+    @if (!empty && !_loading)
+    {
+        List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Proyectos", href: "Projects"),
+        };
+
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+        <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
+             <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+             <MudGrid>
+                <MudItem xs="4"></MudItem>
+                <MudItem xs="6">
+                <MudItem xs="6">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Email" Color="@Color.Secondary" /> Email: @employerData.Email</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Person" Color="@Color.Secondary" /> Nombre: @employerData.Name @employerData.LastName1 @employerData.LastName2</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Photo" Color="@Color.Secondary" /> Cédula: @employerData.Ssn </MudField>
+                </MudItem>
+                 <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.CreditCard" Color="@Color.Secondary" />  Cuenta bancaria: @employerData.BankAccount</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.LocationOn" Color="@Color.Secondary" /> Dirección: @employerData.Adress</MudField>
+                </MudItem>
+                <MudItem xs="8">
+                <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.ContactPhone" Color="@Color.Secondary" /> Teléfono: @employerData.PhoneNumber</MudField>
+                </MudItem> 
+                </MudItem>
+                </MudGrid>
+             </MudPaper>
+    }
+    else
+    {
+        <MudText Align="Align.Center" Typo="Typo.h4"> Email incorrecto</MudText>
+    }
+}
+
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private bool empty = true;
+    Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
+    public Person employerData = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
+    [Parameter] public string employerEmail { get; set; }
+    private IEnumerable<Person> _elements = new List<Person>();  
+    private MudTable<Person> _table;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        personInfo.Email = employerEmail;
+        _elements = await PersonService.GetAllInfoEmployer(personInfo);
+        employerData = _elements.FirstOrDefault();
+        if ( _elements.Length() == 0){
+            empty = true;
+        }
+        else{
+            empty = false;
+        }
+        _loading = false;
+    }
+}

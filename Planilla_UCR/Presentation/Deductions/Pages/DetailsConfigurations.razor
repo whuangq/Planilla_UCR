@@ -1,5 +1,4 @@
-﻿@page "/Deductions/Details/{employerEmail}/{projectName}/{subscriptionName}/Configurations"
-@using Domain.Subscriptions.DTOs
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Deductions/{SubscriptionName}/Configurations"
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
@@ -8,15 +7,21 @@
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
 
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
+    };
+}
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 @if (_loading)
 {
-    <h4 class="text-danger">Loading deduction :)</h4>
+    <h4 class="text-danger">Deduction not found</h4>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
     <MudGrid>
         @*Text fields *@
         <MudItem xs="12" sm="8">
@@ -52,7 +57,7 @@ else
                     </MudButton>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="4">
-                            <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
+                            <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                                     <MudText>Limpiar</MudText>
                             </MudButton>
                 </MudItem>
@@ -74,24 +79,17 @@ else
     SnackHandler snackHandler = new SnackHandler();
 
 
-    [Parameter] public string employerEmail { get; set; }
-    [Parameter] public string projectName { get; set; }
-    [Parameter] public string subscriptionName { get; set; }
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions")
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
+    [Parameter] public string SubscriptionName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        subscription.EmployerEmail = employerEmail;
-        subscription.SubscriptionName = subscriptionName;
-        subscription.ProjectName = projectName;
-        subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionName);
-        _loading = false;
+        subscription = await SubscriptionService.GetSubscription(EmployerEmail, ProjectName, SubscriptionName);
+        if (subscription != null)
+        {
+            _loading = false;
+        }
     }
 
     async Task SaveDeduction()
@@ -133,13 +131,9 @@ else
         subscription.Cost = 0;
     }
 
-    private void GoToConfigs(string employerEmail, string subscriptionName)
-    {
-       
-    }
 
     private void GoToMain()
     {
-        nav.NavigateTo("/Deductions");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions");
     }
 }

@@ -1,2 +1,39 @@
-﻿@page "/"
+﻿@page "/{email}"
+@using Presentation.Authentication
+@using Presentation.Shared
+@using Presentation.Core.Layout
+@inject NavigationManager nav
 
+<Authenticator email="leonel.campos@ucr.ac.cr" SendAuthenticationState="ReceiveAuthenticationState"> </Authenticator>
+
+@if (_loading)
+{
+    <MudText> loading</MudText>
+}
+else
+{
+    if (authenticationState == true && _loading == false)
+    {
+        //Authorized
+        nav.NavigateTo("/Authorized");
+    }
+    else
+    {
+        //Unauthorized
+        nav.NavigateTo("/");
+    }
+}
+
+@code{
+    bool _loading = true;
+    bool authenticationState = false;
+
+    [Parameter]
+    public string email { get; set; }
+
+    protected void ReceiveAuthenticationState(bool state)
+    {
+        authenticationState = state;
+        _loading = false;
+    }
+}

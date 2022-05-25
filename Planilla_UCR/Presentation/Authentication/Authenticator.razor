@@ -1,0 +1,35 @@
+﻿@using Domain.Accounts.Entities
+@using Domain.Accounts.DTOs
+@using Presentation
+@using Application
+@using Application.Accounts
+@using Application.Accounts.Implementations
+@inject IAccountService AccountService
+
+@code{
+    bool authenticationState = false;
+
+    [Parameter]
+    public string email { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> SendAuthenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        authenticationState = await GetAuthenticationState(email);
+        await SendAuthenticationState.InvokeAsync(authenticationState);
+    }
+
+    public async Task<bool> GetAuthenticationState(string email)
+    {
+        authenticationState = false;
+        AccountsDTO accountData = new AccountsDTO(email, "");
+        IEnumerable<Account> emailChecked = await AccountService.GetAuthenticationState(accountData);
+        if (emailChecked.Length() == 1)
+        {
+            authenticationState = true;
+        }
+        return authenticationState;
+    }
+}

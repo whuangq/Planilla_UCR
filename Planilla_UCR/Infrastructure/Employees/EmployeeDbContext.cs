@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Employees
 {
-    internal class EmployeeDbContext:ApplicationDbContext
+    internal class EmployeeDbContext : ApplicationDbContext
     {
         public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options, ILogger<EmployeeDbContext> logger) : base(options, logger)
         {

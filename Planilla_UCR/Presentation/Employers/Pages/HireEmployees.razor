@@ -1,11 +1,12 @@
-﻿@page "/Hire_Employees"
+﻿@page "/Hire_Employees/{email}/{projectName}"
 @using Application.Employees
 @using Application.People
 @using Domain.Employees.Entities
 @using Domain.Employees.DTOs
 @using Domain.People.Entities
-@using Presentation.Employers.Components
+@using Presentation.Employers
 @using Presentation.Core.Components
+@using Presentation.Employees
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeService
 @inject IPersonService PersonService
@@ -23,8 +24,8 @@
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Proyectos", href: "#"),
-            new BreadcrumbItem("Empleados", href: "#"),
+            new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+            new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
         };
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -40,7 +41,14 @@
                         <MudTh>Email</MudTh>
                         <MudTh>Nombre completo</MudTh>
                         <MudTh>Cedula</MudTh>
-                        <MudTh></MudTh>
+                        <MudTh> 
+                            <MudSpacer></MudSpacer>
+                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToCreateEmployee(@email, @projectName))" Color="Color.Transparent">
+                                <MudText>
+                                Crear Empleados
+                                </MudText> 
+                            </MudButton>
+                        </MudTh>
                     </HeaderContent>
 
                     <RowTemplate>
@@ -64,7 +72,7 @@
     }
     else
     {
-        <HireEmployeesError></HireEmployeesError>
+        <HireEmployeesError email="@email" projectName="@projectName"></HireEmployeesError>
     }
 }
 
@@ -75,6 +83,12 @@
     string searchString1 = "";
     private IEnumerable<Person> _elements = new List<Person>();
     private MudTable<Person> _table;
+
+    [Parameter]
+    public string email { get; set; }
+
+    [Parameter]
+    public string projectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -91,9 +105,9 @@
         _loading = false;
     }
 
-    private void GoToCreateEmployee()
+    private void GoToCreateEmployee(string email, string projectName)
     {
-        nav.NavigateTo("/Create_Employee");
+        nav.NavigateTo($"/Create_Employee/{email}/{projectName}");
     }
 
     private void GoToContractEmployee(String email)
