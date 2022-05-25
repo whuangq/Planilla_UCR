@@ -32,9 +32,9 @@ namespace Application.Accounts.Implementations
            return await _accountRepository.CheckPassword(accountData);
         }
 
-        public async Task SendEmail(string message, string receiver)
+        public void  SendEmail(string message, string receiver)
         {
-            await _accountRepository.SendEmail(message, receiver);
+             _accountRepository.SendEmail(message, receiver);
         }
 
         public async Task SetAuthenticationState(AccountsDTO accountData, byte state)

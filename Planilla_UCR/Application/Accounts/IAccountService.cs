@@ -12,6 +12,6 @@ namespace Application.Accounts
         Task<IEnumerable<Account>> CheckPassword(AccountsDTO accountData);
         Task<IEnumerable<Account>> GetAuthenticationState(AccountsDTO accountData);
         Task SetAuthenticationState(AccountsDTO accountData, byte state);
-        Task SendEmail(string message, string receiver);
+        void SendEmail(string message, string receiver);
     }
 }

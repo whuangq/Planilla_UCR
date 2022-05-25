@@ -44,10 +44,10 @@ namespace Infrastructure.Accounts.Repositories
 
         }
 
-        public async Task SendEmail(string message, string receiver)
+        public void SendEmail(string message, string receiver)
         {
             EmailSender emailSender = new();
-            await emailSender.Execute(message, receiver);
+            emailSender.SendMail(message, receiver);
         }
 
         public async Task<IEnumerable<Account?>> GetAuthenticationState(AccountsDTO accountData)

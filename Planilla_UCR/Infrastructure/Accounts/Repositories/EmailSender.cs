@@ -1,35 +1,40 @@
-﻿using SendGrid;
-using SendGrid.Helpers.Mail;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Net;
+using System.Net.Mail;
 
 namespace Infrastructure.Accounts.Repositories
 {
     public class EmailSender
     {
         public EmailSender(){}
+        private string user = "i/MVRXAfhPPNVbUc0F0ILYn2xj4vSGjeCu1sXhBD7I0fFZBI5H7wD/8GHhHlMzPo";
+        private string key = "p/ZNHkzgSrYi7TogkFKN7qRHrBb0lc/XTw8DmUZ2Jro=";
 
-        
-
-        // Must install PM> Install-Package SendGrid
-        public async Task Execute(string message, string receiver)
+        public void SendMail(string textMessage, string email)
         {
-            EncryptionHelper encryptionHelper = new EncryptionHelper();
-            string a = "QcXhdv4TLgn6xKN79GKqRSMOb3oNvEXXmAMMA0HotgBrh9cBkOR4E0S1Ct0QBPvp29T57umzIFCiNYVrcYw9L2vvPrHEfkcjj83BHa5Nrf2X0nzTcnlPUnfyTIh1Aq99Z0tc0vJqkM93emLQEGnCYFkz7ou6Ny4CPA587IHOLhLvaGQpd/ow52Hlf1zK2WwM";
-            string value = encryptionHelper.Decrypt(a);
-            var client = new SendGridClient(a);
-            var from = new EmailAddress("nayeriazofeifa3003@gmail", "Planilla_UCR");
-            var subject = "Account confirmation";
-            var to = new EmailAddress(receiver, "");
-            var plainTextContent = "";
-            var htmlContent = "<strong>"+ message + "</strong>";
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            msg.SetClickTracking(false, false);
-            var response = await client.SendEmailAsync(msg);
-            Console.WriteLine(response);
+            try
+            {
+                var encriptor =  new EncryptionHelper();
+                var htmlContent = "<strong>" + textMessage + "</strong>";
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress(encriptor.Decrypt(user));
+                message.To.Add(new MailAddress(email));
+                message.Subject = "Confirmación de registro Planilla_UCR";
+                message.IsBodyHtml = true; //to make message body as html  
+                message.Body = htmlContent;
+                smtp.Port = 587;
+                smtp.Host = "smtp.gmail.com"; //for gmail host  
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(encriptor.Decrypt(user), encriptor.Decrypt(key));
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Send(message);
+            }
+            catch (Exception) { }
         }
     }
 

@@ -162,7 +162,7 @@
                 //await EmployerService.CreateEmployerAsync(personInfo.Email);
             }
             if (SendEmail == true) {
-                await AccountService.SendEmail("Ha registrado su cuenta correctamente, bienvenido a Planilla_UCR",personInfo.Email);
+                AccountService.SendEmail("Ha registrado su cuenta correctamente, bienvenido a Planilla_UCR",personInfo.Email);
             }
             accountData.Email = personInfo.Email;
             await AccountService.InsertAccountData(accountData);
