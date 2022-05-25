@@ -5,6 +5,7 @@
 @using Application.Accounts
 @using Application.People
 @using Application.Employees
+@using Application.Employers
 @using Domain.Accounts.Entities
 @using Domain.Accounts.DTOs
 @using Presentation.Shared.Models
@@ -19,6 +20,7 @@
 @inject IPersonService PersonService
 @inject IAccountService AccountService
 @inject IEmployeeService EmployeeService
+@inject IEmployerService EmployerService
 
 
 @*Navigation footprint *@
@@ -164,7 +166,7 @@
                 //await AccountService.SetAuthenticationState(accountData, 1);
             }
             else{
-                //await EmployerService.CreateEmployerAsync(personInfo.Email);
+                await EmployerService.CreateEmployerAsync(personInfo.Email);
                 accountData.Email = personInfo.Email;
                 IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
                 if (emailChecked.Length() != 0)
