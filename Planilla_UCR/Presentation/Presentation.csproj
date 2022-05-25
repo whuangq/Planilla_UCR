@@ -5,12 +5,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Employers\Models\**" />
-	  <Content Remove="Employers\Models\**" />
-	  <EmbeddedResource Remove="Employers\Models\**" />
-	  <None Remove="Employers\Models\**" />
+		<Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
+	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
 	</ItemGroup>
-	
+
+
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
@@ -35,10 +34,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="Employers\Pages\HireEmployeesError.razor" />
 	</ItemGroup>
 
 </Project>

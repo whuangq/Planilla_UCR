@@ -1,5 +1,4 @@
-﻿
-namespace Presentation.Employees.Models
+﻿namespace Presentation.Shared.Models
 {
     internal class SnackHandler
     {

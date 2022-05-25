@@ -1,14 +1,13 @@
-﻿@page "/Create_Employee"
+﻿@page "/Create_Employee/{email}/{projectName}"
 @using Application.People
 @using Domain.People.Entities
-@*@using Application.Accounts
-@using Domain.Accounts.Entities*@
-@*@using Presentation.Accounts.Models*@
 @using Domain.Employees.Entities
 @using Application.Employees
-@using Presentation.Employees.Models
+@using Presentation.Shared.Models
 @using Presentation.Core.Components
 @using System.ComponentModel.DataAnnotations
+@using Application.Accounts
+@using Domain.Accounts.Entities
 
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
@@ -18,11 +17,12 @@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Inicio", href: "#"),
-        new BreadcrumbItem("Cuenta", href: "#"),
+        new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+        new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
     };
 }
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
 
 <MudGrid>
     <MudItem xs="10" sm="12">
@@ -96,7 +96,7 @@
                         <MudButton Disabled="true"> </MudButton>
 
                         @*Clear buton *@
-                        <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Tertiary">
+                        <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                                 <MudText>Limpiar</MudText>
                         </MudButton>
                         
@@ -114,6 +114,11 @@
     //Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
+
+    [Parameter]
+    public string email { set; get; }
+    [Parameter]
+    public string projectName { set; get; }
 
     async Task SavePersonInfo()
     {

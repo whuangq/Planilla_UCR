@@ -1,0 +1,123 @@
+﻿@page "/Loggin"
+@using Domain.Accounts.DTOs
+@using Application.Accounts
+@using Domain.Accounts.Entities
+@using Presentation.Core.Components
+@using Application.People
+@using Domain.People.Entities
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using Shared.Models
+@using Presentation.Core.Layout.Visitor
+
+@layout VisitorMainLayout
+@inject NavigationManager nav
+@inject ISnackbar Snackbar
+@inject IPersonService PersonService
+@inject IAccountService AccountService
+@inject IAccountService AccountService
+
+<MudGrid>
+ <MudItem xs="10" sm="12">
+        <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudSpacer></MudSpacer>
+            <MudText Align="Align.Center" Typo="Typo.h6">Inicio</MudText>
+            <MudForm @ref="form">
+            <MudGrid>
+                <MudItem xs="2"></MudItem>
+                <MudItem xs="8">
+                    <MudTextField @bind-Value="accountData.Email" Label="Correo electrónico" Required="true" RequiredError="Campo requerido" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+                <MudItem xs="2"></MudItem>
+                <MudItem xs="2"></MudItem>
+                <MudItem xs="8">
+                    <MudTextField @bind-Value="accountData.UserPassword" Label="Contraseña" Required="true" RequiredError="Campo requerido" InputType="InputType.Password" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+                <MudItem xs="2"></MudItem>
+
+                @*Create buton *@
+                 <MudItem xs="2"></MudItem>
+                     <MudItem xs="8">
+                        <MudButton Disabled="@snackHandler._saving" OnClick="ValidateRegisterAccount" Variant="Variant.Filled" Color="Color.Secondary">
+                            @if (snackHandler._saving)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                <MudText Class="ms-2">Procesando</MudText>
+                            }
+                            else
+                            {
+                                <MudText>Ingresar</MudText>
+                            }
+                        </MudButton>
+                     
+                <MudButton Disabled="true"> </MudButton>
+              
+                <MudButton OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Transparent">
+                    <MudText>Registrarse</MudText>
+                 </MudButton>
+               </MudItem>
+            </MudGrid>
+           </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="3">
+    </MudItem>
+</MudGrid>
+
+@code{
+    MudForm form;
+    AccountsDTO accountData = new AccountsDTO("","");
+    SnackHandler snackHandler = new SnackHandler();
+   
+    async Task ValidateRegisterAccount()
+    {
+        snackHandler._saving = true;
+        await form.Validate();
+        if (form.IsValid){
+            IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
+            if (emailChecked.Length() != 0){
+                IEnumerable<Account> passwordChecked = await AccountService.CheckPassword(accountData);
+                if (passwordChecked.Length() != 0){
+                    await AccountService.SetAuthenticationState(accountData,1);
+                    nav.NavigateTo($"/Projects/{accountData.Email}");
+                }
+                else{
+                    ShowSnackNotification("Contraseña incorrecta", Severity.Error);
+                }
+            }
+             else {
+                 ShowSnackNotification("No posee una cuenta registrada", Severity.Error);
+            } 
+        }
+        snackHandler._saving = false;
+    }
+
+    private void GoToCreateAccount()
+    {
+        nav.NavigateTo("/Register_Form");
+    }
+
+        /*
+        private void GoToProjects()
+        {
+        nav.NavigateTo("/Register_Form");
+        }
+        */
+
+    void ShowSnackNotification(string message, Severity severity)
+    {
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PreventDuplicates = false;
+        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Configuration.NewestOnTop = true;
+        Snackbar.Add($"{message}", severity, config =>
+        {
+            config.RequireInteraction = false;
+            config.ShowCloseIcon = true;
+            config.Onclick = snackbar =>
+            {
+                return Task.CompletedTask;
+            };
+        });
+    }
+}

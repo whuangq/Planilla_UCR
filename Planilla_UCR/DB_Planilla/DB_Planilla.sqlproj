@@ -56,6 +56,7 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures\People" />
@@ -72,6 +73,17 @@
     <Build Include="Tables\Person.sql" />
     <Build Include="Tables\Project.sql" />
     <Build Include="Tables\Subscription.sql" />
+    <Build Include="Tables\Employee.sql" />
+    <Build Include="Tables\Employer.sql" />
+    <Build Include="Tables\Person.sql" />
+    <Build Include="Tables\Project.sql" />
+    <Build Include="Tables\Subscription.sql" />
+    <Build Include="StoredProcedures\Account\EmailCheckLoggin.sql" />
+    <Build Include="StoredProcedures\Account\InsertDataToAccountWithPasswordEncripted.sql" />
+    <Build Include="StoredProcedures\Account\PasswordCheckLoggin.sql" />
+    <Build Include="StoredProcedures\Account\GetAuthenticationState.sql" />
+    <Build Include="StoredProcedures\Account\SetAuthenticationState.sql" />
+    <Folder Include="StoredProcedures" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\People" />
@@ -89,14 +101,19 @@
     <Build Include="Tables\Acquire.sql" />
     <Build Include="Tables\Agreement.sql" />
     <Build Include="Tables\AgreementType.sql" />
+    <Build Include="Tables\Acquire.sql" />
     <Build Include="Tables\Employee.sql" />
     <Build Include="Tables\Employer.sql" />
     <Build Include="Tables\Person.sql" />
     <Build Include="Tables\Project.sql" />
     <Build Include="Tables\Subscription.sql" />
+    <Build Include="StoredProcedures\People\GetAllEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetProjectEmployees.sql" />
+    <Build Include="StoredProcedures\People\GetPersonByEmail.sql" />
+    <Build Include="StoredProcedures\Employee\GetEmployeeByEmail.sql" />
   </ItemGroup>
   <ItemGroup>
-    <PostDeploy Include="Script.PostDeployment.sql" />
     <RefactorLog Include="DB_Planilla.refactorlog" />
+    <PostDeploy Include="Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>

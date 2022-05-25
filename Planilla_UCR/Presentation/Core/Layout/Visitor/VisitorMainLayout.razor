@@ -1,0 +1,36 @@
+﻿@inherits LayoutComponentBase
+
+<CascadingValue Value="this">
+<MudThemeProvider/>
+<MudSnackbarProvider />
+<MudLayout id="banner">
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudSpacer />
+        <MudSpacer />
+        <MudLink Href="/Loggin" Color="Color.Secondary">Ingresar</MudLink>
+        <MudButton Disabled=true></MudButton>
+        <MudLink Href="/Register_Form" Color="Color.Secondary">Registrar</MudLink>
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
+        @*<VisitorNavMenu></VisitorNavMenu>*@
+    </MudDrawer>
+    <MudMainContent>
+        <div style="padding: 2%;" class="container">
+            @Body
+        </div>
+    </MudMainContent>
+</MudLayout>
+</CascadingValue>
+
+@code {
+    bool _drawerOpen = false;
+    public bool Authenticated { get; set; } = false;
+    private bool collapseNavMenu = true;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}
