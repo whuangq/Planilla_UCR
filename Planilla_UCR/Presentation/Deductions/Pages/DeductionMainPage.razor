@@ -1,29 +1,48 @@
-﻿@page "/Deductions"
-@using Domain.Subscriptions.DTOs
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Deductions"
 @using Domain.Subscriptions.Entities
 @using Application.Subscriptions
 @using Presentation.Core.Components
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
-@if (_loading)
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
 {
-    <h4 class="text-danger">Loading deductions :)</h4>
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
+    };
+}
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+@if (_empty)
+{
+    <MudText Typo="Typo.h6" Align="Align.Center">No hay deducciones asociadas al proyecto
+    </MudText>
+    <br>
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudButton></MudButton>
+        <MudSpacer></MudSpacer>
+        <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
+            <MudText> 
+            Crear Deducción
+            </MudText> 
+        </MudButton>
+        <MudSpacer></MudSpacer>
+        <MudButton></MudButton>
+    </MudToolBar>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
          <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
     </MudToolBar>
-    <MudItem xs="2">
-        <MudSelect  @bind-Value="project" Label="Proyecto">
-            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
-            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
-        </MudSelect>
-    </MudItem>
-    <MudTable Items="@Elements" RowsPerPage="6" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable">
+    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
+        <ToolBarContent>
+            <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
@@ -31,8 +50,8 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{context.EmployerEmail}/{context.NameSubscription}")">
-                    @context.NameSubscription
+                <MudLink Color="Color.Secondary" Href="@($"/Projects/{EmployerEmail}/{ProjectName}/Deductions/{context.SubscriptionName}")">
+                    @context.SubscriptionName
                 </MudLink>
             </MudTd>
             <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
@@ -54,41 +73,50 @@ else
 
 @code {
     private bool _hidePosition;
-    private bool _loading = true;
+    private bool _empty = true;
     private int selectedRowNumber = -1;
-    private MudTable<SubscriptionDTO> mudTable;
+    private MudTable<Subscription> mudTable;
     private List<string> clickedEvents = new();
-    private IEnumerable<SubscriptionDTO> Elements;
+    private IEnumerable<Subscription> Elements;
 
+    public string searchString1 = "";
     public string project { get; set; }
 
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
 
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions"),
-    };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
-        _loading = false;
+        Elements = await SubscriptionService.GetDeductionsByProject(EmployerEmail, ProjectName);
+        if (Elements.Length() > 0){
+            _empty = false;
+        }
     }
 
     private void GoToCreate()
     {
-        nav.NavigateTo("/Deductions/New");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions/New");
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo("/Deductions/Configurations");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions/Configurations");
     }
 
     private void PageChanged(int i)
     {
         mudTable.NavigateTo(i - 1);
+    }
+
+    private bool FilterFunc1(Subscription element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Subscription element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.SubscriptionName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

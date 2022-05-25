@@ -42,3 +42,12 @@
 --INSERT INTO Employee
 --VALUES('mau@ucr.ac.cr')
 
+--INSERT INTO Project
+--VALUES('jeremychaman@gmail.com',
+--'Proyecto 1',
+--'Emprendimiento de chocolates',
+--15000,
+--10,
+--'Quincenal'
+--)
+

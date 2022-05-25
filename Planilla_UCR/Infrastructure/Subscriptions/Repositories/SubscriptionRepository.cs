@@ -1,5 +1,5 @@
 ﻿using Domain.Core.Repositories;
-using Domain.Subscriptions.DTOs;
+using Domain.Subscriptions.Entities;
 using Domain.Subscriptions.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -18,9 +18,49 @@ namespace Infrastructure.Subscriptions.Repositories
             _dbContext = unitOfWork;
         }
 
-        public async Task<IEnumerable<SubscriptionDTO>> GetAllSubscriptionsAsync()
+        public async Task<IEnumerable<Subscription>> GetAllDeductionsAsync()
         {
-            return await _dbContext.Subscriptions.Select(t => new SubscriptionDTO(t.EmployerEmail, t.NameSubscription, t.ProviderName, t.SubscriptionDescription, t.Cost, t.TypeSubscription)).ToListAsync();
+            return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetAllDeductions").ToListAsync();
+        }
+
+        public async Task<IEnumerable<Subscription>> GetAllBenefictsAsync()
+        {
+            return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetAllBenefits").ToListAsync();
+        }
+
+        public async Task CreateSubscriptionAsync(Subscription subscription)
+        {
+            _dbContext.Subscriptions.Add(subscription);
+            await _dbContext.SaveEntitiesAsync();
+        }
+
+        public async Task<Subscription>? GetSubscription(string employerEmail, string projectName, string subscriptionName)
+        {
+            IList<Subscription> subscriptionResult = await _dbContext.Subscriptions.Where
+                (e => e.EmployerEmail == employerEmail && e.SubscriptionName == subscriptionName 
+                && e.ProjectName == projectName).ToListAsync();
+            Subscription subscription = null;
+            if (subscriptionResult.Length() > 0)
+            {
+                subscription = subscriptionResult.First();
+            }
+            return subscription;
+        }
+
+        public async Task<IEnumerable<Subscription>> GetDeductionsByProject(string employerEmail, string projectName)
+        {
+            IList<Subscription> subscriptionResult = await _dbContext.Subscriptions.Where
+                (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName 
+                && e.TypeSubscription == 0 && e.IsEnabled == 1).ToListAsync();
+            return subscriptionResult;
+        }
+
+        public async Task<IEnumerable<Subscription>> GetBenefitsByProject(string employerEmail, string projectName)
+        {
+            IList<Subscription> subscriptionResult = await _dbContext.Subscriptions.Where
+                (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName
+                && e.TypeSubscription == 1 && e.IsEnabled == 1).ToListAsync();
+            return subscriptionResult;
         }
     }
 }

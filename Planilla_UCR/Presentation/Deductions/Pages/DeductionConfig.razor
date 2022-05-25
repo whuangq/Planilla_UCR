@@ -1,25 +1,32 @@
-﻿@page "/Deductions/Configurations"
-@using Domain.Subscriptions.DTOs
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Deductions/Configurations"
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
 
+
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
+        new BreadcrumbItem("Configuraciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions/Configurations"),
+    };
+}
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 @if (_loading)
 {
-    <h4 class="text-danger">Loading deductions :)</h4>
+    <MudText Typo="Typo.h6">No hay deducciones asociadas al proyecto</MudText>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-    <MudItem xs="2">
-        <MudSelect  @bind-Value="project" Label="Proyecto">
-            <MudSelectItem Value="@("Proyecto 1")">Proyecto 1</MudSelectItem>
-            <MudSelectItem Value="@("Proyecto 2")">Proyecto 2</MudSelectItem>
-        </MudSelect>
-    </MudItem>
-    <MudTable @ref="mudTable" Items="@Elements" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
+        <ToolBarContent>
+            <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh>Nombre</MudTh>
             <MudTh>Descripción</MudTh>
@@ -27,8 +34,8 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.NameSubscription}/Configurations")">
-                    @context.NameSubscription
+                <MudLink Color="Color.Secondary" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Deductions/{@context.SubscriptionName}/Configurations")">
+                    @context.SubscriptionName
                 </MudLink>
             </MudTd>
             <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
@@ -41,7 +48,7 @@ else
             <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
         </PagerContent>
     </MudTable>
-    <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.NameSubscription).Select(x=>x.NameSubscription)))</MudText>
+    <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
         <MudButton Variant="Variant.Filled" OnClick="DeleteDeductions" Color="Color.Error">Borrar</MudButton>
@@ -52,26 +59,22 @@ else
 @code {
     private bool _hidePosition;
     private bool _loading = true;
-    private HashSet<SubscriptionDTO> selectedItems1 = new HashSet<SubscriptionDTO>();
-    private IEnumerable<SubscriptionDTO> Elements;
-    private MudTable<SubscriptionDTO> mudTable;
+    private HashSet<Subscription> selectedItems1 = new HashSet<Subscription>();
+    private IEnumerable<Subscription> Elements;
+    private MudTable<Subscription> mudTable;
 
+    public string searchString1 = "";
     public string project { get; set; }
 
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions"),
-        new BreadcrumbItem("Configuraciones", href: "configdeductions"),
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllSubscriptionsAsync();
+        Elements = await SubscriptionService.GetDeductionsByProject(EmployerEmail, ProjectName);
+        if (Elements.Length() > 0){
         _loading = false;
-
+        }
     }
 
     private void DeleteDeductions()
@@ -88,6 +91,17 @@ else
                 return Task.CompletedTask;
             };
         });
+    }
+
+    private bool FilterFunc1(Subscription element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Subscription element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.SubscriptionName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 
     private void DeleteDeductionsUpdate()

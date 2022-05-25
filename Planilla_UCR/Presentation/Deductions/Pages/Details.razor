@@ -1,4 +1,4 @@
-﻿@page "/Deductions/Details/{employerEmail}/{subscriptionName}"
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Deductions/{SubscriptionName}"
 
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
@@ -7,18 +7,25 @@
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
+    };
+}
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
 @if (_loading)
 {
-    <h4 class="text-danger">Loading deduction :)</h4>
+    <h4 class="text-danger">Deduction not found</h4>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
     <MudCard>
         <MudCardHeader>
             <CardHeaderContent>    
-                <MudText Typo="Typo.h6" Align="Align.Center">@subscription.NameSubscription</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center">@subscription.SubscriptionName</MudText>
             </CardHeaderContent>
             <CardHeaderActions>
                 <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
@@ -44,34 +51,29 @@ else
 @code {
     private bool _hidePosition;
     private bool _loading = true;
-    private IEnumerable<SubscriptionDTO> Elements;
-    public Subscription subscription = new Subscription("","","CCSS","Deducción1",2000,0);
+    private IEnumerable<Subscription> Elements;
+    public Subscription subscription = new Subscription("","","","","",0,0,1);
 
-    [Parameter] public string employerEmail { get; set; }
-    [Parameter] public string subscriptionName { get; set; }
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions")
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
+    [Parameter] public string SubscriptionName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        subscription.EmployerEmail = employerEmail;
-        subscription.NameSubscription = subscriptionName;
-        _loading = false;
+        subscription = await SubscriptionService.GetSubscription(EmployerEmail, ProjectName, SubscriptionName);
+        if (subscription != null)
+        {
+            _loading = false;
+        }
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo($"/Deductions/Details/{employerEmail}/{subscriptionName}/Configurations");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions/{SubscriptionName}/Configurations");
     }
 
     private void GoToMain()
     {
-        nav.NavigateTo("/Deductions");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions");
     }
 }

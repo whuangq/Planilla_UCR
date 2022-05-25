@@ -62,12 +62,12 @@
     <Folder Include="StoredProcedures\People" />
     <Folder Include="StoredProcedures\Employee" />
     <Folder Include="StoredProcedures\Account" />
+    <Folder Include="StoredProcedures\Subscription" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
     <Build Include="Tables\Agreement.sql" />
     <Build Include="Tables\AgreementType.sql" />
-    <Build Include="Tables\Acquire.sql" />
     <Build Include="Tables\Employee.sql" />
     <Build Include="Tables\Employer.sql" />
     <Build Include="Tables\Person.sql" />
@@ -98,10 +98,8 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
-    <Build Include="Tables\Acquire.sql" />
     <Build Include="Tables\Agreement.sql" />
     <Build Include="Tables\AgreementType.sql" />
-    <Build Include="Tables\Acquire.sql" />
     <Build Include="Tables\Employee.sql" />
     <Build Include="Tables\Employer.sql" />
     <Build Include="Tables\Person.sql" />
@@ -115,5 +113,9 @@
   <ItemGroup>
     <RefactorLog Include="DB_Planilla.refactorlog" />
     <PostDeploy Include="Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="StoredProcedures\Subscription\GetAllDeductions.sql" />
+    <None Include="StoredProcedures\Subscription\GetAllBenefits.sql" />
   </ItemGroup>
 </Project>
