@@ -2,10 +2,7 @@
 using Domain.People.Entities;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System;
-using Domain.People.DTOs;
-using Domain.Core.Repositories;
-using System.Collections.Generic;
+
 
 namespace Application.People.Implementations
 {
