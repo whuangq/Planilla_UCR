@@ -10,7 +10,7 @@ namespace Infrastructure.Subscriptions.EntityMappings
         {
             builder.ToTable("Subscription");
 
-            builder.HasKey(p => new { p.EmployerEmail, p.NameSubscription});
+            builder.HasKey(p => new { p.EmployerEmail, p.NameSubscription });
 
             builder.Property(p => p.ProviderName)
                 .IsRequired();

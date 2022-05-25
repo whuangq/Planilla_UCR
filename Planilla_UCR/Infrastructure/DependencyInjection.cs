@@ -20,12 +20,13 @@ namespace Infrastructure
 
             services.AddDbContext<PersonDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IPersonRepository, PersonRepository>();
-
+            
             services.AddDbContext<EmployeeDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             services.AddDbContext<SubscriptionDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+            
             return services;
         }
     }

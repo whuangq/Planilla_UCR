@@ -1,6 +1,6 @@
 ﻿namespace Domain.Employees.ValueObjects
 {
-    class EmployeeCode 
+    class EmployeeCode
     {
 
     }

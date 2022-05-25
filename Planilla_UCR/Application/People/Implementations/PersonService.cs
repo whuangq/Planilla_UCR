@@ -3,6 +3,7 @@ using Domain.People.Entities;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+
 namespace Application.People.Implementations
 {
     internal class PersonService : IPersonService
@@ -33,5 +34,12 @@ namespace Application.People.Implementations
         {
             return await _personRepository.GetProjectEmployees(projectName);
         }
+
+        
+        public async  Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo)
+        {
+            return await _personRepository.GetAllInfoEmployer(personInfo);
+        }
+        
     }
 }

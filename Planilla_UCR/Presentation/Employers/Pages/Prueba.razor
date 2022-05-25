@@ -1,0 +1,16 @@
+﻿@page "/Employer_Profile"
+@inject NavigationManager nav
+
+<MudText>@employerEmail </MudText>
+
+
+
+@code{
+    public string employerEmail = "leo@a";
+
+    protected override void OnParametersSet()
+    {
+        nav.NavigateTo($"/Employer_Profile/{employerEmail}");
+    }
+
+}

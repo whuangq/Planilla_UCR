@@ -3,6 +3,13 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Employers\Models\**" />
+	  <Content Remove="Employers\Models\**" />
+	  <EmbeddedResource Remove="Employers\Models\**" />
+	  <None Remove="Employers\Models\**" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
@@ -28,6 +35,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Employers\Pages\HireEmployeesError.razor" />
 	</ItemGroup>
 
 </Project>

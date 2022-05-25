@@ -1,6 +1,6 @@
 ﻿CREATE TABLE Account
 (
 	Email varchar(255) NOT NULL PRIMARY KEY,
-	Password VARBINARY(8000) NOT NULL
-	FOREIGN KEY(Email) REFERENCES Person(Email)
+	UserPassword VARBINARY(500) NOT NULL,
+	FOREIGN KEY(Email) REFERENCES Person(Email),
 );
