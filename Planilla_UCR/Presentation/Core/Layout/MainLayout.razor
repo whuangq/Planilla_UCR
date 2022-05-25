@@ -1,34 +1,49 @@
 ﻿@inherits LayoutComponentBase
+@using Presentation
 
 <MudThemeProvider/>
 <MudSnackbarProvider />
+
+@signal
+
+ <CascadingValue Value="this">
 <MudLayout id="banner">
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudSpacer />
+        
 
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
-        <NavMenu />
+        <NavMenu email=@signal></NavMenu>
     </MudDrawer>
     <MudMainContent>
+        
+             @*<MudTextField> @theme</MudTextField>*@
         <div style="padding: 2%;" class="container">
             @Body
         </div>
     </MudMainContent>
 </MudLayout>
+ </CascadingValue>
 
 @code {
+    public string signal { get; set; } = "no";
+
     bool _drawerOpen = true;
 
-        void DrawerToggle()
-        {
-            _drawerOpen = !_drawerOpen;
-        }
-
-    protected override async Task OnInitializedAsync()
+    void DrawerToggle()
     {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    protected override void OnInitialized()
+    {
+        if (signal != "no")
+        {
+            InvokeAsync(() => StateHasChanged());
+        }
 
     }
 }

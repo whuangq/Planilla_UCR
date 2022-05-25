@@ -1,10 +1,14 @@
-﻿@page "/{email}"
+﻿@page "/"
 @using Presentation.Authentication
 @using Presentation.Shared
 @using Presentation.Core.Layout
+@using Presentation
+
 @inject NavigationManager nav
 
-<Authenticator email="leonel.campos@ucr.ac.cr" SendAuthenticationState="ReceiveAuthenticationState"> </Authenticator>
+
+
+@*<Authenticator email="leonel.campos@ucr.ac.cr" SendAuthenticationState="ReceiveAuthenticationState"> </Authenticator>
 
 @if (_loading)
 {
@@ -22,14 +26,23 @@ else
         //Unauthorized
         nav.NavigateTo("/");
     }
-}
+}*@
 
 @code{
     bool _loading = true;
     bool authenticationState = false;
+    private int currentCount = 0;
 
     [Parameter]
     public string email { get; set; }
+
+    [CascadingParameter]
+    public MainLayout layout { get; set; }
+
+    protected override void OnInitialized()
+    {
+        layout.signal = "email";
+    }
 
     protected void ReceiveAuthenticationState(bool state)
     {
