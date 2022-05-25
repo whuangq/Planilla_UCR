@@ -33,7 +33,6 @@
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
          <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
@@ -86,13 +85,6 @@ else
     [Parameter] public string EmployerEmail { get; set; }
     [Parameter] public string ProjectName { get; set; }
 
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Nombre", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions"),
-    };
 
     protected override async Task OnInitializedAsync()
     {
