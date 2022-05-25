@@ -33,5 +33,14 @@ namespace Application.Subscriptions.Implementations
         {
             return await _subscriptionRepository.GetSubscription(employerEmail, projectName, subscriptionName);
         }
+
+        public async Task<IEnumerable<Subscription>> GetDeductionsByProject(string employerEmail, string projectName) {
+            return await _subscriptionRepository.GetDeductionsByProject(employerEmail, projectName);
+        }
+
+        public async Task<IEnumerable<Subscription>> GetBenefitsByProject(string employerEmail, string projectName)
+        {
+            return await _subscriptionRepository.GetBenefitsByProject(employerEmail, projectName);
+        }
     }
 }

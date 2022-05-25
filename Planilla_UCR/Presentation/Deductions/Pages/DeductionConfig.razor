@@ -1,10 +1,19 @@
-﻿@page "/Deductions/Configurations"
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Deductions/Configurations"
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
 
+
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
+        new BreadcrumbItem("Configuraciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions/Configurations"),
+    };
+}
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 @if (_loading)
 {
@@ -25,7 +34,7 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Deductions/Details/{@context.EmployerEmail}/{@context.ProjectName}/{@context.SubscriptionName}/Configurations")">
+                <MudLink Color="Color.Secondary" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Deductions/{@context.SubscriptionName}/Configurations")">
                     @context.SubscriptionName
                 </MudLink>
             </MudTd>
@@ -57,17 +66,12 @@ else
     public string searchString1 = "";
     public string project { get; set; }
 
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions"),
-        new BreadcrumbItem("Configuraciones", href: "configdeductions"),
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllDeductionsAsync();
+        Elements = await SubscriptionService.GetDeductionsByProject(EmployerEmail, ProjectName);
         if (Elements.Length() > 0){
             _loading = false;
         }

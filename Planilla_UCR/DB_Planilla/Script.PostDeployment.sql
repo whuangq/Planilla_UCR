@@ -24,7 +24,7 @@ VALUES('jeremy@ucr.ac.cr',
 
 INSERT INTO Project
 VALUES('jeremy@ucr.ac.cr',
-'Proyecto 2',
+'Proyecto',
 'Emprendimiento de candelas',
 15000,
 10,
@@ -33,6 +33,7 @@ VALUES('jeremy@ucr.ac.cr',
 select *
 from Subscription
 
+/*
 DROP TABLE Subscription
 
 CREATE PROCEDURE GetAllDeductions
@@ -45,4 +46,4 @@ CREATE PROCEDURE GetAllBenefits
 AS
 BEGIN
     SELECT * FROM Subscription WHERE TypeSubscription=1 and IsEnabled=1
-END
+END*/

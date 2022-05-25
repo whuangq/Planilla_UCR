@@ -1,11 +1,8 @@
 ﻿using Domain.Core.Repositories;
-using Domain.Subscriptions.DTOs;
 using Domain.Subscriptions.Entities;
 using Domain.Subscriptions.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,6 +45,22 @@ namespace Infrastructure.Subscriptions.Repositories
                 subscription = subscriptionResult.First();
             }
             return subscription;
+        }
+
+        public async Task<IEnumerable<Subscription>> GetDeductionsByProject(string employerEmail, string projectName)
+        {
+            IList<Subscription> subscriptionResult = await _dbContext.Subscriptions.Where
+                (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName 
+                && e.TypeSubscription == 0 && e.IsEnabled == 1).ToListAsync();
+            return subscriptionResult;
+        }
+
+        public async Task<IEnumerable<Subscription>> GetBenefitsByProject(string employerEmail, string projectName)
+        {
+            IList<Subscription> subscriptionResult = await _dbContext.Subscriptions.Where
+                (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName
+                && e.TypeSubscription == 1 && e.IsEnabled == 1).ToListAsync();
+            return subscriptionResult;
         }
     }
 }

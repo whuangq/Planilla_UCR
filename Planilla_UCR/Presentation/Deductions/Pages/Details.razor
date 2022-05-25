@@ -1,4 +1,4 @@
-﻿@page "/Deductions/Details/{employerEmail}/{projectName}/{subscriptionName}"
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Deductions/{SubscriptionName}"
 
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
@@ -7,14 +7,21 @@
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
+    };
+}
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
 @if (_loading)
 {
-    <h4 class="text-danger">Loading deduction :)</h4>
+    <h4 class="text-danger">Deduction not found</h4>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
     <MudCard>
         <MudCardHeader>
             <CardHeaderContent>    
@@ -47,33 +54,26 @@ else
     private IEnumerable<Subscription> Elements;
     public Subscription subscription = new Subscription("","","","","",0,0,1);
 
-    [Parameter] public string employerEmail { get; set; }
-    [Parameter] public string projectName { get; set; }
-    [Parameter] public string subscriptionName { get; set; }
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: "deductions")
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
+    [Parameter] public string SubscriptionName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        subscription.EmployerEmail = employerEmail;
-        subscription.SubscriptionName = subscriptionName;
-        subscription.ProjectName = projectName;
-        subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionName);
-        _loading = false;
+        subscription = await SubscriptionService.GetSubscription(EmployerEmail, ProjectName, SubscriptionName);
+        if (subscription != null)
+        {
+            _loading = false;
+        }
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo($"/Deductions/Details/{employerEmail}/{projectName}/{subscriptionName}/Configurations");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions/{SubscriptionName}/Configurations");
     }
 
     private void GoToMain()
     {
-        nav.NavigateTo("/Deductions");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions");
     }
 }
