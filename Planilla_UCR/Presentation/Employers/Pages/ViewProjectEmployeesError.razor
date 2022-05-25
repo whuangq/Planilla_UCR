@@ -1,6 +1,8 @@
 ﻿@using Application.Employees
 @using Domain.Employees.Entities
 @using Presentation.Core.Components
+@using Presentation.Employers.Pages
+
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
@@ -35,6 +37,6 @@
     public string projectName { get; set; }
     private void GoToHireEmployee()
     {
-        nav.NavigateTo("/Hire_Employees");
+        nav.NavigateTo($"/Hire_Employees");
     }
 }

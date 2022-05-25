@@ -5,7 +5,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="Employers\Components\HireEmployeesError.razor" />
+	  <Compile Remove="Employers\Models\**" />
+	  <Content Remove="Employers\Models\**" />
+	  <EmbeddedResource Remove="Employers\Models\**" />
+	  <None Remove="Employers\Models\**" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -35,19 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Employers\Models\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <UpToDateCheckInput Remove="Employers\Components\HireEmployeesError.razor" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <_ContentIncludedByDefault Remove="Employers\Components\HireEmployeesError.razor" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="Employers\Components\HireEmployeesError.razor" />
+	  <None Include="Employers\Pages\HireEmployeesError.razor" />
 	</ItemGroup>
 
 </Project>
