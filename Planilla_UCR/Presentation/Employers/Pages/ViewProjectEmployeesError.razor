@@ -4,7 +4,8 @@
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
-@page "/View_Project_Employees_Error/{projectName}"
+@page "/View_Project_Employees_Error/{email}/{projectName}"
+
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -33,8 +34,12 @@
 @code {
     [Parameter]
     public string projectName { get; set; }
+
+    [Parameter]
+    public string email { get; set; }
+
     private void GoToHireEmployee()
     {
-        nav.NavigateTo("/Hire_Employees");
+        nav.NavigateTo($"/Hire_Employees/{email}/{projectName}");
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/Create_Employee"
+﻿@page "/Create_Employee/{email}/{projectName}"
 @using Application.People
 @using Domain.People.Entities
 @using Domain.Employees.Entities
@@ -18,7 +18,7 @@
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Inicio", href: "#"),
-        new BreadcrumbItem("Cuenta", href: "#"),
+        new BreadcrumbItem("Cuenta", href: $"/View_Project_Employees/{email}/{projectName}"),
     };
 }
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -114,6 +114,11 @@
     //Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
+
+    [Parameter]
+    public string email { set; get; }
+    [Parameter]
+    public string projectName { set; get; }
 
     async Task SavePersonInfo()
     {

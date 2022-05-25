@@ -1,4 +1,4 @@
-﻿@page "/Hire_Employees"
+﻿@page "/Hire_Employees/{email}/{projectName}"
 @using Application.Employees
 @using Application.People
 @using Domain.Employees.Entities
@@ -64,7 +64,7 @@
     }
     else
     {
-        <HireEmployeesError></HireEmployeesError>
+        <HireEmployeesError email="@email" projectName="@projectName"></HireEmployeesError>
     }
 }
 
@@ -75,6 +75,12 @@
     string searchString1 = "";
     private IEnumerable<Person> _elements = new List<Person>();
     private MudTable<Person> _table;
+
+    [Parameter]
+    public string email { get; set; }
+
+    [Parameter]
+    public string projectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

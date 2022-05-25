@@ -1,0 +1,18 @@
+﻿@page "/Projects/{email}"
+@inject NavigationManager nav
+
+<MudText>@email </MudText>
+
+
+
+@code{
+    [Parameter]
+    public string email { get; set; }
+    string projectName = "proyecto23";
+
+    protected override void OnParametersSet()
+    {
+        nav.NavigateTo($"/View_Project_Employees/{email}/{projectName}");
+    }
+    
+}
