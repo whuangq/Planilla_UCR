@@ -1,6 +1,7 @@
 ﻿@using Application.Employees
 @using Domain.Employees.Entities
 @using Presentation.Core.Components
+
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
@@ -31,9 +32,13 @@
     </MudToolBar>
 
 @code {
+    [Parameter]
+    public string email {get; set;}
+    [Parameter]
+    public string projectName {get; set;}
 
    private void GoToCreateEmployee()
     {
-        nav.NavigateTo("/Create_Employee");
+        nav.NavigateTo($"/Create_Employee/{email}/{projectName}");
     }
 }

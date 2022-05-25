@@ -1,10 +1,10 @@
-﻿@page "/View_Project_Employees/{projectName}"
+﻿@page "/View_Project_Employees/{email}/{projectName}"
 @using Application.Employees
 @using Application.People
 @using Domain.Employees.Entities
 @using Domain.Employees.DTOs
 @using Domain.People.Entities
-@using Presentation.Employers.Components
+@using Presentation.Employers
 @using Presentation.Core.Components
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeService
@@ -22,8 +22,8 @@
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Proyectos", href: "#"),
-            new BreadcrumbItem("Empleados", href: "#"),
+            new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+            new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
         };
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -68,6 +68,8 @@
     private MudTable<Person> _table;
     [Parameter]
     public string projectName { get; set; }
+    [Parameter]
+    public string email { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,7 +88,7 @@
 
     private void GoToViewError()
     {
-       nav.NavigateTo($"/View_Project_Employees_Error/{projectName}");
+       nav.NavigateTo($"/View_Project_Employees_Error/{email}/{projectName}");
     }
 
     private void PageChanged(int i)

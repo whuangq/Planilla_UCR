@@ -1,16 +1,19 @@
 ﻿@using Application.Employees
 @using Domain.Employees.Entities
 @using Presentation.Core.Components
+@using Presentation.Employers.Pages
+
 @inject NavigationManager nav
 @inject IEmployeeService EmployeeServic
 
-@page "/View_Project_Employees_Error/{projectName}"
+@page "/View_Project_Employees_Error/{email}/{projectName}"
+
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Proyectos", href: "#"),
-        new BreadcrumbItem("Empleados", href: "#"),
+        new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+        new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
     };
 }
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -33,8 +36,12 @@
 @code {
     [Parameter]
     public string projectName { get; set; }
+
+    [Parameter]
+    public string email { get; set; }
+
     private void GoToHireEmployee()
     {
-        nav.NavigateTo("/Hire_Employees");
+        nav.NavigateTo($"/Hire_Employees/{email}/{projectName}");
     }
 }
