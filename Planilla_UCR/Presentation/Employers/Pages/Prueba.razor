@@ -1,4 +1,4 @@
-﻿@page "/Employer_Perfil/Prueba"
+﻿@page "/Employer_Profile"
 @inject NavigationManager nav
 
 <MudText>@employerEmail </MudText>
@@ -10,7 +10,7 @@
 
     protected override void OnParametersSet()
     {
-        nav.NavigateTo($"/Employer_Perfil/{employerEmail}");
+        nav.NavigateTo($"/Employer_Profile/{employerEmail}");
     }
 
 }

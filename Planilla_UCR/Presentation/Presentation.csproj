@@ -31,8 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Accounts\Components\" />
-	  <Folder Include="Employees\Pages\" />
+	  <Folder Include="Employers\Components\" />
 	  <Folder Include="Employers\Models\" />
 	</ItemGroup>
 
