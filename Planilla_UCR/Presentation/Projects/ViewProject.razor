@@ -18,8 +18,11 @@ else
        @* // View Project Employees
         nav.NavigateTo($"/View_Project_Employees/{email}/{projectName}");*@
 
-        // Hire Project Employees
-        nav.NavigateTo($"/Hire_Employees/{email}/{projectName}");
+        @*// Hire Project Employees
+        nav.NavigateTo($"/Hire_Employees/{email}/{projectName}");*@
+
+        // View deductions 
+        nav.NavigateTo($"/Projects/{email}/{projectName}/Deductions");
     }
     else
     {
