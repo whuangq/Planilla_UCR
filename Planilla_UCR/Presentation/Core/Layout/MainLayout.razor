@@ -1,19 +1,20 @@
 ﻿@inherits LayoutComponentBase
+@using Presentation
+@using Presentation.Authentication
+@inject NavigationManager nav
 
 <MudThemeProvider/>
 <MudSnackbarProvider />
-
-Krmelo Autenticado @userEmail
-
+ <CascadingValue Value="this">
 <MudLayout id="banner">
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudSpacer />
-
+        <MudIconButton Icon="@Icons.Filled.Person" Size="Size.Large" Color="Color.Secondary" OnClick="GoToProfile"></MudIconButton>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
-        <NavMenu />
+        <NavMenu email=@userEmail ></NavMenu>
     </MudDrawer>
     <MudMainContent>
         <div style="padding: 2%;" class="container">
@@ -23,24 +24,39 @@ Krmelo Autenticado @userEmail
         </div>
     </MudMainContent>
 </MudLayout>
+ </CascadingValue>
 
 @code {
+    public string userEmail { get; set; } = "unknown";
+    bool _loading = true;
+    bool authenticationState = false;
+
     bool _drawerOpen = true;
-    public string userEmail = "";
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
 
-    void signal(string email)
+    public void signal(string email)
     {
         userEmail = email;
+        if (userEmail == "unknown")
+        {
+            nav.NavigateTo("/Visitor");
+        }
     }
 
-    protected override async Task OnInitializedAsync()
+    public void GoToProfile()
     {
-
+        nav.NavigateTo($"/Employer_Profile/{userEmail}"); 
     }
+
+    protected void ReceiveAuthenticationState(bool state)
+    {
+        authenticationState = state;
+        _loading = false;
+    }
+
     public EventCallback<string> setEmail => EventCallback.Factory.Create<string>(this, signal);
 }

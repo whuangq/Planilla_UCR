@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager nav
 
 <CascadingValue Value="this">
 <MudThemeProvider/>
@@ -13,7 +14,6 @@
         <MudLink Href="/Register_Form" Color="Color.Secondary">Registrar</MudLink>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
-        @*<VisitorNavMenu></VisitorNavMenu>*@
     </MudDrawer>
     <MudMainContent>
         <div style="padding: 2%;" class="container">

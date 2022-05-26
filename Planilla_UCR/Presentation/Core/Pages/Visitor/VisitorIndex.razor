@@ -1,5 +1,5 @@
 ﻿@using Presentation.Core.Layout.Visitor
-
+@layout VisitorMainLayout
 @page "/"
 
 
@@ -15,12 +15,4 @@
 </MudPaper>
 
 @code{
-    [CascadingParameter]
-    protected EventCallback<string> setEmail { get; set; }
-
-     protected override async Task OnInitializedAsync()
-    {
-        await setEmail.InvokeAsync("leonelscamposm@gmail.com");
-    }
-
 }
