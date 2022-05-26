@@ -9,13 +9,18 @@
 @{
 List<BreadcrumbItem> _items = new List<BreadcrumbItem>
 {
-    new BreadcrumbItem("Inicio", href: ""),
+    new BreadcrumbItem("Inicio", href: $"/{EmployerEmail}"),
     new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
 };
 }
 @if (_loading)
 {
-    <h3 class="text-danger">Cargando Proyectos</h3>
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+       
+    </MudPaper>
 }
 else
 {
@@ -80,11 +85,13 @@ else
     public string searchString1 = "";
     [Parameter] public string EmployerEmail { get; set; }
 
-
+    [CascadingParameter]
+    protected EventCallback<string> setEmail { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
+        await setEmail.InvokeAsync(EmployerEmail);
         Elements = await ProjectService.GetAllProjectsAsync();
         _loading = false;
     }

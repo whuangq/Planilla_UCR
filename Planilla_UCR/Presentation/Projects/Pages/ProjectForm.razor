@@ -22,12 +22,6 @@
 };
 }
 
-
-@if (_created)
-{
-    ShowSnackNotification("Proyecto Creado", Severity.Success);
-}
-
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 <MudGrid>
@@ -138,7 +132,6 @@
     async Task CreateProject()
     {
         await ProjectService.CreateProjectAsync(ProjectInfo);
-
     }
 
     async Task TryToSend()

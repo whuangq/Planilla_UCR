@@ -93,7 +93,13 @@
                     </MudButton>
                     <MudSpacer></MudSpacer>
 
+                    <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(EmployerEmail, ProjectName))" Color="Color.Secondary">
+                                <MudText>
+                                Contratar empleados
+                                </MudText> 
+                    </MudButton>
 
+                     <MudSpacer></MudSpacer>
                     <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                         <MudText>Cancelar</MudText>
                     </MudButton>
@@ -129,7 +135,10 @@
         Tittle = "Modificar " + ProjectName;
     }
 
-
+    private void GoToContractEmployee(String email, string project)
+    {
+       nav.NavigateTo($"/Hire_Employees/{email}/{project}");
+    }
 
 
     async Task ModifyProject()
