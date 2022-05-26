@@ -156,7 +156,6 @@
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid && ValidateInfo(personInfo)){
-            await PersonService.CreatePersonAsync(personInfo);
             if (Rol.Equals("RolEmployee")){
                 //await EmployeeService.CreateEmployeeAsync(personInfo.Email);
                 //accountData.Email = personInfo.Email;
@@ -164,8 +163,10 @@
                 //snackHandler._saving = false;
                 //ShowSnackNotification("Cuenta para "+personInfo.Name+" registrada", Severity.Success);
                 //await AccountService.SetAuthenticationState(accountData, 1);
+                ShowSnackNotification("No se puede registrar un empleado", Severity.Error);
             }
             else{
+                await PersonService.CreatePersonAsync(personInfo);
                 await EmployerService.CreateEmployerAsync(personInfo.Email);
                 accountData.Email = personInfo.Email;
                 IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
