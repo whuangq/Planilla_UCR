@@ -17,7 +17,11 @@
 <Authenticator email="@EmployerEmail" SendAuthenticationState="ReceiveAuthenticationState"> </Authenticator>
 @if (_loading)
 {
-    <MudText> loading</MudText>
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+    </MudPaper>
 }
 else
 {

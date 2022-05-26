@@ -15,7 +15,12 @@
 }
 @if (_loading)
 {
-    <h4 class="text-danger">Cargando Proyectos</h4>
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+       
+    </MudPaper>
 }
 else
 {
