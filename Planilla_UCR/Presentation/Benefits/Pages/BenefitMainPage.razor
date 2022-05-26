@@ -14,69 +14,67 @@
         new BreadcrumbItem("Beneficios", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
     };
 }
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
-<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
-@if (_empty)
-{
-    <MudText Typo="Typo.h6" Align="Align.Center">No hay beneficios asociados al proyecto
-    </MudText>
-    <br>
-    <MudToolBar DisableGutters="true" Class="gap-4">
-        <MudButton></MudButton>
-        <MudSpacer></MudSpacer>
-        <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
-            <MudText> 
-            Crear Beneficio
-            </MudText> 
-        </MudButton>
-        <MudSpacer></MudSpacer>
-        <MudButton></MudButton>
-    </MudToolBar>
-}
-else
-{
-    <MudToolBar DisableGutters="true" Class="gap-4">
-        <MudSpacer></MudSpacer>
-         <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
-    </MudToolBar>
-    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
-        <ToolBarContent>
-            <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios</MudText>
-            <MudSpacer />
-            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh>Nombre</MudTh>
-            <MudTh>Descripción</MudTh>
-            <MudTh>Costo</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Projects/{EmployerEmail}/{ProjectName}/Benefits/{context.SubscriptionName}")">
-                    @context.SubscriptionName
-                </MudLink>
-            </MudTd>
-            <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
-            <MudTd DataLabel="Costo">@context.Cost</MudTd>
-        </RowTemplate>
-        <FooterContent>
-            <MudTFootRow Class="bold-text">
-                <MudTd>
-                     <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Beneficio</MudButton>
+    @if (_empty)
+    {
+        <MudText Typo="Typo.h6" Align="Align.Center">No hay beneficios asociados al proyecto
+        </MudText>
+        <br>    <MudToolBar DisableGutters="true" Class="gap-4">
+            <MudButton></MudButton>
+            <MudSpacer></MudSpacer>
+            <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
+                <MudText> 
+                    Crear Beneficio
+                </MudText> 
+            </MudButton>
+            <MudSpacer></MudSpacer>
+            <MudButton></MudButton>
+        </MudToolBar>
+    }
+    else
+    {
+        <MudToolBar DisableGutters="true" Class="gap-4">
+            <MudSpacer></MudSpacer>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
+        </MudToolBar>
+        <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
+            <ToolBarContent>
+                <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Nombre</MudTh>
+                <MudTh>Descripción</MudTh>
+                <MudTh>Costo</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Nombre">
+                    <MudLink Color="Color.Secondary" Href="@($"/Projects/{EmployerEmail}/{ProjectName}/Benefits/{context.SubscriptionName}")">
+                        @context.SubscriptionName
+                    </MudLink>
                 </MudTd>
-            </MudTFootRow>
-        </FooterContent>
-        <PagerContent>
+                <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
+                <MudTd DataLabel="Costo">@context.Cost</MudTd>
+            </RowTemplate>
+            <FooterContent>
+                <MudTFootRow Class="bold-text">
+                    <MudTd>
+                        <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Beneficio</MudButton>
+                    </MudTd>
+                </MudTFootRow>
+            </FooterContent>
+            <PagerContent>
                 <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
-        </PagerContent>
-    </MudTable>
-}
-
+            </PagerContent>
+        </MudTable>
+    }
 
 @code {
     private bool _hidePosition;
     private bool _empty = true;
+    private bool _loading = true;
     private int selectedRowNumber = -1;
     private MudTable<Subscription> mudTable;
     private List<string> clickedEvents = new();
@@ -87,7 +85,7 @@ else
 
     [Parameter] public string EmployerEmail { get; set; }
     [Parameter] public string ProjectName { get; set; }
-
+    
 
     protected override async Task OnInitializedAsync()
     {

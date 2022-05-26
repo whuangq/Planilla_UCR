@@ -1,5 +1,4 @@
 ﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits/{SubscriptionName}/Configurations"
-@using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
@@ -12,19 +11,17 @@
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Benefits", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
+        new BreadcrumbItem("Beneficios", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
     };
 }
-
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 @if (_loading)
 {
-    <h4 class="text-danger">Loading benefit</h4>
+    <h4 class="text-danger">Benefit not found</h4>
 }
 else
 {
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
     <MudGrid>
         @*Text fields *@
         <MudItem xs="12" sm="8">
@@ -60,7 +57,7 @@ else
                     </MudButton>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="4">
-                            <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
+                            <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                                     <MudText>Limpiar</MudText>
                             </MudButton>
                 </MudItem>
@@ -77,7 +74,7 @@ else
     private bool _hidePosition;
     private bool _loading = true;
     private IEnumerable<Subscription> Elements;
-    public Subscription subscription = new Subscription("","","","Mascotas","Beneficio1",5000,1,1);
+    public Subscription subscription = new Subscription("","","","Mascotas","b1",2000,0,1);
     MudForm form;
     SnackHandler snackHandler = new SnackHandler();
 
@@ -102,7 +99,7 @@ else
         if (form.IsValid)
         {
             snackHandler._saving = false;
-            ShowSnackNotification("Beneficio "+subscription.SubscriptionName+" modificado", Severity.Success);
+            ShowSnackNotification("Beneficio "+subscription.SubscriptionName+" modificada", Severity.Success);
             CleanForm();
         }
        
@@ -134,13 +131,9 @@ else
         subscription.Cost = 0;
     }
 
-    private void GoToConfigs(string employerEmail, string subscriptionName)
-    {
-       
-    }
 
     private void GoToMain()
     {
-         nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Benefits");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Benefits");
     }
 }

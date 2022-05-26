@@ -41,11 +41,7 @@
                 <MudTextField @bind-Value="subscriptionInfo.Cost" Label="Costo" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
 
-          
-
-            <MudItem xs="2">
-            </MudItem>
-            <MudItem xs="8">
+            <MudItem xs="4">
                 <MudTextField @bind-Value="subscriptionInfo.ProviderName"  Label="Organización" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
 
@@ -63,7 +59,7 @@
             </MudItem>
             @*Create buton *@
             <MudItem xs="8" >
-                <MudButton Disabled="@snackHandler._saving" OnClick="SaveBenefit" Variant="Variant.Filled" Color="Color.Secondary">
+                <MudButton Disabled="@snackHandler._saving" OnClick=" SaveBenefit" Variant="Variant.Filled" Color="Color.Secondary">
                     @if (snackHandler._saving)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -76,7 +72,7 @@
                 </MudButton>
                 <MudButton Disabled="true"> </MudButton>
                 @*Clear buton *@
-                <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Error">
+                <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                         <MudText>Limpiar</MudText>
                 </MudButton>
             </MudItem>
@@ -115,13 +111,11 @@
                 await SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
                 snackHandler._saving = false;
                 ShowSnackNotification("Beneficio "+subscriptionToAdd.SubscriptionName+" creada", Severity.Success);
-                CleanForm();
             }
             catch (Exception)
             {
                 snackHandler._saving = false;
                 ShowSnackNotification("Ya existe un beneficio con el nombre "+subscriptionToAdd.SubscriptionName, Severity.Error);
-                CleanForm();
             }
         }
 

@@ -1,6 +1,4 @@
 ﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits/Configurations"
-@using Domain.Subscriptions.DTOs
-@using Domain.Subscriptions.Entities
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
@@ -8,26 +6,24 @@
 @inject ISubscriptionService SubscriptionService
 
 
-
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
-        new BreadcrumbItem("Beneficos", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
+        new BreadcrumbItem("Beneficios", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
         new BreadcrumbItem("Configuraciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits/Configurations"),
     };
 }
-
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 @if (_loading)
 {
-    <MudText Typo="Typo.h6">No hay beneficios asociadas al proyecto</MudText>
+    <MudText Typo="Typo.h6">No hay beneficios asociados al proyecto</MudText>
 }
 else
 {
     <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
         <ToolBarContent>
-            <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios </MudText>
             <MudSpacer />
             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
@@ -38,7 +34,7 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href= "@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Benefits/{@context.SubscriptionName}/Configurations")">    >
+                <MudLink Color="Color.Secondary" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Benefits/{@context.SubscriptionName}/Configurations")">
                     @context.SubscriptionName
                 </MudLink>
             </MudTd>
@@ -55,7 +51,7 @@ else
     <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
-        <MudButton Variant="Variant.Filled" OnClick="DeleteBenefit" Color="Color.Error">Borrar</MudButton>
+        <MudButton Variant="Variant.Filled" OnClick="DeleteBenefits" Color="Color.Error">Borrar</MudButton>
     </MudToolBar>
 }
 
@@ -75,15 +71,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllBenefictsAsync();
+        Elements = await SubscriptionService.GetBenefitsByProject(EmployerEmail, ProjectName);
         if (Elements.Length() > 0){
-            _loading = false;
+        _loading = false;
         }
     }
 
-    private void DeleteBenefit()
+    private void DeleteBenefits()
     {
-        string message = "¿Desea borrar los beneficios seleccionados?";
+        string message = "¿Desea borrar los beneficios seleccionadas?";
         Snackbar.Add(message, Severity.Warning, config =>
         {
             config.Action = "Confirmar";
@@ -91,7 +87,7 @@ else
             config.ShowCloseIcon = false;
             config.Onclick = snackbar =>
             {
-                DeleteBenefitUpdate();
+                DeleteBenefitsUpdate();
                 return Task.CompletedTask;
             };
         });
@@ -108,7 +104,7 @@ else
         return false;
     }
 
-    private void DeleteBenefitUpdate()
+    private void DeleteBenefitsUpdate()
     {
         Snackbar.Add("Beneficios borradas", Severity.Success);
         StateHasChanged();
