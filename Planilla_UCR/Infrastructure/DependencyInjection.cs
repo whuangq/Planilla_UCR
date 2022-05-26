@@ -12,6 +12,8 @@ using Infrastructure.Accounts.Repositories;
 using Infrastructure.Employers.Repositories;
 using Domain.Employers.Repositories;
 using Domain.Accounts.Repositories;
+using Infrastructure.Projects.Repositories;
+using Domain.Projects.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Employers;
@@ -37,6 +39,9 @@ namespace Infrastructure
             
             services.AddDbContext<EmployerDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IEmployerRepository, EmployerRepository>();
+
+            services.AddDbContext<EmployerDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IProjectRepository, ProjectRepository>();
             return services;
         }
     }

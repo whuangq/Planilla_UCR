@@ -9,6 +9,10 @@
 	  <Content Remove="C:\Users\leone\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Include="Projects\Pages\ProjectForm.razor" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
