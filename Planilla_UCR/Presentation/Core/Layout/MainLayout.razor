@@ -1,34 +1,64 @@
 ﻿@inherits LayoutComponentBase
+@using Presentation
+@using Presentation.Authentication
+@inject NavigationManager nav
 
 <MudThemeProvider/>
 <MudSnackbarProvider />
+ <CascadingValue Value="this">
 <MudLayout id="banner">
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudSpacer />
-
+        <MudLink Color="Color.Secondary" Href="@($"/")"> Salir  
+        </MudLink>
+        <MudIconButton Icon="@Icons.Filled.Person" Size="Size.Large" Color="Color.Secondary" OnClick="GoToProfile"></MudIconButton>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
-        <NavMenu />
+        <NavMenu email=@userEmail ></NavMenu>
     </MudDrawer>
     <MudMainContent>
         <div style="padding: 2%;" class="container">
-            @Body
+            <CascadingValue Value=setEmail >
+                @Body
+            </CascadingValue>
         </div>
     </MudMainContent>
 </MudLayout>
+ </CascadingValue>
 
 @code {
+    public string userEmail { get; set; } = "unknown";
+    bool _loading = true;
+    bool authenticationState = false;
+
     bool _drawerOpen = true;
 
-        void DrawerToggle()
-        {
-            _drawerOpen = !_drawerOpen;
-        }
-
-    protected override async Task OnInitializedAsync()
+    void DrawerToggle()
     {
-
+        _drawerOpen = !_drawerOpen;
     }
+
+    public void signal(string email)
+    {
+        userEmail = email;
+        if (userEmail == "unknown")
+        {
+            nav.NavigateTo("/Visitor");
+        }
+    }
+
+    public void GoToProfile()
+    {
+        nav.NavigateTo($"/Employer_Profile/{userEmail}"); 
+    }
+
+    protected void ReceiveAuthenticationState(bool state)
+    {
+        authenticationState = state;
+        _loading = false;
+    }
+
+    public EventCallback<string> setEmail => EventCallback.Factory.Create<string>(this, signal);
 }

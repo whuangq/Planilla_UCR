@@ -99,8 +99,7 @@ else
         if (form.IsValid)
         {
             snackHandler._saving = false;
-            ShowSnackNotification("Beneficio "+subscription.SubscriptionName+" modificada", Severity.Success);
-            CleanForm();
+            ShowSnackNotification("Beneficio "+subscription.SubscriptionName+" modificado", Severity.Success);
         }
        
         snackHandler._saving = false;

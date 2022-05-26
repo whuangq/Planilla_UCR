@@ -79,7 +79,7 @@ else
 
     private void DeleteBenefits()
     {
-        string message = "¿Desea borrar los beneficios seleccionadas?";
+        string message = "¿Desea borrar los beneficios seleccionados?";
         Snackbar.Add(message, Severity.Warning, config =>
         {
             config.Action = "Confirmar";
@@ -106,7 +106,7 @@ else
 
     private void DeleteBenefitsUpdate()
     {
-        Snackbar.Add("Beneficios borradas", Severity.Success);
+        Snackbar.Add("Beneficios borrados", Severity.Success);
         StateHasChanged();
     }
 

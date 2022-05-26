@@ -63,6 +63,7 @@
     <Folder Include="StoredProcedures\Employee" />
     <Folder Include="StoredProcedures\Account" />
     <Folder Include="StoredProcedures\Subscription" />
+    <Folder Include="StoredProcedures\Project" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Account.sql" />
@@ -117,5 +118,7 @@
   <ItemGroup>
     <None Include="StoredProcedures\Subscription\GetAllDeductions.sql" />
     <None Include="StoredProcedures\Subscription\GetAllBenefits.sql" />
+    <None Include="StoredProcedures\Project\ProjectNameCheck.sql" />
+    <None Include="StoredProcedures\Project\GetEmployerByEmail.sql" />
   </ItemGroup>
 </Project>

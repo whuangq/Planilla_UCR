@@ -22,7 +22,7 @@
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Proyectos", href: "Projects"),
+            new BreadcrumbItem("Proyectos", href: $"Projects/{employerEmail}"),
         };
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>

@@ -110,7 +110,7 @@
             {
                 await SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
                 snackHandler._saving = false;
-                ShowSnackNotification("Beneficio "+subscriptionToAdd.SubscriptionName+" creada", Severity.Success);
+                ShowSnackNotification("Beneficio "+subscriptionToAdd.SubscriptionName+" creado", Severity.Success);
             }
             catch (Exception)
             {
