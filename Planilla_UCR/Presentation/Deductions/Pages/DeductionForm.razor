@@ -109,13 +109,11 @@
                 await SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
                 snackHandler._saving = false;
                 ShowSnackNotification("Deducción "+subscriptionToAdd.SubscriptionName+" creada", Severity.Success);
-                CleanForm();
             }
             catch (Exception)
             {
                 snackHandler._saving = false;
                 ShowSnackNotification("Ya existe una deducción con el nombre "+subscriptionToAdd.SubscriptionName, Severity.Error);
-                CleanForm();
             }
         }
 
