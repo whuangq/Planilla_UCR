@@ -1,4 +1,4 @@
-﻿@page "/Projects/{email}"
+﻿@page "/krmelo/Projects/{email}"
 @using Presentation.Authentication
 @inject NavigationManager nav
 
@@ -15,17 +15,20 @@ else
         <MudText>Visión del producto para @email</MudText>
         <MudText>Página de projectos @email </MudText>
 
-       @* // View Project Employees
-        nav.NavigateTo($"/View_Project_Employees/{email}/{projectName}");*@
+        @* // View Project Employees
+            nav.NavigateTo($"/View_Project_Employees/{email}/{projectName}");*@
 
         @*// Hire Project Employees
-        nav.NavigateTo($"/Hire_Employees/{email}/{projectName}");*@
+            nav.NavigateTo($"/Hire_Employees/{email}/{projectName}");*@
 
         // View deductions 
         //nav.NavigateTo($"/Projects/{email}/{projectName}/Deductions");
 
         // View benefits 
-        nav.NavigateTo($"/Projects/{email}/{projectName}/Benefits");
+        //nav.NavigateTo($"/Projects/{email}/{projectName}/Benefits");
+
+        //View Project
+        nav.NavigateTo($"/Create_Project/{email}");
     }
     else
     {

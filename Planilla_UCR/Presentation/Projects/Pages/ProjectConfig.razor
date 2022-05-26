@@ -1,51 +1,32 @@
-﻿@page "/Create_Project/{EmployerEmail}"
+﻿@page "/Projects/Details/{EmployerEmail}/{ProjectName}/Configurations"
 @using Domain.Projects.DTOs
 @using Domain.Projects.Entities
-@using Domain.Employers.DTOs
-@using Domain.Employers.Entities
 @using Application.Projects
-@using Application.Employers
 @using Presentation.Projects.Models
 @using Presentation.Core.Components
 @using System.ComponentModel.DataAnnotations
+@inject NavigationManager nav
 
 
 @inject IProjectService ProjectService
-@inject IEmployerService EmployerService
 @inject ISnackbar Snackbar
 
-@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-{
-    new BreadcrumbItem("Inicio", href: ""),
-    new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
-    new BreadcrumbItem("Crear proyecto", href: null, disabled: true)
-};
+@{List <BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Inicio", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Modificar proyecto", href:$"/Projects/Details/{EmployerEmail}/{ProjectName}/Configurations")
+    };
 }
 
-
-@if (_created)
-{
-    ShowSnackNotification("Proyecto Creado", Severity.Success);
-}
 
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
 <MudGrid>
     <MudItem xs="10" sm="12">
         <MudPaper  Height="220px" Width="100%" Outlined="false " Class="border-none pa-4" Elevation="0">
             <MudForm @ref="form">
-                <MudText Align="Align.Center" Typo="Typo.h6">Crear Proyecto</MudText>
+                <MudText Align="Align.Center" Typo="Typo.h6">@Tittle</MudText>
                 <MudGrid>
-
-                <MudItem xs="2"> </MudItem>
-                <MudItem xs="8">
-                    <MudTextField Label="Nombre del Proyecto" Class="mt-3" Variant="Variant.Outlined"  
-                    Required="true" RequiredError="Ingrese un nombre para su proyecto" 
-                    @bind-Value="ProjectInfo.ProjectName" For="@(() => Limits.ProjectName)">
-                    </MudTextField>
-                </MudItem>
-                <MudItem xs="2"> </MudItem>
-
 
                 <MudItem xs="2"> </MudItem>
                 <MudItem xs="8">
@@ -89,30 +70,37 @@
                 <MudItem xs="2"></MudItem>
                 <MudItem xs="2"></MudItem>
 
-                @*Create buton *@
+                @*Create button *@
                 <MudItem xs="8"> 
+                <MudToolBar DisableGutters="true" Class="gap-4">
+                    <MudSpacer></MudSpacer>
                     <MudButton Disabled="@_saving" OnClick="TryToSend" 
                     Variant="Variant.Filled" Color="Color.Primary">
-                        @if (_saving)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                            <MudText Class="ms-2">Creando</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Crear</MudText>
-                        }
+                    @if (_saving)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">Modificando</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Modificar</MudText>
+                    }
                     </MudButton>
+                    <MudSpacer></MudSpacer>
+                   
+                    <MudButton OnClick="DeleteProject" Variant="Variant.Filled" Color="Color.Transparent">
+                        <MudText>Borrar Proyecto</MudText>
+                    </MudButton>
+                    <MudSpacer></MudSpacer>
 
-                    <MudButton Disabled="true"> </MudButton>
 
-                    @*Clear buton *@
                     <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                         <MudText>Cancelar</MudText>
                     </MudButton>
+                    <MudSpacer></MudSpacer>
+                </MudToolBar>
                 </MudItem>
                 <MudItem xs="2"></MudItem>
-
                 </MudGrid>
             </MudForm>
         </MudPaper>
@@ -121,72 +109,52 @@
 
 @code{
     public string project { get; set; }
-    private bool _isLoading = true;
-    private bool _processing = false;
-    private bool _created = false;
     private bool _saving = false;
 
 
     SnackHandler snackHandler = new SnackHandler();
 
     Project ProjectInfo = new Project("","","",0,0,"");
-    [Parameter] public string EmployerEmail { get; set; }
-    [Parameter] public string ProjectName { get; set; }
+    public Project Project = new Project("","","",0,0,"");
     MudForm form;
 
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
+    public string Tittle { get; set; }
+    
 
-    async Task CreateProject()
+    protected override async Task OnInitializedAsync()
     {
-        await ProjectService.CreateProjectAsync(ProjectInfo);
+        Project = await ProjectService.GetProject(EmployerEmail, ProjectName);
+        Tittle = "Modificar " + ProjectName;
+    }
+
+
+
+
+    async Task ModifyProject()
+    {
+         ShowSnackNotification("Proyecto Modificado correctamente", Severity.Success);
 
     }
 
+    async Task DeleteProject()
+    {
+
+        ShowSnackNotification("Proyecto borrado correctamente", Severity.Success);
+
+    }
     async Task TryToSend()
     {
-        ProjectInfo.EmployerEmail = EmployerEmail;
         await form.Validate();
-        snackHandler._saving = true;
-        if (form.IsValid && await (ValidateInfo(ProjectInfo)))
+        if (form.IsValid)
         {
             _saving = true;
-            await CreateProject();
+            await ModifyProject();
             _saving = false;
-            _created = true;
-            ShowSnackNotification(ProjectInfo.ProjectName+" creado exitosamente", Severity.Success);
-            CleanForm();
+
         }
-        snackHandler._saving = false;
-    }
 
-    async Task<bool> ValidateInfo(Project projectInfo)
-    {
-        bool name =  await (ValidateName(projectInfo));
-        bool email = await (ValidateEmail(projectInfo));
-        return name && email;
-    }
-
-    async Task<bool> ValidateEmail(Project project)
-    {
-        bool valid = true;
-        Employer emailChecked = await EmployerService.GetEmployerAsync(project.EmployerEmail);
-        if(emailChecked == null)
-        {
-            valid = false;
-            ShowSnackNotification("El email no pertenece a un empleador", Severity.Error);
-        }   
-        return valid;
-    }
-
-    async Task<bool> ValidateName(Project project)
-    {
-        bool valid = true;
-        IEnumerable<Project> nameCecked = await ProjectService.GetAllNameProjects(project.ProjectName);
-        if (nameCecked.Length() != 0)
-        {
-            valid=false;
-            ShowSnackNotification("El nombre de proyecto ya está siendo usado", Severity.Error);
-        }
-        return valid;
     }
 
     void ShowSnackNotification(string Message, Severity Severity)
@@ -223,15 +191,6 @@
     public class LimitsValidationForm
     {
 
-        [StringLength(250, ErrorMessage = "El nombre del proyecto es muy grande")]
-        public string ProjectName { get; set; }
-
-
-        [EmailAddress (ErrorMessage = "El Email es inválido")]
-        [StringLength(250, ErrorMessage = "El Email es muy grande")]
-        public string Email { get; set; }
-
-
         [StringLength(250, ErrorMessage = "La descripción es muy grande")]
         public string Description { get; set; }
 
@@ -239,4 +198,3 @@
 
  
 }
-    

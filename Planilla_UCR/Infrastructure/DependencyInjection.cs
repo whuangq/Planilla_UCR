@@ -17,6 +17,7 @@ using Domain.Projects.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Employers;
+using Infrastructure.Projects;
 
 namespace Infrastructure
 {
@@ -40,7 +41,7 @@ namespace Infrastructure
             services.AddDbContext<EmployerDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IEmployerRepository, EmployerRepository>();
 
-            services.AddDbContext<EmployerDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<ProjectDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IProjectRepository, ProjectRepository>();
             return services;
         }
