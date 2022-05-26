@@ -1,10 +1,19 @@
-﻿@page "/Benefit"
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits"
 @using Domain.Subscriptions.DTOs
 @using Domain.Subscriptions.Entities
 @using Application.Subscriptions
 @using Presentation.Core.Components
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
+
+
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Beneficios", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
+    };
+}
 
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
@@ -44,7 +53,7 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Benefit/Details/{context.EmployerEmail}/{context.ProjectName}/{context.SubscriptionName}")">
+                <MudLink Color="Color.Secondary" Href="@($"/Projects/{EmployerEmail}/{ProjectName}/Benefits/{context.SubscriptionName}")">
                     @context.SubscriptionName
                 </MudLink>
             </MudTd>
@@ -76,17 +85,13 @@ else
     public string searchString1 = "";
     public string project { get; set; }
 
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
 
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Beneficios", href: "Benefit"),
-    };
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetAllBenefictsAsync();
+        Elements = await SubscriptionService.GetBenefitsByProject(EmployerEmail, ProjectName);
         if (Elements.Length() > 0){
             _empty = false;
         }
@@ -94,12 +99,12 @@ else
 
     private void GoToCreate()
     {
-        nav.NavigateTo("/Benefit/New");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Benefits/New");
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo("/Benefit/Configurations");
+       nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Benefits/Configurations");
     }
 
     private void PageChanged(int i)

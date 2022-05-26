@@ -1,11 +1,21 @@
-﻿@page "/Benefit/Details/{employerEmail}/{projectName}/{subscriptionName}"
-
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits/{SubscriptionName}"
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
+
+
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Beneficios", href: $"/Projects/{EmployerEmail}/{ProjectName}/Beneficios"),
+    };
+}
+
+
 
 @if (_loading)
 {
@@ -47,33 +57,26 @@ else
     private IEnumerable<Subscription> Elements;
     public Subscription subscription = new Subscription("","","","","",0,1,1);
 
-    [Parameter] public string employerEmail { get; set; }
-    [Parameter] public string projectName { get; set; }
-    [Parameter] public string subscriptionName { get; set; }
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Beneficios", href: "Benefit")
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
+    [Parameter] public string SubscriptionName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        subscription.EmployerEmail = employerEmail;
-        subscription.SubscriptionName = subscriptionName;
-        subscription.ProjectName = projectName;
-        subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionName);
-        _loading = false;
+        subscription = await SubscriptionService.GetSubscription(EmployerEmail, ProjectName, SubscriptionName);
+        if (subscription != null)
+        {
+            _loading = false;
+        }
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo($"/Benefit/Details/{employerEmail}/{projectName}/{subscriptionName}/Configurations");
+        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Benefits/{SubscriptionName}/Configurations");
     }
 
     private void GoToMain()
     {
-        nav.NavigateTo("/Benefit");
+         nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Benefits");
     }
 }

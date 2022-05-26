@@ -1,4 +1,4 @@
-﻿@page "/Benefit/Configurations"
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits/Configurations"
 @using Domain.Subscriptions.DTOs
 @using Domain.Subscriptions.Entities
 @using Application.Subscriptions
@@ -6,6 +6,17 @@
 @using Presentation.Core.Components
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
+
+
+
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+        new BreadcrumbItem("Beneficos", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
+        new BreadcrumbItem("Configuraciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits/Configurations"),
+    };
+}
 
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 @if (_loading)
@@ -27,7 +38,7 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Benefit/Details/{@context.EmployerEmail}/{@context.ProjectName}/{@context.SubscriptionName}/Configurations")">
+                <MudLink Color="Color.Secondary" Href= "@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Benefits/{@context.SubscriptionName}/Configurations")">    >
                     @context.SubscriptionName
                 </MudLink>
             </MudTd>
@@ -59,13 +70,8 @@ else
     public string searchString1 = "";
     public string project { get; set; }
 
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Beneficios", href: "Benefit"),
-        new BreadcrumbItem("Configuraciones", href: "configbenefit"),
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

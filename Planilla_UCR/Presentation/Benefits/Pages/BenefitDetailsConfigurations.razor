@@ -1,4 +1,4 @@
-﻿@page "/Benefit/Details/{employerEmail}/{projectName}/{subscriptionName}/Configurations"
+﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits/{SubscriptionName}/Configurations"
 @using Domain.Subscriptions.DTOs
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
@@ -7,6 +7,14 @@
 @inject NavigationManager nav
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
+
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: ""),
+        new BreadcrumbItem("Proyectos", href: null, disabled: true),
+        new BreadcrumbItem("Benefits", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
+    };
+}
 
 
 @if (_loading)
@@ -74,24 +82,17 @@ else
     SnackHandler snackHandler = new SnackHandler();
 
 
-    [Parameter] public string employerEmail { get; set; }
-    [Parameter] public string projectName { get; set; }
-    [Parameter] public string subscriptionName { get; set; }
-
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Beneficios", href: "benefit")
-    };
+    [Parameter] public string EmployerEmail { get; set; }
+    [Parameter] public string ProjectName { get; set; }
+    [Parameter] public string SubscriptionName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        subscription.EmployerEmail = employerEmail;
-        subscription.SubscriptionName = subscriptionName;
-        subscription.ProjectName = projectName;
-        subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionName);
-        _loading = false;
+        subscription = await SubscriptionService.GetSubscription(EmployerEmail, ProjectName, SubscriptionName);
+        if (subscription != null)
+        {
+            _loading = false;
+        }
     }
 
     async Task SaveBenefit()
@@ -140,6 +141,6 @@ else
 
     private void GoToMain()
     {
-        nav.NavigateTo("/Benefit");
+         nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Benefits");
     }
 }
