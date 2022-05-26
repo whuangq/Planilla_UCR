@@ -1,5 +1,4 @@
-﻿using Domain.Subscriptions.DTOs;
-using Domain.Subscriptions.Entities;
+﻿using Domain.Subscriptions.Entities;
 using Domain.Subscriptions.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
