@@ -11,6 +11,8 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudSpacer />
+        <MudLink Color="Color.Secondary" Href="@($"/")"> Salir  
+        </MudLink>
         <MudIconButton Icon="@Icons.Filled.Person" Size="Size.Large" Color="Color.Secondary" OnClick="GoToProfile"></MudIconButton>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
