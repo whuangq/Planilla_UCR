@@ -79,7 +79,7 @@
                 IEnumerable<Account> passwordChecked = await AccountService.CheckPassword(accountData);
                 if (passwordChecked.Length() != 0){
                     await AccountService.SetAuthenticationState(accountData,1);
-                    nav.NavigateTo($"/{accountData.Email}");
+                    nav.NavigateTo($"/Projects/{accountData.Email}");
                 }
                 else{
                     ShowSnackNotification("Contraseña incorrecta", Severity.Error);
