@@ -92,7 +92,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await setEmail.InvokeAsync(EmployerEmail);
-        Elements = await ProjectService.GetAllProjectsAsync();
+        Elements = await ProjectService.GetEmployerProyects(EmployerEmail);
         _loading = false;
     }
 

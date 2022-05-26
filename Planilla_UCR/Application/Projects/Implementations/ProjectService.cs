@@ -31,5 +31,8 @@ namespace Application.Projects.Implementations
         {
             return await _projectRepository.GetProject(employerEmail, projectName);
         }
+        public async Task<IEnumerable<Project>> GetEmployerProyects(string email) { 
+            return await _projectRepository.GetEmployerProyects(email);
+        }
     }
 }

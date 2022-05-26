@@ -53,5 +53,11 @@ namespace Infrastructure.Projects.Repositories
                 return nameList;
             }
         }
+
+        public async Task<IEnumerable<Project>> GetEmployerProyects(string email) {
+            IList<Project> projectsResult = await _dbContext.Projects.Where
+                (e => e.EmployerEmail == email).ToListAsync();
+            return projectsResult;
+        }
     }
 }
