@@ -9,8 +9,9 @@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Proyectos", href: "#"),
-        new BreadcrumbItem("Empleados", href: "#"),
+        new BreadcrumbItem("Projectos", href: $"/Projects/{email}"),
+        new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
+        new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
     };
 }
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>

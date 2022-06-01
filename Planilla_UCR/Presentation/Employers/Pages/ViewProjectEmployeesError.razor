@@ -12,10 +12,12 @@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
-        new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
+        new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
+        new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}")
     };
-}
+} 
+    <MudIconButton Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton>
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <br />
     <MudText Align="Align.Center" Typo="Typo.h4">No hay empleados contratados en @projectName </MudText>
