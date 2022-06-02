@@ -1,12 +1,6 @@
-﻿@using Application.Employees
-@using Application.People
-@using Domain.Employees.Entities
-@using Domain.Employees.DTOs
+﻿@using Application.People
 @using Domain.People.Entities
-@using Presentation.Employers
-@using Presentation.Core.Components
 @inject NavigationManager nav
-@inject IEmployeeService EmployeeService
 @inject IPersonService PersonService
 
 @if(_loading) {
@@ -17,7 +11,7 @@
        
     </MudPaper>
 }else{
-    @if (!empty && !_loading)
+    @if (!_loading)
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
@@ -31,36 +25,38 @@
                 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
             </MudToolBar>
          </MudPaper>
-        <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">  
-            <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
-                <ToolBarContent>
-                        <MudButton Disabled=true> Empleados Contratados</MudButton>
-                        <MudButton OnClick="SendConmuteSignal"> Contratar empleados</MudButton>
-                        <MudSpacer />
-                        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        if(!empty)
+        {
+             <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">  
+                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
+                    <ToolBarContent>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"> Empleados contratados </MudButton>
+                            <MudButton OnClick="SendConmuteSignal"> Contratar Empleados </MudButton>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>Email</MudTh>
+                            <MudTh>Nombre completo</MudTh>
+                            <MudTh>Cedula</MudTh>
+                        </HeaderContent>
 
-                    <HeaderContent>
-                        <MudTh>Email</MudTh>
-                        <MudTh>Nombre completo</MudTh>
-                        <MudTh>Cedula</MudTh>
-                    </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Email">@context.Email</MudTd>
+                            <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
+                            <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
 
-                    <RowTemplate>
-                        <MudTd DataLabel="Email">@context.Email</MudTd>
-                        <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
-                        <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
+                            </RowTemplate>
+                        <PagerContent>
+                            <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+                        </PagerContent>
+                    </MudTable>
+             </MudPaper>
 
-                    </RowTemplate>
-                <PagerContent>
-                    <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
-                </PagerContent>
-            </MudTable>
-        </MudPaper>
-    }
-    else
-    {
-        GoToViewError();
+        }else
+        {
+            <HiredEmployeesError email="@email" projectName="@projectName" SendTableState="SendConmuteSignal"></HiredEmployeesError>
+        }
     }
 }
 
@@ -77,7 +73,7 @@
     public string email { get; set; }
 
     [Parameter]
-    public EventCallback<string> SendAuthenticationState { get; set; }
+    public EventCallback<string> SendTableState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -122,6 +118,6 @@
 
     private async Task SendConmuteSignal()
     {
-        await SendAuthenticationState.InvokeAsync("");
+        await SendTableState.InvokeAsync("");
     }
 }

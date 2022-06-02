@@ -1,8 +1,6 @@
 ﻿using Domain.Core.Repositories;
 using Domain.People.Entities;
 using Domain.People.Repositories;
-using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
@@ -22,15 +20,8 @@ namespace Infrastructure.People.Repositories
 
         public async Task CreatePersonAsync(Person personInfo)
         {
-            try
-            {
-                _dbContext.Persons.Add(personInfo);
-                await _dbContext.SaveEntitiesAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Repeated key error" + ex.Message);
-            }   
+            _dbContext.Persons.Add(personInfo);
+            await _dbContext.SaveEntitiesAsync();
         }
 
         public async Task<IEnumerable<Person?>> GetAllEmployees()

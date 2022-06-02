@@ -8,7 +8,6 @@ namespace Application.Employees
     public interface IEmployeeService
     {
         Task CreateEmployeeAsync(String email);
-
         Task<IEnumerable<Employee>> GetEmployeeByEmail(string email);
     }
 }

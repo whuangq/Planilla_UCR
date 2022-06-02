@@ -1,17 +1,9 @@
-﻿@using Application.Employees
-@using Application.People
-@using Domain.Employees.Entities
-@using Domain.Employees.DTOs
+﻿@using Application.People
 @using Domain.People.Entities
-@using Presentation.Employers
-@using Presentation.Core.Components
-@using Presentation.Employees
 @inject NavigationManager nav
-@inject IEmployeeService EmployeeService
 @inject IPersonService PersonService
 
 @if(_loading) {
-
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
          <MudText Align="Align.Center" Typo="Typo.h6">
               <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
@@ -19,7 +11,7 @@
        
     </MudPaper>
 }else{
-    @if (!empty && !_loading)
+    @if (!_loading)
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
@@ -33,12 +25,14 @@
                 <MudIconButton Size="Size.Small" OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
                 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
             </MudToolBar>
-         </MudPaper>
-        <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">
-            <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
+        </MudPaper>
+        if (!empty)
+        {
+            <MudPaper  Height="100px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">
+                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
                     <ToolBarContent>
-                        <MudButton OnClick="SendConmuteSignal"> Empleados Contratados</MudButton>
-                        <MudButton Disabled=true> Contratar empleados</MudButton>
+                        <MudButton OnClick="SendConmuteSignal"> Empleados contratados </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary"> Contratar Empleados </MudButton>
                         <MudSpacer />
                         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
@@ -65,18 +59,18 @@
                 <PagerContent>
                     <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
                 </PagerContent>
-            </MudTable>
-             <br>
-            <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Transparent">
-                <MudText>
-                Crear Empleados
-                </MudText> 
-            </MudButton>
-        </MudPaper>
-    }
-    else
-    {
-        <HireEmployeesError email="@email" projectName="@projectName"></HireEmployeesError>
+                </MudTable>
+                 <br>
+                <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Transparent">
+                    <MudText>
+                    Crear Empleados
+                    </MudText> 
+                </MudButton>
+            </MudPaper>
+        }else
+        {
+           <HireEmployeesError email="@email" projectName="@projectName" SendTableState="SendConmuteSignal"></HireEmployeesError>
+        }
     }
 }
 
@@ -85,6 +79,7 @@
     private bool _loading = true;
     private bool empty = true;
     string searchString1 = "";
+    public string Disabled { get; set; } = "Empleados Contratados";
     private IEnumerable<Person> _elements = new List<Person>();
     private MudTable<Person> _table;
 
@@ -95,11 +90,10 @@
     public string projectName { get; set; }
 
     [Parameter]
-    public EventCallback<string> SendAuthenticationState { get; set; }
+    public EventCallback<string> SendTableState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-
         _elements = await PersonService.GetAllEmployees();
         if (_elements.Length() == 0)
         {
@@ -145,6 +139,6 @@
 
     private async Task SendConmuteSignal()
     {
-        await SendAuthenticationState.InvokeAsync("");
+        await SendTableState.InvokeAsync("");
     }
 }

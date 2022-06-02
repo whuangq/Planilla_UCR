@@ -1,0 +1,34 @@
+﻿@page "/View_Project_Employees/{email}/{projectName}"
+@using Presentation.Employers.Components
+@inject NavigationManager nav
+
+@if (selectedWindow)
+{
+    <HireEmployeesTable email="@email" projectName="@projectName" SendTableState="ReceiveTableState"></HireEmployeesTable>
+}
+else
+{
+   <HiredEmployeesTable  email="@email" projectName="@projectName" SendTableState="ReceiveTableState"></HiredEmployeesTable>
+}
+
+@code {
+    [Parameter]
+    public string projectName { get; set; }
+
+    [Parameter]
+    public string email { get; set; }
+
+    private bool selectedWindow = true;
+
+    public EventCallback<string> conmuteWindow => EventCallback.Factory.Create<string>(this, ReceiveTableState);
+
+    private void GoToViewError()
+    {
+       nav.NavigateTo($"/View_Project_Employees_Error/{email}/{projectName}");
+    }
+
+     public void ReceiveTableState()
+    {
+        selectedWindow = !selectedWindow;
+    }
+}
