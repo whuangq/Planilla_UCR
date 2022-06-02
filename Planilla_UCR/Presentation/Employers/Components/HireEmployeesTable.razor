@@ -1,18 +1,10 @@
-﻿@page "/Hire_Employees/{email}/{projectName}"
-@using Application.Employees
-@using Application.People
-@using Domain.Employees.Entities
-@using Domain.Employees.DTOs
+﻿@using Application.People
 @using Domain.People.Entities
-@using Presentation.Employers
-@using Presentation.Core.Components
-@using Presentation.Employees
+@using Application.Employees
 @inject NavigationManager nav
-@inject IEmployeeService EmployeeService
-@inject IPersonService PersonService
+@inject IEmployeeService PersonService
 
 @if(_loading) {
-
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
          <MudText Align="Align.Center" Typo="Typo.h6">
               <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
@@ -20,20 +12,28 @@
        
     </MudPaper>
 }else{
-    @if (!empty && !_loading)
+    @if (!_loading)
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+            new BreadcrumbItem("Projectos", href: $"/Projects/{email}"),
+            new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
             new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
         };
 
-        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
-        <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-            <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
+        <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">  
+            <MudToolBar>
+                <MudIconButton Size="Size.Small" OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
+                <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+            </MudToolBar>
+        </MudPaper>
+        if (!empty)
+        {
+            <MudPaper  Height="100px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">
+                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
                     <ToolBarContent>
-                         <MudText Align="Align.Center" Typo="Typo.h6">Contratar empleados</MudText>
+                        <MudButton OnClick="SendConmuteSignal"> Empleados contratados </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary"> Contratar Empleados </MudButton>
                         <MudSpacer />
                         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
@@ -41,21 +41,14 @@
                         <MudTh>Email</MudTh>
                         <MudTh>Nombre completo</MudTh>
                         <MudTh>Cedula</MudTh>
-                        <MudTh> 
-                            <MudSpacer></MudSpacer>
-                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToCreateEmployee(@email, @projectName))" Color="Color.Transparent">
-                                <MudText>
-                                Crear Empleados
-                                </MudText> 
-                            </MudButton>
-                        </MudTh>
+                        <MudTh>Acciones</MudTh>
                     </HeaderContent>
 
                     <RowTemplate>
                         <MudTd DataLabel="Email">@context.Email</MudTd>
                         <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
                         <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
-                         <MudTd DataLabel="">
+                         <MudTd DataLabel="Acciones">
                         <MudSpacer></MudSpacer>
                             <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email))" Color="Color.Secondary">
                                 <MudText>
@@ -67,12 +60,18 @@
                 <PagerContent>
                     <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
                 </PagerContent>
-            </MudTable>
-        </MudPaper>
-    }
-    else
-    {
-        <HireEmployeesError email="@email" projectName="@projectName"></HireEmployeesError>
+                </MudTable>
+                 <br>
+                <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Transparent">
+                    <MudText>
+                    Crear Empleados
+                    </MudText> 
+                </MudButton>
+            </MudPaper>
+        }else
+        {
+           <HireEmployeesError email="@email" projectName="@projectName" SendTableState="SendConmuteSignal"></HireEmployeesError>
+        }
     }
 }
 
@@ -81,6 +80,7 @@
     private bool _loading = true;
     private bool empty = true;
     string searchString1 = "";
+    public string Disabled { get; set; } = "Empleados Contratados";
     private IEnumerable<Person> _elements = new List<Person>();
     private MudTable<Person> _table;
 
@@ -90,9 +90,11 @@
     [Parameter]
     public string projectName { get; set; }
 
+    [Parameter]
+    public EventCallback<string> SendTableState { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-
         _elements = await PersonService.GetAllEmployees();
         if (_elements.Length() == 0)
         {
@@ -105,12 +107,17 @@
         _loading = false;
     }
 
-    private void GoToCreateEmployee(string email, string projectName)
+    private void GoToCreateEmployee()
     {
         nav.NavigateTo($"/Create_Employee/{email}/{projectName}");
     }
 
-    private void GoToContractEmployee(String email)
+    private void GoToProjectDetails()
+    {
+        nav.NavigateTo($"/Projects/Details/{email}/{projectName}");
+    }
+
+    private void GoToContractEmployee(string email)
     {
        nav.NavigateTo($"/Agreements/{email}");
     }
@@ -129,5 +136,10 @@
         if (element.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
+    }
+
+    private async Task SendConmuteSignal()
+    {
+        await SendTableState.InvokeAsync("");
     }
 }

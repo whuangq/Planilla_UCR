@@ -20,21 +20,10 @@ namespace Application.People.Implementations
             await _personRepository.CreatePersonAsync(personInfo);
         }
 
-        public async Task<IEnumerable<Person>> GetAllEmployees()
-        {
-            return await _personRepository.GetAllEmployees();
-        }
-
         public async Task<IEnumerable<Person>> GetPersonByEmail(string email)
         {
             return await _personRepository.GetPersonByEmail(email);
         }
-
-        public async Task<IEnumerable<Person>> GetProjectEmployees(string projectName)
-        {
-            return await _personRepository.GetProjectEmployees(projectName);
-        }
-
         
         public async  Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo)
         {

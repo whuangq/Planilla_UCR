@@ -1,8 +1,6 @@
 ﻿using Domain.Core.Repositories;
 using Domain.People.Entities;
 using Domain.People.Repositories;
-using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
@@ -22,28 +20,8 @@ namespace Infrastructure.People.Repositories
 
         public async Task CreatePersonAsync(Person personInfo)
         {
-            try
-            {
-                _dbContext.Persons.Add(personInfo);
-                await _dbContext.SaveEntitiesAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Repeated key error" + ex.Message);
-            }   
-        }
-
-        public async Task<IEnumerable<Person?>> GetAllEmployees()
-        {
-            var employeeList =  await _dbContext.Persons.FromSqlRaw("EXEC GetAllEmployees").ToListAsync();
-            return employeeList;
-        }
-
-        public async Task<IEnumerable<Person?>> GetProjectEmployees(string projectName)
-        {
-            var employeeList = await _dbContext.Persons.FromSqlRaw("EXEC GetProjectEmployees @projectName",
-                new SqlParameter("projectName", projectName)).ToListAsync();
-            return employeeList;
+            _dbContext.Persons.Add(personInfo);
+            await _dbContext.SaveEntitiesAsync();
         }
 
         public async Task<IEnumerable<Person?>> GetPersonByEmail(string email)

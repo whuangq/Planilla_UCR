@@ -1,0 +1,123 @@
+﻿@using Application.Employees
+@using Domain.People.Entities
+@inject NavigationManager nav
+@inject IEmployeeService PersonService
+
+@if(_loading) {
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+       
+    </MudPaper>
+}else{
+    @if (!_loading)
+    {
+        List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
+            new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
+            new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}")
+        };
+         <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">  
+            <MudToolBar>
+                <MudIconButton Size="Size.Small"  OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
+                <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+            </MudToolBar>
+         </MudPaper>
+        if(!empty)
+        {
+             <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">  
+                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
+                    <ToolBarContent>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"> Empleados contratados </MudButton>
+                            <MudButton OnClick="SendConmuteSignal"> Contratar Empleados </MudButton>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+                        <HeaderContent>
+                            <MudTh>Email</MudTh>
+                            <MudTh>Nombre completo</MudTh>
+                            <MudTh>Cedula</MudTh>
+                        </HeaderContent>
+
+                        <RowTemplate>
+                            <MudTd DataLabel="Email">@context.Email</MudTd>
+                            <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
+                            <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
+
+                            </RowTemplate>
+                        <PagerContent>
+                            <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+                        </PagerContent>
+                    </MudTable>
+             </MudPaper>
+
+        }else
+        {
+            <HiredEmployeesError email="@email" projectName="@projectName" SendTableState="SendConmuteSignal"></HiredEmployeesError>
+        }
+    }
+}
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private bool empty = true;
+    string searchString1 = "";
+    private IEnumerable<Person> _elements = new List<Person>();
+    private MudTable<Person> _table;
+    [Parameter]
+    public string projectName { get; set; }
+    [Parameter]
+    public string email { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SendTableState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        _elements = await PersonService.GetProjectEmployees(projectName);
+        if (_elements.Length() == 0)
+        {
+            empty = true;
+        }
+        else
+        {
+            empty = false;
+        }
+        _loading = false;
+    }
+
+    private void GoToViewError()
+    {
+        nav.NavigateTo($"/View_Project_Employees_Error/{email}/{projectName}");
+    }
+
+    private void GoToProjectDetails()
+    {
+        nav.NavigateTo($"/Projects/Details/{email}/{projectName}");
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterFunc1(Person element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Person element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task SendConmuteSignal()
+    {
+        await SendTableState.InvokeAsync("");
+    }
+}
