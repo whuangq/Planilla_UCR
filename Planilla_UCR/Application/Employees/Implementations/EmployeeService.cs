@@ -3,6 +3,7 @@ using Domain.Employees.Entities;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Domain.People.Entities;
 
 namespace Application.Employees.Implementations
 {
@@ -17,9 +18,20 @@ namespace Application.Employees.Implementations
         {
             await _employeeRepository.CreateEmployeeAsync(email);
         }
+
+        public async Task<IEnumerable<Person>> GetAllEmployees()
+        {
+            return await _employeeRepository.GetAllEmployees();
+        }
+
         public async Task<IEnumerable<Employee>> GetEmployeeByEmail(string email)
         {
             return await _employeeRepository.GetEmployeeByEmail(email);
+        }
+
+        public async Task<IEnumerable<Person>> GetProjectEmployees(string projectName)
+        {
+            return await _employeeRepository.GetProjectEmployees(projectName);
         }
     }
 }

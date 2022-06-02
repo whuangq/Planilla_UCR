@@ -24,19 +24,6 @@ namespace Infrastructure.People.Repositories
             await _dbContext.SaveEntitiesAsync();
         }
 
-        public async Task<IEnumerable<Person?>> GetAllEmployees()
-        {
-            var employeeList =  await _dbContext.Persons.FromSqlRaw("EXEC GetAllEmployees").ToListAsync();
-            return employeeList;
-        }
-
-        public async Task<IEnumerable<Person?>> GetProjectEmployees(string projectName)
-        {
-            var employeeList = await _dbContext.Persons.FromSqlRaw("EXEC GetProjectEmployees @projectName",
-                new SqlParameter("projectName", projectName)).ToListAsync();
-            return employeeList;
-        }
-
         public async Task<IEnumerable<Person?>> GetPersonByEmail(string email)
         {
             var peopleList = await _dbContext.Persons.FromSqlRaw("EXEC GetPersonByEmail @email",

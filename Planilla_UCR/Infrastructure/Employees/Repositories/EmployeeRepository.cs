@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
+using Domain.People.Entities;
 
 namespace Infrastructure.Employees.Repositories
 {
@@ -31,5 +32,19 @@ namespace Infrastructure.Employees.Repositories
                 new SqlParameter("email", email)).ToListAsync();
             return employeeList;
         }
+
+        public async Task<IEnumerable<Person?>> GetAllEmployees()
+        {
+            var employeeList = await _dbContext.People.FromSqlRaw("EXEC GetAllEmployees").ToListAsync();
+            return employeeList;
+        }
+
+        public async Task<IEnumerable<Person?>> GetProjectEmployees(string projectName)
+        {
+            var employeeList = await _dbContext.People.FromSqlRaw("EXEC GetProjectEmployees @projectName",
+                new SqlParameter("projectName", projectName)).ToListAsync();
+            return employeeList;
+        }
+
     }
 }

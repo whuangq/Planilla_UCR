@@ -1,7 +1,7 @@
-﻿@using Application.People
+﻿@using Application.Employees
 @using Domain.People.Entities
 @inject NavigationManager nav
-@inject IPersonService PersonService
+@inject IEmployeeService PersonService
 
 @if(_loading) {
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">

@@ -7,8 +7,6 @@ namespace Application.People
     public interface IPersonService
     {
         Task CreatePersonAsync(Person personInfo);
-        Task<IEnumerable<Person>> GetAllEmployees();
-        Task<IEnumerable<Person>> GetProjectEmployees(string projectName);
         Task<IEnumerable<Person>> GetPersonByEmail(string email);
         Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo);
     }
