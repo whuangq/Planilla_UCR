@@ -1,4 +1,4 @@
-﻿namespace Presentation.Deductions.Models
+﻿namespace Presentation.Deductions.Components
 {
     internal class SnackHandler
     {

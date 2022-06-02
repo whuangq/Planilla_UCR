@@ -1,4 +1,4 @@
-﻿EXEC InsertDataToAccountWithPasswordEncripted @EmailAccount = 'leonel@ucr.ac.cr', @UserPasswordToEncrypt = 'Prueba01';
+
 
 INSERT INTO Person
 VALUES('jeremy@ucr.ac.cr',
@@ -156,3 +156,4 @@ VALUES('Empleado fijo', 22)
 
 INSERT INTO Agreement
 VALUES('mau@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1', '9999-12-31','Empleado fijo',22, '9999-12-31')
+

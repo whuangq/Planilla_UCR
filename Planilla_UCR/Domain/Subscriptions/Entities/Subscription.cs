@@ -9,14 +9,14 @@ namespace Domain.Subscriptions.Entities
         public String SubscriptionName { get; set; }
         public String ProviderName { get; set; }
         public String SubscriptionDescription { get; set; }
-        public int Cost { get; set; }
+        public double Cost { get; set; }
         public int TypeSubscription { get; set; }
         public int IsEnabled { get; set; }
 
 
         public Subscription(String employerEmail, String projectName,
             String subscriptionName, String providerName,
-            String subscriptionDescription, int cost, int typeSubscription, int isEnabled)
+            String subscriptionDescription, double cost, int typeSubscription, int isEnabled)
         {
             EmployerEmail = employerEmail;
             ProjectName = projectName;

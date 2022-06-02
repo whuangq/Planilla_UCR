@@ -1,8 +1,9 @@
-﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Deductions/{SubscriptionName}/Configurations"
+﻿@page "/Projects/{employerEmail}/{projectName}/Deductions/{subscriptionName}"
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
-@using Presentation.Deductions.Models
+@using Presentation.Deductions.Components
+@using System.Globalization
 @inject NavigationManager nav
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
@@ -10,11 +11,18 @@
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: null, disabled: true),
-        new BreadcrumbItem("Deducciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Deductions"),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
+        new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
+        new BreadcrumbItem("Deducciones", href: $"/Projects/{employerEmail}/{projectName}/Deductions"),
+        new BreadcrumbItem($"{subscriptionName}", href: $"/Projects/{employerEmail}/{projectName}/Deductions/{subscriptionName}")
     };
 }
-<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+<MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">
+    <MudToolBar>
+        <MudIconButton Size="Size.Small" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete" OnClick="GoToMain"></MudIconButton> 
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    </MudToolBar>
+</MudPaper>
 
 @if (_loading)
 {
@@ -22,28 +30,65 @@
 }
 else
 {
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudSpacer></MudSpacer>
+        @if(_disabled)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="EnableForm"/>
+        }else
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="DisableForm"/>
+        }
+        
+    </MudToolBar>
     <MudGrid>
         @*Text fields *@
-        <MudItem xs="12" sm="8">
-            <MudPaper  Height="250px" Width="90%" Outlined="false" Class="border-none pa-4" Elevation="0">
-                <MudText Align="Align.Center" Typo="Typo.h6">Modificar deducción</MudText>
-                <MudText Align="Align.Center" Typo="Typo.h6">@subscription.SubscriptionName</MudText>
+        <MudItem xs="12" sm="12">
+            <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+                @if (_disabled)
+                {
+                    <MudText Align="Align.Center" Typo="Typo.h6">Detalles de la deducción</MudText>
+                }else
+                {
+                    <MudText Align="Align.Center" Typo="Typo.h6">Modificar deducción</MudText>
+                }
                 <MudForm @ref="form">
                 <MudGrid>
 
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="subscription.Cost" Label="Costo" Variant="Variant.Outlined"></MudTextField>
+                <MudItem xs="2">
+                </MudItem>
+                <MudItem xs="8">
+                    <MudTextField @bind-Value="subscription.SubscriptionName" MaxLength="255" Label="Nombre" Variant="Variant.Outlined" ReadOnly = "@_disabled"></MudTextField>
+                </MudItem>
+                <MudItem xs="2">
                 </MudItem>
 
-                <MudItem xs="6">
-                    <MudTextField @bind-Value="subscription.ProviderName"  Label="Organización" Variant="Variant.Outlined"></MudTextField>
+                <MudItem xs="2"></MudItem>
+
+                <MudItem xs="4">
+                    <MudNumericField Immediate="true" Label="Costo" Format="N2" Culture="@cultureCR" Variant="Variant.Outlined" @bind-Value="subscription.Cost" 
+                    Adornment="Adornment.Start" AdornmentText="@cultureCR.NumberFormat.CurrencySymbol" ReadOnly = "@_disabled"/>
                 </MudItem>
 
-                <MudItem xs="12">
-                    <MudTextField @bind-Value="subscription.SubscriptionDescription" Label="Descripcion" Variant="Variant.Outlined"></MudTextField>
+                <MudItem xs="4">
+                    <MudTextField @bind-Value="subscription.ProviderName"  MaxLength="255" Label="Organización" Variant="Variant.Outlined" ReadOnly = "@_disabled"></MudTextField>
                 </MudItem>
 
+                <MudItem xs="2"></MudItem>  
+
+                <MudItem xs="2"></MudItem>  
+
+                <MudItem xs="8">
+                    <MudTextField @bind-Value="subscription.SubscriptionDescription" MaxLength="600" Label="Descripcion" Lines="6" Variant="Variant.Outlined" ReadOnly = "@_disabled"></MudTextField>
+                </MudItem>
+
+                <MudItem xs="2"></MudItem>  
+                <MudItem xs="2"></MudItem>  
+
+                @if(_disabled == false)
+                {
                 <MudItem xs="12" sm="6" md="4">
+                    <MudItem xs="2"></MudItem>  
                     <MudButton Disabled="@snackHandler._saving" OnClick="SaveDeduction" Variant="Variant.Filled" Color="Color.Secondary">
                         @if (snackHandler._saving)
                         {
@@ -61,7 +106,7 @@ else
                                     <MudText>Limpiar</MudText>
                             </MudButton>
                 </MudItem>
-
+                }
                 </MudGrid>
             </MudForm>
             </MudPaper>
@@ -69,23 +114,21 @@ else
     </MudGrid>
 }
 
-
 @code {
-    private bool _hidePosition;
     private bool _loading = true;
-    private IEnumerable<Subscription> Elements;
-    public Subscription subscription = new Subscription("","","","CCSS","Deducción1",2000,0,1);
+    private bool _disabled = true;
+    public Subscription subscription = new Subscription("", "", "", "", "", 0.0, 0, 1);
     MudForm form;
     SnackHandler snackHandler = new SnackHandler();
+    public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
 
-
-    [Parameter] public string EmployerEmail { get; set; }
-    [Parameter] public string ProjectName { get; set; }
-    [Parameter] public string SubscriptionName { get; set; }
+    [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string projectName { get; set; }
+    [Parameter] public string subscriptionName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        subscription = await SubscriptionService.GetSubscription(EmployerEmail, ProjectName, SubscriptionName);
+        subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionName);
         if (subscription != null)
         {
             _loading = false;
@@ -101,7 +144,7 @@ else
             snackHandler._saving = false;
             ShowSnackNotification("Deducción "+subscription.SubscriptionName+" modificada", Severity.Success);
         }
-       
+
         snackHandler._saving = false;
     }
 
@@ -122,17 +165,25 @@ else
         });
     }
 
-
     void CleanForm()
     {
         subscription.SubscriptionDescription = "";
         subscription.ProviderName= "";
-        subscription.Cost = 0;
+        subscription.Cost = 0.0;
     }
-
 
     private void GoToMain()
     {
-        nav.NavigateTo($"/Projects/{EmployerEmail}/{ProjectName}/Deductions");
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions");
+    }
+
+    private void EnableForm()
+    {
+        _disabled = false;
+    }
+
+    private void DisableForm()
+    {
+        _disabled = true;
     }
 }
