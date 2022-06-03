@@ -38,7 +38,5 @@ namespace Infrastructure.Employers.Repositories
             }
             return employer;
         }
-
-
     }
 }

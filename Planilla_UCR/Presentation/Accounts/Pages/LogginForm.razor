@@ -17,11 +17,29 @@
 @inject IAccountService AccountService
 @inject IAccountService AccountService
 
+
+@{
+    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Inicio", href: "#"),
+        new BreadcrumbItem("Ingresar", href: "Loggin"),
+    };
+}
+
+<MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">
+    <MudToolBar>
+        <MudIconButton Size="Size.Small" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete" Link="#" ></MudIconButton> 
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    </MudToolBar>
+</MudPaper>
+
+
+
 <MudGrid>
  <MudItem xs="10" sm="12">
         <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
             <MudSpacer></MudSpacer>
-            <MudText Align="Align.Center" Typo="Typo.h6">Inicio</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h6">Ingresar</MudText>
             <MudForm @ref="form">
             <MudGrid>
                 <MudItem xs="2"></MudItem>
@@ -97,12 +115,6 @@
         nav.NavigateTo("/Register_Form");
     }
 
-        /*
-        private void GoToProjects()
-        {
-        nav.NavigateTo("/Register_Form");
-        }
-        */
 
     void ShowSnackNotification(string message, Severity severity)
     {

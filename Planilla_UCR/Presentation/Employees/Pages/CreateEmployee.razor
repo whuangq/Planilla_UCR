@@ -137,7 +137,7 @@
             await PersonService.CreatePersonAsync(personInfo);
             await EmployeeService.CreateEmployeeAsync(personInfo.Email);
             AccountsDTO accountData = new AccountsDTO(personInfo.Email,personInfo.Name+"_"+personInfo.Ssn);
-            string message = "Ha registrado su cuenta correctamente, bienvenido2 a Planilla_UCR. Sus credenciales son: password: "+accountData.UserPassword+" email: "+accountData.Email;
+            string message = "Sus credenciales son password: "+accountData.UserPassword+" email: "+accountData.Email;
             await AccountService.InsertAccountData(accountData, message);
             snackHandler._saving = false;
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);

@@ -24,13 +24,11 @@ namespace Application.Accounts.Implementations
 
         public async Task<IEnumerable<Account>>CheckEmail(AccountsDTO accountData)
         {
-
            return await _accountRepository.CheckEmail(accountData);
         }
 
         public async Task<IEnumerable<Account>>CheckPassword(AccountsDTO accountData)
         {
-
            return await _accountRepository.CheckPassword(accountData);
         }
 
