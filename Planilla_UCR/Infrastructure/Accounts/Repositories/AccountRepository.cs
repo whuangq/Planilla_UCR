@@ -44,12 +44,6 @@ namespace Infrastructure.Accounts.Repositories
 
         }
 
-        public void SendEmail(string message, string receiver)
-        {
-            EmailSender emailSender = new();
-            emailSender.SendMail(message, receiver);
-        }
-
         public async Task<IEnumerable<Account?>> GetAuthenticationState(AccountsDTO accountData)
         {
             var  state = await _dbContext.Accounts.FromSqlRaw("EXEC GetAuthenticationState @email",

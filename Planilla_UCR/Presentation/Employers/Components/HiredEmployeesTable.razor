@@ -8,7 +8,6 @@
          <MudText Align="Align.Center" Typo="Typo.h6">
               <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
          </MudText>
-       
     </MudPaper>
 }else{
     @if (!_loading)
@@ -19,12 +18,13 @@
             new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
             new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}")
         };
-         <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">  
-            <MudToolBar>
-                <MudIconButton Size="Size.Small"  OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
-                <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-            </MudToolBar>
-         </MudPaper>
+          <MudToolBar>
+            <MudIconButton Size="Size.Small"  OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
+            <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+          </MudToolBar>
+             <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
+          </MudPaper>
+
         if(!empty)
         {
              <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">  
@@ -34,7 +34,7 @@
                             <MudButton OnClick="SendConmuteSignal"> Contratar Empleados </MudButton>
                             <MudSpacer />
                             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                    </ToolBarContent>
+                    </ToolBarContent> 
                         <HeaderContent>
                             <MudTh>Email</MudTh>
                             <MudTh>Nombre completo</MudTh>

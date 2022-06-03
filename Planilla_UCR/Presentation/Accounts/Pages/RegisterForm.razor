@@ -176,13 +176,11 @@
                 }
                 else
                 {
-                    await AccountService.InsertAccountData(accountData);
+                    string message = "Ha registrado su cuenta correctamente, bienvenido2 a Planilla_UCR";
+                    await AccountService.InsertAccountData(accountData, message);
                     snackHandler._saving = false;
                     ShowSnackNotification("Cuenta para "+personInfo.Name+" registrada", Severity.Success);
                     await AccountService.SetAuthenticationState(accountData,1);
-                    if (SendEmail == true) {
-                      AccountService.SendEmail("Ha registrado su cuenta correctamente, bienvenido a Planilla_UCR",personInfo.Email);
-                    } 
                     nav.NavigateTo($"/Projects/{accountData.Email}");
                 }  
             }

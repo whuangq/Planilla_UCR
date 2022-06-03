@@ -1,5 +1,6 @@
 ﻿@page "/Create_Employee/{email}/{projectName}"
 @using Application.People
+@using Domain.Accounts.DTOs
 @using Domain.People.Entities
 @using Domain.Employees.Entities
 @using Application.Employees
@@ -10,18 +11,25 @@
 @using Domain.Accounts.Entities
 
 @inject ISnackbar Snackbar
+@inject IAccountService AccountService
 @inject IPersonService PersonService
 @inject IEmployeeService EmployeeService
+@inject NavigationManager nav
 
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+        new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
         new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
+        new BreadcrumbItem("Nuevo", href: $"/Create_Employee/{email}/{projectName}")
     };
 }
- <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+<MudToolBar>
+    <MudIconButton Size="Size.Small"  OnClick="GoToProjectEmployees" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+</MudToolBar>
 
 
 <MudGrid>
@@ -111,7 +119,6 @@
 
 @code {
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
-    //Account accountInfo = new Account("","");
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
 
@@ -128,10 +135,10 @@
         if (form.IsValid && validPerson)
         {
             await PersonService.CreatePersonAsync(personInfo);
-            //accountInfo.Email = personInfo.Email;
-            //accountInfo.Password = personInfo.Name +"_"+ personInfo.Ssn.ToString();
-            //await AccountService.CreateAccountAsync(accountInfo);
             await EmployeeService.CreateEmployeeAsync(personInfo.Email);
+            AccountsDTO accountData = new AccountsDTO(personInfo.Email,personInfo.Name+"_"+personInfo.Ssn);
+            string message = "Ha registrado su cuenta correctamente, bienvenido2 a Planilla_UCR. Sus credenciales son: password: "+accountData.UserPassword+" email: "+accountData.Email;
+            await AccountService.InsertAccountData(accountData, message);
             snackHandler._saving = false;
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);
             ShowSnackNotification("Se utilizó la contraseña por defecto: Nombre_Cedula", Severity.Info);
@@ -201,6 +208,10 @@
         personInfo.BankAccount = "";
         personInfo.PhoneNumber = "";
         personInfo.Ssn = 0;
-        //accountInfo.Password = "";
+    }
+
+     private void GoToProjectEmployees()
+    {
+        nav.NavigateTo($"View_Project_Employees/{email}/{projectName}");
     }
 }

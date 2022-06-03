@@ -5,7 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Mail;
 
-namespace Infrastructure.Accounts.Repositories
+namespace Application.Accounts
 {
     public class EmailSender
     {

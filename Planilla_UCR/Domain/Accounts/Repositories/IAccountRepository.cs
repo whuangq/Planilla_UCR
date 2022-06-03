@@ -17,6 +17,5 @@ namespace Domain.Accounts.Repositories
 
         Task SetAuthenticationState(AccountsDTO accountData, byte state);
 
-        void SendEmail(string message, string receiver);
     }
 }

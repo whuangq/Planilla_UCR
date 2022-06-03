@@ -3,6 +3,7 @@ using Domain.Accounts.DTOs;
 using Domain.Accounts.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+
 namespace Application.Accounts.Implementations
 {
     internal class AccountService : IAccountService
@@ -14,9 +15,10 @@ namespace Application.Accounts.Implementations
             _accountRepository = accountRepository;
         }
 
-        public async Task InsertAccountData(AccountsDTO accountData)
+        public async Task InsertAccountData(AccountsDTO accountData, string message)
         {
-
+            EmailSender emailSender = new();
+            emailSender.SendMail(message, accountData.Email);
             await _accountRepository.InsertAccountData(accountData);
         }
 
@@ -30,11 +32,6 @@ namespace Application.Accounts.Implementations
         {
 
            return await _accountRepository.CheckPassword(accountData);
-        }
-
-        public void  SendEmail(string message, string receiver)
-        {
-             _accountRepository.SendEmail(message, receiver);
         }
 
         public async Task SetAuthenticationState(AccountsDTO accountData, byte state)

@@ -16,17 +16,18 @@
     {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Projectos", href: $"/Projects/{email}"),
+            new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
             new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
             new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
         };
 
-        <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">  
+       
             <MudToolBar>
                 <MudIconButton Size="Size.Small" OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
                 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
             </MudToolBar>
-        </MudPaper>
+          <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
+          </MudPaper>
         if (!empty)
         {
             <MudPaper  Height="100px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">
