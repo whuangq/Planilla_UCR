@@ -1,4 +1,4 @@
-﻿namespace Presentation.Benefits.Models
+﻿namespace Presentation.Benefits.Components
 {
     internal class SnackHandler
     {

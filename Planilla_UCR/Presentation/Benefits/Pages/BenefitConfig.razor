@@ -1,20 +1,24 @@
-﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits/Configurations"
+﻿@page "/Projects/{employerEmail}/{projectName}/Benefits/Configurations"
 @using Application.Subscriptions
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
+@using Presentation.Benefits.Components
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
-
+@inject NavigationManager nav
 
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
-        new BreadcrumbItem("Beneficios", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
-        new BreadcrumbItem("Configuraciones", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits/Configurations"),
+        new BreadcrumbItem("Inicio", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
+        new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
+        new BreadcrumbItem("Beneficios", href: $"/Projects/{employerEmail}/{projectName}/Benefits"),
+        new BreadcrumbItem("Configuraciones", href: $"/Projects/{employerEmail}/{projectName}/Benefits/Configurations"),
     };
 }
+
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
 @if (_loading)
 {
     <MudText Typo="Typo.h6">No hay beneficios asociados al proyecto</MudText>
@@ -29,16 +33,16 @@ else
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Nombre</MudTh>
-            <MudTh>Descripción</MudTh>
+            <MudTh>Proveedor</MudTh>
             <MudTh>Costo</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Benefits/{@context.SubscriptionName}/Configurations")">
+                <MudLink Color="Color.Secondary" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Benefits/{@context.SubscriptionName}")">
                     @context.SubscriptionName
                 </MudLink>
             </MudTd>
-            <MudTd DataLabel="Descripción">@context.SubscriptionDescription</MudTd>
+            <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
             <MudTd DataLabel="Costo">@context.Cost</MudTd>
         </RowTemplate>
         <FooterContent>
@@ -55,23 +59,20 @@ else
     </MudToolBar>
 }
 
-
 @code {
-    private bool _hidePosition;
     private bool _loading = true;
     private HashSet<Subscription> selectedItems1 = new HashSet<Subscription>();
     private IEnumerable<Subscription> Elements;
     private MudTable<Subscription> mudTable;
-
     public string searchString1 = "";
     public string project { get; set; }
 
-    [Parameter] public string EmployerEmail { get; set; }
-    [Parameter] public string ProjectName { get; set; }
+    [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string projectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await SubscriptionService.GetBenefitsByProject(EmployerEmail, ProjectName);
+        Elements = await SubscriptionService.GetBenefitsByProject(employerEmail, projectName);
         if (Elements.Length() > 0){
         _loading = false;
         }
@@ -113,5 +114,10 @@ else
     private void PageChanged(int i)
     {
         mudTable.NavigateTo(i - 1);
+    }
+
+    private void GoToMain()
+    {
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Benefits");
     }
 }

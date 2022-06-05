@@ -1,25 +1,23 @@
-﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Benefits/New"
-@using Domain.Subscriptions.DTOs
+﻿@page "/Projects/{employerEmail}/{projectName}/Benefits/New"
 @using Domain.Subscriptions.Entities
 @using Application.Subscriptions
-@using Presentation.Benefits.Models
+@using Presentation.Benefits.Components
 @using Presentation.Core.Components
-
+@using System.Globalization
 @inject ISubscriptionService SubscriptionService
 @inject ISnackbar Snackbar
-
+@inject NavigationManager nav
 
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: ""),
-        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
-        new BreadcrumbItem("Beneficios", href: $"/Projects/{EmployerEmail}/{ProjectName}/Benefits"),
-        new BreadcrumbItem("Nuevo", href: "newbenefit")
+        new BreadcrumbItem("Inicio", href: ""),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
+        new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
+        new BreadcrumbItem("Beneficios", href: $"/Projects/{employerEmail}/{projectName}/Benefits"),
+        new BreadcrumbItem("Nuevo beneficio", href: $"Projects/{employerEmail}/{projectName}/Benefits/New")
     };
 }
-
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
 <MudGrid>
     @*Text fields *@
     <MudItem xs="12" sm="12">
@@ -38,11 +36,12 @@
             <MudItem xs="2">
             </MudItem>
             <MudItem xs="4">
-                <MudTextField @bind-Value="subscriptionInfo.Cost" Label="Costo" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+                <MudNumericField Immediate="true" Label="Costo" Format="N2" Culture="@cultureCR" Variant="Variant.Outlined" @bind-Value="_cost" 
+                    Adornment="Adornment.Start" AdornmentText="@cultureCR.NumberFormat.CurrencySymbol" Required="true" RequiredError="Campo requerido"/>
             </MudItem>
 
             <MudItem xs="4">
-                <MudTextField @bind-Value="subscriptionInfo.ProviderName"  Label="Organización" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+                <MudTextField @bind-Value="subscriptionInfo.ProviderName" MaxLength="255" Label="Organización" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
 
             <MudItem xs="2">
@@ -50,7 +49,7 @@
             <MudItem xs="2">
             </MudItem>
             <MudItem xs="8">
-                <MudTextField @bind-Value="subscriptionInfo.SubscriptionDescription" Label="Descripción" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
+                <MudTextField @bind-Value="subscriptionInfo.SubscriptionDescription"  MaxLength="600" Label="Descripción" Variant="Variant.Outlined"  Required="true" RequiredError="Campo requerido"></MudTextField>
             </MudItem>
 
             <MudItem xs="2">
@@ -84,23 +83,23 @@
     </MudItem>
 </MudGrid>
 
-
 @code{
-    private bool _isLoading = true;
-    private bool _processing = false;
-
+    private double? _cost;
     SnackHandler snackHandler = new SnackHandler();
-    Subscription subscriptionInfo = new Subscription("", "", "", "", "", 0, 1, 1);
+    Subscription subscriptionInfo = new Subscription("", "", "", "", "", 0.0, 1, 1);
     MudForm form;
+    public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
 
-    [Parameter] public string EmployerEmail { get; set; }
-    [Parameter] public string ProjectName { get; set; }
+
+    [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string projectName { get; set; }
 
 
     async Task SaveBenefit()
     {
-        subscriptionInfo.EmployerEmail = EmployerEmail;
-        subscriptionInfo.ProjectName = ProjectName;
+        subscriptionInfo.EmployerEmail = employerEmail;
+        subscriptionInfo.ProjectName = projectName;
+        subscriptionInfo.Cost = Convert.ToDouble(_cost);
         Subscription subscriptionToAdd = subscriptionInfo;
         snackHandler._saving = true;
         await form.Validate();
@@ -139,13 +138,17 @@
         });
     }
 
-
     void CleanForm()
     {
         subscriptionInfo.SubscriptionName = "";
         subscriptionInfo.ProjectName = "";
         subscriptionInfo.SubscriptionDescription = "";
         subscriptionInfo.ProviderName= "";
-        subscriptionInfo.Cost = 0;
+        subscriptionInfo.Cost = 0.0;
+    }
+
+    private void GoToMain()
+    {
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Benefits");
     }
 }
