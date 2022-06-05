@@ -2,10 +2,10 @@
 
 <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">  
     <MudToolBar>
-            <MudButton Disabled="true"> Empleados contratados </MudButton>
-            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="SendConmuteSignal"> Contratar Empleados </MudButton>
-            <MudSpacer />
-            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudButton Color= "Color.Success"> Empleados contratados </MudButton>
+        <MudButton OnClick="SendConmuteSignal"  > Contratar Empleados </MudButton>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </MudToolBar> 
     <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
     </MudPaper>

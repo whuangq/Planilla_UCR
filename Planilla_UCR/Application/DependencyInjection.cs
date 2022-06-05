@@ -11,6 +11,12 @@ using Application.Employers.Implementations;
 using Application.Projects;
 using Application.Projects.Implementations;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components.Authorization;
+using Application.Authentication;
+using Application.Authentication.Implementations;
+using Microsoft.AspNetCore.Identity;
+using Application.Authorization;
+using Application.Authorization.Implementations;
 
 namespace Application
 {
@@ -25,6 +31,9 @@ namespace Application
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IEmployerService, EmployerService>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IAuthorizationServices, AuthorizationServices>();
             return services;
         }
     }

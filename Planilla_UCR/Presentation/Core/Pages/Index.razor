@@ -1,45 +1,51 @@
-﻿@page "/{email}"
-@using Presentation.Authentication
-@using Presentation.Shared
-@using Presentation.Core.Layout
-@using Presentation
-@inject NavigationManager nav
+﻿@using Domain.Accounts.DTOs
+@using Application.Authentication
+@using  Domain.Authentication
+@using Application.Authorization;
+@using Application.Authorization.Implementations;
+@inject IAuthenticationService AuthenticationService
+@inject IAuthorizationServices AuthorizationService
 
-<Authenticator email="@email" SendAuthenticationState="ReceiveAuthenticationState"> </Authenticator>
-@if (_loading)
-{
-    <MudText> loading</MudText>
-}
-else
-{
-    if (authenticationState == true && _loading == false)
-    {
-        //Authorized
-        <MudText>Visión del producto para @email</MudText>
-        nav.NavigateTo($"/Projects/{email}");
-    }
-    else
-    {
-        //Unauthorized
-        nav.NavigateTo("/Visitor");
-    }
-}
+@page "/"
+
+<AuthorizeView>
+    <Authorized> 
+        <MudText>Esta autenticado</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText>No esta autenticado</MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Employer">
+    <Authorized> 
+        <MudText>ES Employer</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText>No es employer </MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Employee">
+    <Authorized> 
+        <MudText>Es employee</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText>No es employee </MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+<MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-16" Elevation="0">
+     <MudText Align="Align.Justify" Typo="Typo.h5">Para emprendedores y pequeñas empresas quienes requieren agilizar
+    los pagos de planilla, reduciendo las probabilidades de cometer errores
+    humanos en el proceso, por medio de planilla@ucr, una aplicación web
+    intuitiva que permita asegurar que sus negocios cumplan con todas las
+    disposiciones en la ley del trabajador de Costa Rica.
+    Asimismo, nuestro producto va a ser la herramienta líder en la
+    reducción del uso de papel a la hora de generar informes de planillas y
+    pagos, ya que esta realiza sus tareas de manera totalmente electrónica.</MudText>
+</MudPaper>
 
 @code{
-    bool _loading = true;
-    bool authenticationState = false;
-    private int currentCount = 0;
-
-    [Parameter]
-    public string email { get; set; }
-
-    [CascadingParameter]
-    protected EventCallback<string> setEmail { get; set; }
-
-    public async Task ReceiveAuthenticationState(bool state)
-    {
-        authenticationState = state;
-        _loading = false;
-        await setEmail.InvokeAsync(email);
-    }
 }

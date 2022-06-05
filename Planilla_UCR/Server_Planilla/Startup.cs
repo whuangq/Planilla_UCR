@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Infrastructure.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace Server
 {
@@ -26,7 +27,7 @@ namespace Server
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddMudServices();
-            services.AddInfrastructureLayer(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddInfrastructureLayer(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetConnectionString("AuthenticationDB"));
             services.AddApplicationLayer();
         }
 
@@ -43,12 +44,12 @@ namespace Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseMiddleware<BlazorCookieLoginMiddleware<IdentityUser>>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();

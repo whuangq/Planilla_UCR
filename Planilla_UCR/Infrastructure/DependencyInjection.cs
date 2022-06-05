@@ -18,12 +18,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Employers;
 using Infrastructure.Projects;
+using Infrastructure.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Domain.Authentication.Repositories;
+using Infrastructure.Authentication.Repositories;
+using Domain.Authorization.Repositories;
+using Infrastructure.Authorization.Repositories;
 
 namespace Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, string connectionString, string AuthenticationDB)
         {
 
             services.AddDbContext<PersonDbContext>(options => options.UseSqlServer(connectionString));
@@ -43,6 +49,13 @@ namespace Infrastructure
 
             services.AddDbContext<ProjectDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IProjectRepository, ProjectRepository>();
+
+            services.AddDbContext<AccountsDbContext>(options => options.UseSqlServer(AuthenticationDB), ServiceLifetime.Transient);
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+               .AddRoles<IdentityRole>()
+               .AddEntityFrameworkStores<AccountsDbContext>();
+            services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddScoped<IAuthorizationRepository, AuthorizationRepository>();
             return services;
         }
     }

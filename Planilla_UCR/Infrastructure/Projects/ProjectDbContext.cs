@@ -8,7 +8,7 @@ namespace Infrastructure.Projects
 {
     public class ProjectDbContext : ApplicationDbContext
     {
-        public ProjectDbContext(DbContextOptions options, 
+        public ProjectDbContext(DbContextOptions<ProjectDbContext> options, 
             ILogger<ProjectDbContext> logger) : base(options, logger)
         {
         }

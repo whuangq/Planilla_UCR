@@ -18,26 +18,20 @@
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
             new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
-            new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
-        };
-
-       
-            <MudToolBar>
-                <MudIconButton Size="Size.Small" OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
-                <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-            </MudToolBar>
-          <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
-          </MudPaper>
+            new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}")
+        }; 
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+        <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
+        </MudPaper>
         if (!empty)
         {
-            <MudPaper  Height="100px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">
                 <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
                     <ToolBarContent>
-                        <MudButton OnClick="SendConmuteSignal"> Empleados contratados </MudButton>
-                        <MudButton Variant="Variant.Outlined" Color="Color.Primary"> Contratar Empleados </MudButton>
-                        <MudSpacer />
-                        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                    </ToolBarContent>
+                            <MudButton OnClick="SendConmuteSignal"> Empleados contratados </MudButton>
+                            <MudButton Color= "Color.Success" > Contratar Empleados </MudButton>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent> 
                     <HeaderContent>
                         <MudTh>Email</MudTh>
                         <MudTh>Nombre completo</MudTh>
@@ -51,7 +45,7 @@
                         <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
                          <MudTd DataLabel="Acciones">
                         <MudSpacer></MudSpacer>
-                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email))" Color="Color.Secondary">
+                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email))" Color="Color.Transparent">
                                 <MudText>
                                 Contratar
                                 </MudText> 
@@ -63,12 +57,11 @@
                 </PagerContent>
                 </MudTable>
                  <br>
-                <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Transparent">
+                <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Primary">
                     <MudText>
-                    Crear Empleados
+                    Registrar Empleados
                     </MudText> 
                 </MudButton>
-            </MudPaper>
         }else
         {
            <HireEmployeesError email="@email" projectName="@projectName" SendTableState="SendConmuteSignal"></HireEmployeesError>
@@ -84,6 +77,8 @@
     public string Disabled { get; set; } = "Empleados Contratados";
     private IEnumerable<Person> _elements = new List<Person>();
     private MudTable<Person> _table;
+    public string tab1 { get; set; } = "Contratar empleados";
+    public string tab2 { get; set; } = "Empleados contratados";
 
     [Parameter]
     public string email { get; set; }
@@ -113,11 +108,6 @@
         nav.NavigateTo($"/Create_Employee/{email}/{projectName}");
     }
 
-    private void GoToProjectDetails()
-    {
-        nav.NavigateTo($"/Projects/Details/{email}/{projectName}");
-    }
-
     private void GoToContractEmployee(string email)
     {
        nav.NavigateTo($"/Agreements/{email}");
@@ -142,5 +132,10 @@
     private async Task SendConmuteSignal()
     {
         await SendTableState.InvokeAsync("");
+    }
+
+    private void GoToProjectDetails()
+    {
+        nav.NavigateTo($"/Projects/Details/{email}/{projectName}");
     }
 }

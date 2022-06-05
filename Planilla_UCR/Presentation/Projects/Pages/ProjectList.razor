@@ -14,6 +14,16 @@ List<BreadcrumbItem> _items = new List<BreadcrumbItem>
 
 };
 }
+
+<AuthorizeView>
+    <Authorized> 
+        <MudText>Esta autenticado. Bienvenido @context.User.Identity.Name</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText>No esta autenticado</MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
 @if (_loading)
 {
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">

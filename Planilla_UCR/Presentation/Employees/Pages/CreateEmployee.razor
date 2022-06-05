@@ -9,28 +9,29 @@
 @using System.ComponentModel.DataAnnotations
 @using Application.Accounts
 @using Domain.Accounts.Entities
+@using Application.Authorization;
+@using Application.Authorization.Implementations;
+@using Application.Authentication;
 
 @inject ISnackbar Snackbar
 @inject IAccountService AccountService
 @inject IPersonService PersonService
 @inject IEmployeeService EmployeeService
+@inject IAuthorizationServices AuthorizationService
+@inject IAuthenticationService authService;
 @inject NavigationManager nav
 
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Proyecto", href: $"/Projects/{email}"),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
         new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
         new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
-        new BreadcrumbItem("Nuevo", href: $"/Create_Employee/{email}/{projectName}")
+        new BreadcrumbItem("Nuevo empleado", href: $"/Create_Employee/{email}/{projectName}")
     };
 }
-<MudToolBar>
-    <MudIconButton Size="Size.Small"  OnClick="GoToProjectEmployees" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-</MudToolBar>
-
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 <MudGrid>
     <MudItem xs="10" sm="12">
@@ -136,12 +137,14 @@
         {
             await PersonService.CreatePersonAsync(personInfo);
             await EmployeeService.CreateEmployeeAsync(personInfo.Email);
-            AccountsDTO accountData = new AccountsDTO(personInfo.Email,personInfo.Name+"_"+personInfo.Ssn);
-            string message = "Sus credenciales son password: "+accountData.UserPassword+" email: "+accountData.Email;
+            AccountsDTO accountData = new AccountsDTO(personInfo.Email,personInfo.Name+"_"+personInfo.Ssn+"!A");
+            string message = "Sus credenciales son: Usuario = "+accountData.Email+ " Clave =  "+accountData.UserPassword;
             await AccountService.InsertAccountData(accountData, message);
+            await authService.RegisterRequestAsync(accountData);
+            await AuthorizationService.assignRole(accountData.Email, "Employee");
             snackHandler._saving = false;
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);
-            ShowSnackNotification("Se utilizó la contraseña por defecto: Nombre_Cedula", Severity.Info);
+            ShowSnackNotification("Se utilizó la contraseña por defecto: Nombre_Cedula!A", Severity.Info);
         }
         snackHandler._saving = false;
     }

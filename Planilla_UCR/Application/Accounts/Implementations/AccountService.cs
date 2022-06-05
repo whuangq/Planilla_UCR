@@ -31,15 +31,5 @@ namespace Application.Accounts.Implementations
         {
            return await _accountRepository.CheckPassword(accountData);
         }
-
-        public async Task SetAuthenticationState(AccountsDTO accountData, byte state)
-        {
-            await _accountRepository.SetAuthenticationState(accountData, state);
-        }
-
-        public async Task<IEnumerable<Account>> GetAuthenticationState(AccountsDTO accountData)
-        {
-            return await _accountRepository.GetAuthenticationState(accountData);
-        }
     }
 }

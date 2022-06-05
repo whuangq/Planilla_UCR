@@ -17,20 +17,16 @@
             new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
             new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
             new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}")
-        };
-          <MudToolBar>
-            <MudIconButton Size="Size.Small"  OnClick="GoToProjectDetails" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete"></MudIconButton> 
-            <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-          </MudToolBar>
-             <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
-          </MudPaper>
+        }; 
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+        <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
+        </MudPaper>
 
         if(!empty)
         {
-             <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">  
                 <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
                     <ToolBarContent>
-                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"> Empleados contratados </MudButton>
+                            <MudButton Color= "Color.Success"> Empleados contratados </MudButton>
                             <MudButton OnClick="SendConmuteSignal"> Contratar Empleados </MudButton>
                             <MudSpacer />
                             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -51,7 +47,12 @@
                             <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
                         </PagerContent>
                     </MudTable>
-             </MudPaper>
+                     <br>
+                    <MudButton Variant="Variant.Filled" OnClick="GoToCreateEmployee" Color="Color.Primary">
+                        <MudText>
+                        Registrar Empleados
+                        </MudText> 
+                    </MudButton>
 
         }else
         {
@@ -67,6 +68,9 @@
     string searchString1 = "";
     private IEnumerable<Person> _elements = new List<Person>();
     private MudTable<Person> _table;
+    public string tab1 { get; set; } = "Contratar empleados";
+    public string tab2 { get; set; } = "Empleados contratados";
+
     [Parameter]
     public string projectName { get; set; }
     [Parameter]
@@ -119,5 +123,10 @@
     private async Task SendConmuteSignal()
     {
         await SendTableState.InvokeAsync("");
+    }
+
+    private void GoToCreateEmployee()
+    {
+        nav.NavigateTo($"/Create_Employee/{email}/{projectName}");
     }
 }

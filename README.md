@@ -9,3 +9,12 @@ El objetivo de este proyecto es poder proporcionar una aplicaciòn que permita r
 ● Wendy Ortiz Alfaro. B75584.  
 ● Ronald Mauricio Palma Villegas. B95811.  
 ● Jeremy Vargas Artavia. B98157.  
+
+# Crear base de datos de autenticación
+
+## instalar desde powershell:
+dotnet tool install --version 5.0.11 --global dotnet-ef
+
+## Con el servidor web como proyecto por defecto. y la capa de infraestructura seleccionada.
+## Desde el Package manager console ejecutar:
+Update-Database -Context AccountsDbContext

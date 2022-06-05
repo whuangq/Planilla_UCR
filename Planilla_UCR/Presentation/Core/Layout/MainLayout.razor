@@ -5,28 +5,46 @@
 
 <MudThemeProvider/>
 <MudSnackbarProvider />
- <CascadingValue Value="this">
 <MudLayout id="banner">
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
         <MudSpacer />
-        <MudLink Color="Color.Secondary" Href="@($"/")"> Salir  
-        </MudLink>
-        <MudIconButton Icon="@Icons.Filled.Person" Size="Size.Large" Color="Color.Secondary" OnClick="GoToProfile"></MudIconButton>
+        <AuthorizeView>
+            <Authorized> 
+                @{
+                    userEmail = context.User.Identity.Name;
+                }
+                <MudSpacer />
+                <MudSpacer />
+                <MudLink Color="Color.Secondary" Href="@($"/logout")"> Salir  
+                </MudLink>
+                <MudIconButton Icon="@Icons.Filled.Person" Size="Size.Large" Color="Color.Secondary" OnClick="GoToProfile"></MudIconButton>
+            </Authorized>
+            <NotAuthorized>
+                <MudSpacer />
+                <MudSpacer />
+                <MudLink Href="/Loggin" Color="Color.Secondary">Ingresar</MudLink>
+                <MudButton Disabled=true></MudButton>
+                <MudLink Href="/Register_Form" Color="Color.Secondary">Registrar</MudLink>
+            </NotAuthorized>
+        </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
-        <NavMenu email=@userEmail ></NavMenu>
+        <AuthorizeView>
+            <Authorized>
+                <NavMenu email=@userEmail ></NavMenu>
+            </Authorized>
+            <NotAuthorized>
+            </NotAuthorized>
+        </AuthorizeView>
     </MudDrawer>
     <MudMainContent>
         <div style="padding: 2%;" class="container">
-            <CascadingValue Value=setEmail >
                 @Body
-            </CascadingValue>
         </div>
     </MudMainContent>
 </MudLayout>
- </CascadingValue>
 
 @code {
     public string userEmail { get; set; } = "unknown";
@@ -40,25 +58,8 @@
         _drawerOpen = !_drawerOpen;
     }
 
-    public void signal(string email)
-    {
-        userEmail = email;
-        if (userEmail == "unknown")
-        {
-            nav.NavigateTo("/Visitor");
-        }
-    }
-
     public void GoToProfile()
     {
         nav.NavigateTo($"/Employer_Profile/{userEmail}"); 
     }
-
-    protected void ReceiveAuthenticationState(bool state)
-    {
-        authenticationState = state;
-        _loading = false;
-    }
-
-    public EventCallback<string> setEmail => EventCallback.Factory.Create<string>(this, signal);
 }
