@@ -14,12 +14,6 @@ Create Table Person(
 	PhoneNumber varchar(255)
 );
 
-CREATE TABLE Account(
-	Email varchar(255) NOT NULL PRIMARY KEY,
-	UserPassword VARBINARY(500) NOT NULL,
-    FOREIGN KEY(Email) REFERENCES Person(Email),
-);
-
 CREATE TABLE Employee(
 	Email varchar(255) NOT NULL PRIMARY KEY,
 	FOREIGN KEY(Email) REFERENCES Person(Email)
@@ -147,30 +141,6 @@ CREATE PROCEDURE GetEmployeeByEmail(@email varchar(255))
 AS
 BEGIN
     SELECT * FROM Employee AS E WHERE E.Email = @email
-END
-
--- Account Stored Procedures
-GO
-CREATE Procedure EmailCheckLoggin(@UserEmail varchar(255))
-AS
-BEGIN
-    Select * from Account where Account.Email = @UserEmail
-END
-
-GO
-Create proc InsertDataToAccountWithPasswordEncripted(@EmailAccount varchar(255),@UserPasswordToEncrypt varchar(255))
-As 
-Declare @UserPassword varbinary(150)
-Declare @EncryptedPassword varbinary(150)
-Set @UserPassword = CONVERT(varbinary(150),@UserPasswordToEncrypt);
-Set @EncryptedPassword = HASHBYTES('SHA2_256', @UserPassword);
-Insert into Account values (@EmailAccount, @EncryptedPassword) 
-
-GO
-CREATE PROCEDURE PasswordCheckLoggin(@UserEmail varchar(255), @UserPassword varchar(255))
-AS
-BEGIN
-	Select * from Account where [UserPassword] =  HASHBYTES('SHA2_256',@UserPassword) AND Account.Email = @UserEmail
 END
 
 -- Data Insert
@@ -330,3 +300,4 @@ VALUES('Empleado fijo', 22)
 
 INSERT INTO Agreement
 VALUES('mau@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1', '9999-12-31','Empleado fijo',22, '9999-12-31')
+

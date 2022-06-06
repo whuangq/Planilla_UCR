@@ -1,24 +1,23 @@
 ﻿@page "/Create_Employee/{email}/{projectName}"
 @using Application.People
-@using Domain.Accounts.DTOs
+@using Domain.Authentication.DTOs
 @using Domain.People.Entities
 @using Domain.Employees.Entities
 @using Application.Employees
 @using Presentation.Shared.Models
 @using Presentation.Core.Components
 @using System.ComponentModel.DataAnnotations
-@using Application.Accounts
-@using Domain.Accounts.Entities
 @using Application.Authorization;
 @using Application.Authorization.Implementations;
 @using Application.Authentication;
+@using Application.Email;
 
 @inject ISnackbar Snackbar
-@inject IAccountService AccountService
 @inject IPersonService PersonService
 @inject IEmployeeService EmployeeService
 @inject IAuthorizationServices AuthorizationService
 @inject IAuthenticationService authService;
+@inject IEmailServices EmailService
 @inject NavigationManager nav
 
 @*Navigation footprint *@
@@ -137,12 +136,12 @@
         {
             await PersonService.CreatePersonAsync(personInfo);
             await EmployeeService.CreateEmployeeAsync(personInfo.Email);
-            AccountsDTO accountData = new AccountsDTO(personInfo.Email,personInfo.Name+"_"+personInfo.Ssn+"!A");
-            string message = "Sus credenciales son: Usuario = "+accountData.Email+ " Clave =  "+accountData.UserPassword;
-            await AccountService.InsertAccountData(accountData, message);
+            AccountDTO accountData = new AccountDTO(personInfo.Email,personInfo.Name+"_"+personInfo.Ssn+"!A");
+            string message = "Sus credenciales son: Usuario = "+accountData.Email+ " Clave =  "+accountData.Password;
             await authService.RegisterRequestAsync(accountData);
             await AuthorizationService.assignRole(accountData.Email, "Employee");
             snackHandler._saving = false;
+            EmailService.SendConfirmationEmail(message, accountData.Email);
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);
             ShowSnackNotification("Se utilizó la contraseña por defecto: Nombre_Cedula!A", Severity.Info);
         }

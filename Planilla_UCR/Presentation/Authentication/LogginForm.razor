@@ -1,7 +1,4 @@
 ﻿@page "/Loggin"
-@using Domain.Accounts.DTOs
-@using Application.Accounts
-@using Domain.Accounts.Entities
 @using Presentation.Core.Components
 @using Application.People
 @using Domain.People.Entities
@@ -9,14 +6,12 @@
 @using System.ComponentModel.DataAnnotations
 @using Shared.Models
 @using Application.Authentication
+@using Domain.Authentication.DTOs
 
 @inject NavigationManager nav
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
-@inject IAccountService AccountService
-@inject IAccountService AccountService
-@inject IAuthenticationService authService
-
+@inject IAuthenticationService AuthenticationService
 
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -26,14 +21,7 @@
     };
 }
 
-<MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">
-    <MudToolBar>
-        <MudIconButton Size="Size.Small" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete" Link="#" ></MudIconButton> 
-        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-    </MudToolBar>
-</MudPaper>
-
-
+<MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 <MudGrid>
  <MudItem xs="10" sm="12">
@@ -49,7 +37,7 @@
                 <MudItem xs="2"></MudItem>
                 <MudItem xs="2"></MudItem>
                 <MudItem xs="8">
-                    <MudTextField @bind-Value="accountData.UserPassword" Label="Contraseña" Required="true" RequiredError="Campo requerido" InputType="InputType.Password" Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField @bind-Value="accountData.Password" Label="Contraseña" Required="true" RequiredError="Campo requerido" InputType="InputType.Password" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
                 <MudItem xs="2"></MudItem>
 
@@ -71,7 +59,7 @@
                 <MudButton Disabled="true"> </MudButton>
               
                 <MudButton OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Transparent">
-                    <MudText>Registrarse</MudText>
+                    <MudText>Registrar cuenta empleador</MudText>
                  </MudButton>
                </MudItem>
             </MudGrid>
@@ -84,26 +72,26 @@
 
 @code{
     MudForm form;
-    AccountsDTO accountData = new AccountsDTO("","");
+    AccountDTO accountData = new AccountDTO("","");
     SnackHandler snackHandler = new SnackHandler();
-   
+
     async Task ValidateRegisterAccount()
     {
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid){
-            IEnumerable<Account> emailChecked = await AccountService.CheckEmail(accountData);
-            if (emailChecked.Length() != 0){
-                IEnumerable<Account> passwordChecked = await AccountService.CheckPassword(accountData);
-                if (passwordChecked.Length() != 0){
-                    await authService.SignInRequestAsync(accountData, true);
-                }
-                else{
+            bool emailExist = await AuthenticationService.emailIsAlreadyRegistered(accountData.Email);
+            if (emailExist)
+            {
+                bool validPassword = await AuthenticationService.SignInRequestAsync(accountData, true);
+                if (!validPassword)
+                {
                     ShowSnackNotification("Contraseña incorrecta", Severity.Error);
                 }
             }
-             else {
-                 ShowSnackNotification("No posee una cuenta registrada", Severity.Error);
+            else
+            {
+                ShowSnackNotification("No posee una cuenta registrada", Severity.Error);
             } 
         }
         snackHandler._saving = false;

@@ -7,11 +7,8 @@ using Domain.Employees.Repositories;
 using Domain.Subscriptions.Repositories;
 using Infrastructure.Subscriptions;
 using Infrastructure.Subscriptions.Repositories;
-using Infrastructure.Accounts;
-using Infrastructure.Accounts.Repositories;
 using Infrastructure.Employers.Repositories;
 using Domain.Employers.Repositories;
-using Domain.Accounts.Repositories;
 using Infrastructure.Projects.Repositories;
 using Domain.Projects.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -41,9 +38,6 @@ namespace Infrastructure
             services.AddDbContext<SubscriptionDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 
-            services.AddDbContext<AccountDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            
             services.AddDbContext<EmployerDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IEmployerRepository, EmployerRepository>();
 

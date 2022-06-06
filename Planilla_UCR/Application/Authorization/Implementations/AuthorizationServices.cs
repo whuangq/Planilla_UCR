@@ -3,10 +3,10 @@ using Domain.Authorization.Repositories;
 
 namespace Application.Authorization.Implementations
 {
-    public class AuthorizationServices : IAuthorizationServices
+    public class AuthorizationService : IAuthorizationServices
     {
         private readonly IAuthorizationRepository _authorizationRepository;
-        public AuthorizationServices(IAuthorizationRepository authorization) {
+        public AuthorizationService(IAuthorizationRepository authorization) {
             _authorizationRepository = authorization;
         }
         public async Task configureRoles() {

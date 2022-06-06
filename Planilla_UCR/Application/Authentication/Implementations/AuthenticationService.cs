@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Domain.Authentication.Repositories;
-using Domain.Accounts.DTOs;
+using Domain.Authentication.DTOs;
 
 namespace Application.Authentication.Implementations
 {
@@ -22,7 +22,7 @@ namespace Application.Authentication.Implementations
             return _authenticationRepository.EncryptString(data, key);
         }
 
-        public async Task<bool> RegisterRequestAsync(AccountsDTO accountData)
+        public async Task<bool> RegisterRequestAsync(AccountDTO accountData)
         {
             return await _authenticationRepository.RegisterRequestAsync(accountData);
         }
@@ -32,7 +32,7 @@ namespace Application.Authentication.Implementations
             return await _authenticationRepository.SignInInternalAsync(token, isPersistent);
         }
 
-        public async Task<bool> SignInRequestAsync(AccountsDTO accountData, bool isPersistent)
+        public async Task<bool> SignInRequestAsync(AccountDTO accountData, bool isPersistent)
         {
             return await _authenticationRepository.SignInRequestAsync(accountData, isPersistent);
         }
@@ -40,6 +40,10 @@ namespace Application.Authentication.Implementations
         public async Task SignOut()
         {
             await _authenticationRepository.SignOut();
+        }
+        public async Task<bool> emailIsAlreadyRegistered(string email)
+        {
+            return await _authenticationRepository.emailIsAlreadyRegistered(email);
         }
     }
 }

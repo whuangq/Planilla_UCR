@@ -24,13 +24,13 @@
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"Projects/{employerEmail}"),
+            new BreadcrumbItem("Mi perfil empleador", href: $"Employer_Profile/{employerEmail}")
         };
-            <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0">
-                <MudToolBar>
-                    <MudIconButton Size="Size.Small" Icon="@Icons.Filled.ArrowBackIos" aria-label="delete" OnClick="GoToProjects" ></MudIconButton> 
-                    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-                </MudToolBar>
-            </MudPaper>
+
+
+            <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+               
+
              <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
              <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Mi perfil</MudText>
              <MudGrid>

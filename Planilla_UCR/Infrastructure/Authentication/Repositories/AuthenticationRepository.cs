@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Domain.Authentication.Repositories;
-using Domain.Accounts.DTOs;
+using Domain.Authentication.DTOs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.DataProtection;
 
@@ -36,7 +36,7 @@ namespace Infrastructure.Authentication.Repositories
             return protector.Unprotect(data);
         }
 
-        public async Task<bool> RegisterRequestAsync(AccountsDTO accountData)
+        public async Task<bool> RegisterRequestAsync(AccountDTO accountData)
         {
             bool success = false;
             var user = new IdentityUser()
@@ -45,7 +45,7 @@ namespace Infrastructure.Authentication.Repositories
                 Email = accountData.Email,  
                 EmailConfirmed = true
             };
-            var result = await _userManager.CreateAsync(user, accountData.UserPassword);
+            var result = await _userManager.CreateAsync(user, accountData.Password);
 
             if (result.Succeeded)
             {
@@ -79,13 +79,13 @@ namespace Infrastructure.Authentication.Repositories
             return false;
         }
 
-        public async Task<bool> SignInRequestAsync(AccountsDTO r, bool isPersistent)
+        public async Task<bool> SignInRequestAsync(AccountDTO r, bool isPersistent)
         {
             bool result = false;
             var user = await _userManager.FindByNameAsync(r.Email);
             if (user != null)
             {
-                if (await _userManager.CheckPasswordAsync(user, r.UserPassword) == true)
+                if (await _userManager.CheckPasswordAsync(user, r.Password) == true)
                 {
                     if (await _userManager.IsEmailConfirmedAsync(user))
                     {
@@ -108,6 +108,17 @@ namespace Infrastructure.Authentication.Repositories
         public async Task SignOut()
         {
             await signInManag.SignOutAsync();
+        }
+
+        public async Task<bool> emailIsAlreadyRegistered(string email)
+        {
+            bool isRegistered = false;
+            var user = await _userManager.FindByNameAsync(email);
+            if (user != null)
+            {
+                isRegistered = true;
+            }
+            return isRegistered;
         }
     }
 }
