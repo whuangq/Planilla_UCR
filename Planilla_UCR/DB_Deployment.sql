@@ -120,10 +120,12 @@ END
 -- Employee Stored Procedures
 GO
 CREATE PROCEDURE [dbo].[GetAllEmployees]
+@projectName VARCHAR(255)
 AS
 BEGIN
-	SELECT Employee.Email, Person.Name, Person.LastName1, Person.LastName2, Person.SSN, Person.BankAccount, Person.Adress, Person.PhoneNumber
-	FROM Employee JOIN  Person ON Employee.Email = Person.Email
+	SELECT P.Email, P.Name, P.LastName1, P.LastName2, P.SSN, P.BankAccount, P.Adress, P.PhoneNumber
+	FROM Employee JOIN  Person AS P ON Employee.Email = P.Email left JOIN Agreement as A ON A.EmployeeEmail = Employee.Email
+	Where A.ProjectName IS NULL OR A.ProjectName != @projectName
 END
 
 GO

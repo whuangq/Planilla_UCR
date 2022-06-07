@@ -19,9 +19,9 @@ namespace Application.Employees.Implementations
             await _employeeRepository.CreateEmployeeAsync(email);
         }
 
-        public async Task<IEnumerable<Person>> GetAllEmployees()
+        public async Task<IEnumerable<Person>> GetAllEmployees(string projectName)
         {
-            return await _employeeRepository.GetAllEmployees();
+            return await _employeeRepository.GetAllEmployees(projectName);
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeeByEmail(string email)

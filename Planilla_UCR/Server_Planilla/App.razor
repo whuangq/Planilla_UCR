@@ -12,11 +12,12 @@
 </Router>
 </CascadingAuthenticationState>
 
-<MudThemeProvider Theme="MyCustomTheme" />
+<MudThemeProvider  Theme="MyCustomTheme" />
 @code{
     private static string Green = "#00695c";
     private static string White = "#FFFFFF";
     private static string Gray = "#78909C";
+    private static string Teal = "#009688";
 
 
     MudTheme MyCustomTheme = new MudTheme()
@@ -31,7 +32,7 @@
                 DrawerText = White,
                 DrawerIcon = Green,
                 TextDisabled = White,
-                Tertiary = Gray
+                Tertiary = Teal
 
         },
         Typography = new Typography()

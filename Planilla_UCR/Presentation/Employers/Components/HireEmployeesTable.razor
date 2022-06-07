@@ -28,7 +28,7 @@
                 <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
                     <ToolBarContent>
                             <MudButton OnClick="SendConmuteSignal"> Empleados contratados </MudButton>
-                            <MudButton Color= "Color.Success" > Contratar Empleados </MudButton>
+                            <MudButton Color="Color.Tertiary" > Contratar Empleados </MudButton>
                             <MudSpacer />
                             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent> 
@@ -91,7 +91,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _elements = await PersonService.GetAllEmployees();
+        _elements = await PersonService.GetAllEmployees(projectName);
         if (_elements.Length() == 0)
         {
             empty = true;

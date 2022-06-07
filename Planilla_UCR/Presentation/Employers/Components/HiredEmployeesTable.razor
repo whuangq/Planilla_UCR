@@ -26,7 +26,7 @@
         {
                 <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
                     <ToolBarContent>
-                            <MudButton Color= "Color.Success"> Empleados contratados </MudButton>
+                            <MudButton Color="Color.Tertiary"> Empleados contratados </MudButton>
                             <MudButton OnClick="SendConmuteSignal"> Contratar Empleados </MudButton>
                             <MudSpacer />
                             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
