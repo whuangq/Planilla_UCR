@@ -12,5 +12,6 @@ namespace Domain.Subscriptions.Repositories
         Task<Subscription>? GetSubscription(string employerEmail, string projectName, string subscriptionName);
         Task<IEnumerable<Subscription>> GetDeductionsByProject(string employerEmail, string projectName);
         Task<IEnumerable<Subscription>> GetBenefitsByProject(string employerEmail, string projectName);
+        Task<bool> ModifySubscription(Subscription subscription, string newName);
     }
 }

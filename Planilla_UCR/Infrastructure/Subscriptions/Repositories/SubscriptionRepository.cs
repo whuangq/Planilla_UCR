@@ -1,7 +1,9 @@
 ﻿using Domain.Core.Repositories;
 using Domain.Subscriptions.Entities;
 using Domain.Subscriptions.Repositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -61,6 +63,26 @@ namespace Infrastructure.Subscriptions.Repositories
                 (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName
                 && e.TypeSubscription == 1 && e.IsEnabled == 1).ToListAsync();
             return subscriptionResult;
+        }
+
+        public async Task<bool> ModifySubscription(Subscription subscription, string newName)
+        {
+            var Transaction = new SqlParameter("Transaction", 0);
+            Transaction.Direction = System.Data.ParameterDirection.Output;
+            System.FormattableString query = ($@"EXECUTE ModifySubscription 
+                @EmployerEmail = {subscription.EmployerEmail}, @ProjectName = {subscription.ProjectName},
+                @SubscriptionName = {subscription.SubscriptionName},
+                @NewSubscriptionName = {newName}, @ProviderName = {subscription.ProviderName},
+                @SubscriptionDescription = {subscription.SubscriptionDescription}, @Cost = {subscription.Cost},
+                @TypeSubscription = {subscription.TypeSubscription}, @IsEnabled = {subscription.IsEnabled},
+                @Transaction = {Transaction} OUT");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+            await _dbContext.SaveEntitiesAsync();
+            if (Convert.ToInt32(Transaction.Value) == 1) {
+                return true;
+            }
+            else
+            return false;
         }
     }
 }

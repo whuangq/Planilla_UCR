@@ -85,6 +85,34 @@ BEGIN
     SELECT * FROM Subscription WHERE TypeSubscription=0 and IsEnabled=1
 END
 
+GO
+CREATE OR ALTER PROCEDURE ModifySubscription(
+	@EmployerEmail varchar(255),
+	@ProjectName varchar(255),
+	@SubscriptionName varchar(255),
+	@NewSubscriptionName varchar(255),
+	@ProviderName varchar(255),
+	@SubscriptionDescription varchar(600),
+	@Cost float,
+	@TypeSubscription int,
+	@IsEnabled int,
+	@Transaction int output
+) AS
+BEGIN
+	IF ((@NewSubscriptionName in (SELECT SubscriptionName FROM Subscription WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName)) AND (@SubscriptionName <> @NewSubscriptionName))
+	BEGIN 
+		SET @Transaction = 0;
+	END
+	ELSE
+		BEGIN
+			SET @Transaction = 1;
+
+			UPDATE Subscription
+			SET SubscriptionName = @NewSubscriptionName, SubscriptionDescription = @SubscriptionDescription,Cost = @Cost, ProviderName = @ProviderName 
+			WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName;
+		END
+END
+
 -- Project Stored Procedures
 GO 
 CREATE PROCEDURE GetEmployerByEmail(@email VARCHAR(255))

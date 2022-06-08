@@ -29,7 +29,7 @@ else
         <ToolBarContent>
             <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios </MudText>
             <MudSpacer />
-            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>Nombre</MudTh>
@@ -46,13 +46,13 @@ else
             <MudTd DataLabel="Costo">@context.Cost</MudTd>
         </RowTemplate>
         <FooterContent>
-            <MudTd colspan="5">Select All</MudTd>
+            <MudTd colspan="5">Seleccionar todo</MudTd>
         </FooterContent>
         <PagerContent>
             <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
         </PagerContent>
     </MudTable>
-    <MudText Inline="true">Selected items: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
+    <MudText Inline="true">Beneficios seleccionados: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
     <MudToolBar DisableGutters="true" Class="gap-4">
         <MudSpacer></MudSpacer>
         <MudButton Variant="Variant.Filled" OnClick="DeleteBenefits" Color="Color.Error">Borrar</MudButton>

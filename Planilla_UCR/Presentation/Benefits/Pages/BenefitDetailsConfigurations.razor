@@ -83,25 +83,24 @@ else
 
                 @if(_disabled == false)
                 {
-                <MudItem xs="12" sm="6" md="4">
-                    <MudItem xs="2"></MudItem>  
-                    <MudButton Disabled="@snackHandler._saving" OnClick="SaveBenefit" Variant="Variant.Filled" Color="Color.Secondary">
-                        @if (snackHandler._saving)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                            <MudText Class="ms-2">Guardando</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Actualizar</MudText>
-                        }
-                    </MudButton>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="4">
-                            <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
-                                    <MudText>Limpiar</MudText>
-                            </MudButton>
-                </MudItem>
+                    <MudItem xs="8" >
+                        <MudButton Disabled="@snackHandler._saving" OnClick="SaveBenefit" Variant="Variant.Filled" Color="Color.Secondary">
+                            @if (snackHandler._saving)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                <MudText Class="ms-2">Modificando</MudText>
+                            }
+                            else
+                            {
+                                <MudText>Actualizar</MudText>
+                            }
+                        </MudButton>
+                        <MudButton Disabled="true"> </MudButton>
+                        @*Clear buton *@
+                        <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
+                                <MudText>Cancelar</MudText>
+                        </MudButton>
+                    </MudItem>
                 }
                 </MudGrid>
             </MudForm>
