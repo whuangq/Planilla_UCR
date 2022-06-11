@@ -8,6 +8,6 @@ namespace Domain.People.Repositories
     {
         Task CreatePersonAsync(Person personInfo);
         Task<IEnumerable<Person>> GetPersonByEmail(string email);
-        Task<IEnumerable<Person>> GetAllInfoEmployer(Person personInfo);
+        Task UpdatePerson(Person personInfo);
     }
 }

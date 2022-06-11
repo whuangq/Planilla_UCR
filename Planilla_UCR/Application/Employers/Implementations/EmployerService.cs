@@ -2,7 +2,8 @@
 using Domain.Employers.Entities;
 using System;
 using System.Threading.Tasks;
-
+using System.Collections.Generic;
+using Domain.People.Entities;
 
 namespace Application.Employers.Implementations
 {
@@ -24,5 +25,11 @@ namespace Application.Employers.Implementations
         {
             return await _employerRepository.GetEmployerAsync(email);
         }
+
+        public async Task<Person> GetInfoEmployer(Person personInfo)
+        {
+            return await _employerRepository.GetInfoEmployer(personInfo);
+        }
+
     }
 }

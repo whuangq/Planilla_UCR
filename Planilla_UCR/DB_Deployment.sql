@@ -136,6 +136,29 @@ BEGIN
     SELECT * FROM Person AS P WHERE P.Email = @email
 END
 
+
+GO
+CREATE PROCEDURE UpdatePerson(
+	@EmailPerson varchar(255),
+	@NewName varchar(255),
+	@NewLastName1 varchar(255),
+	@NewLastName2 varchar(255),
+	@NewSSN int,
+	@NewBankAccount varchar(255),
+	@NewAdress varchar(255),
+	@NewPhoneNumber varchar(255)
+)
+AS
+BEGIN
+	UPDATE Person 
+	SET Name=@NewName, LastName1=@NewLastName1, LastName2=@NewLastName2, 
+	SSN=@NewSSN, BankAccount=@NewBankAccount, 
+	Adress=@NewAdress, PhoneNumber=@NewPhoneNumber
+	WHERE Email=@EmailPerson
+END
+
+
+
 -- Employer Stored Procedures
 GO
 CREATE PROCEDURE GetInfoEmployer(@EmailEmployer varchar(255))
@@ -174,6 +197,7 @@ BEGIN
 END
 
 -- Data Insert
+GO
 INSERT INTO Person
 VALUES('jeremy@ucr.ac.cr',
 'Jeremy',

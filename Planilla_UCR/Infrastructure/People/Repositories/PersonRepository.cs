@@ -31,12 +31,11 @@ namespace Infrastructure.People.Repositories
             return peopleList;
         }
 
-        public async Task<IEnumerable<Person?>> GetAllInfoEmployer(Person personInfo)
-        {
-            var employerInfo = await _dbContext.Persons.FromSqlRaw("EXEC GetInfoEmployer @EmailEmployer",
-                  new SqlParameter("@EmailEmployer",personInfo.Email)).ToListAsync();
-            return employerInfo;
-        }
 
+        public async Task UpdatePerson(Person personInfo)
+        {
+            System.FormattableString query = $"EXECUTE UpdatePerson @EmailPerson = {personInfo.Email}, @NewName = {personInfo.Name}, @NewLastName1 = {personInfo.LastName1}, @NewLastName2 = {personInfo.LastName2}, @NewSSN = {personInfo.Ssn}, @NewBankAccount = {personInfo.BankAccount}, @NewAdress = {personInfo.Adress}, @NewPhoneNumber = {personInfo.PhoneNumber}";
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+        } 
     }
 }
