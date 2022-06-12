@@ -65,7 +65,7 @@ namespace Infrastructure.Subscriptions.Repositories
             return subscriptionResult;
         }
 
-        public async Task<bool> ModifySubscription(Subscription subscription, string newName)
+        public bool ModifySubscription(Subscription subscription, string newName)
         {
             var Transaction = new SqlParameter("Transaction", 0);
             Transaction.Direction = System.Data.ParameterDirection.Output;
@@ -77,7 +77,6 @@ namespace Infrastructure.Subscriptions.Repositories
                 @TypeSubscription = {subscription.TypeSubscription}, @IsEnabled = {subscription.IsEnabled},
                 @Transaction = {Transaction} OUT");
             _dbContext.Database.ExecuteSqlInterpolated(query);
-            await _dbContext.SaveEntitiesAsync();
             if (Convert.ToInt32(Transaction.Value) == 1) {
                 return true;
             }

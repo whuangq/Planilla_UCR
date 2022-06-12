@@ -4,6 +4,7 @@
 @using Presentation.Core.Components
 @using Presentation.Authentication
 @using Presentation.Deductions.Components
+@using System.Globalization
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
@@ -12,8 +13,8 @@
 {
         new BreadcrumbItem("Inicio", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
-        new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
-        new BreadcrumbItem("Deducciones", href: $"/Projects/{employerEmail}/{projectName}/Deductions"),
+        new BreadcrumbItem($"{projectName}", href: $"/Projects/{employerEmail}/{projectName}/Configurations"),
+        new BreadcrumbItem("Deducciones voluntarias", href: null, disabled: true),
     };
 }
 
@@ -38,7 +39,7 @@ else
                 <MudSpacer></MudSpacer>
                 <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
                     <MudText> 
-                    Crear Deducción
+                    Crear deducción voluntaria
                     </MudText> 
                 </MudButton>
                 <MudSpacer></MudSpacer>
@@ -53,7 +54,7 @@ else
             </MudToolBar>
             <MudTable @ref="mudTable" Items="@elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
                 <ToolBarContent>
-                    <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
+                    <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones voluntarias</MudText>
                     <MudSpacer />
                     <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 </ToolBarContent>
@@ -64,19 +65,19 @@ else
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="Nombre">
-                        <MudLink Color="Color.Secondary" Href="@($"/Projects/{employerEmail}/{projectName}/Deductions/{context.SubscriptionName}")">
+                        <MudLink Color="Color.Secondary" Underline="Underline.Always" Href="@($"/Projects/{employerEmail}/{projectName}/Deductions/{context.SubscriptionName}")">
                             @context.SubscriptionName
                         </MudLink>
                     </MudTd>
                     <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
-                    <MudTd DataLabel="Costo">@context.Cost</MudTd>
+                    <MudTd DataLabel="Costo"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
                 </RowTemplate>
                 <PagerContent>
                         <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
                 </PagerContent>
             </MudTable>
             <br>
-            <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Deducciones</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear deducción voluntaria</MudButton>
         }
 
 }
@@ -88,6 +89,7 @@ else
     private IEnumerable<Subscription> elements;
     private bool _loading = true;
     public string searchString1 = "";
+    public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
@@ -110,7 +112,7 @@ else
     {
         nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions/Configurations");
     }
-    
+
     private void GoToProject()
     {
         nav.NavigateTo($"/Projects/Details/{employerEmail}/{projectName}");
@@ -130,5 +132,11 @@ else
         if (element.SubscriptionName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
+    }
+
+    private string costFormat(double cost)
+    {
+        string costo = string.Format("{0:N}", cost);
+        return costo;
     }
 }

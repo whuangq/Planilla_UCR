@@ -12,9 +12,9 @@
     {
         new BreadcrumbItem("Inicio", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
-        new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
+        new BreadcrumbItem($"{projectName}", href: $"/Projects/{employerEmail}/{projectName}/Configurations"),
         new BreadcrumbItem("Beneficios", href: $"/Projects/{employerEmail}/{projectName}/Benefits"),
-        new BreadcrumbItem("Nuevo beneficio", href: $"Projects/{employerEmail}/{projectName}/Benefits/New")
+        new BreadcrumbItem("Nuevo beneficio", href: null, disabled: true)
     };
 }
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>

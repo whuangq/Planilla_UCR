@@ -12,9 +12,9 @@
     {
         new BreadcrumbItem("Inicio", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
-        new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
-        new BreadcrumbItem("Deducciones", href: $"/Projects/{employerEmail}/{projectName}/Deductions"),
-        new BreadcrumbItem("Nueva deducción", href: "newdeduction")
+        new BreadcrumbItem($"{projectName}", href: $"/Projects/{employerEmail}/{projectName}/Configurations"),
+        new BreadcrumbItem("Deducciones voluntarias", href: $"/Projects/{employerEmail}/{projectName}/Deductions"),
+        new BreadcrumbItem("Nueva deducción", href: null, disabled: true)
     };
 }
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -22,7 +22,7 @@
     @*Text fields *@
     <MudItem xs="12" sm="12">
         <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-            <MudText Align="Align.Center" Typo="Typo.h6">Añadir deducción</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h6">Añadir deducción voluntaria</MudText>
             <MudForm @ref="form">
             <MudGrid>
             <MudItem xs="2">

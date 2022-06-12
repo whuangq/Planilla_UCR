@@ -52,8 +52,14 @@ else
                 </li>
 
                 <li class="nav-item px-3">
-                <NavLink class="nav-link" href=@($"/Projects/{email}/{projectname}/Deductions/Configurations") Match="NavLinkMatch.All">
-                    <span  aria-hidden="true"></span> Deducciones
+                <NavLink class="nav-link" href=@($"/Projects/{email}/{projectname}/Deductions") Match="NavLinkMatch.All">
+                    <span  aria-hidden="true"></span> Deducciones voluntarias
+                </NavLink>
+                </li>
+
+                <li class="nav-item px-3">
+                <NavLink class="nav-link" href=@($"/Projects/{email}/{projectname}/Benefits") Match="NavLinkMatch.All">
+                    <span  aria-hidden="true"></span> Beneficios
                 </NavLink>
                 </li>
             }

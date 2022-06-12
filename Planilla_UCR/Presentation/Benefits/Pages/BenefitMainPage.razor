@@ -4,6 +4,7 @@
 @using Presentation.Core.Components
 @using Presentation.Benefits.Components
 @using Presentation.Authentication
+@using System.Globalization
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
@@ -12,8 +13,8 @@
 {
     new BreadcrumbItem("Inicio", href: ""),
     new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
-    new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
-    new BreadcrumbItem("Beneficios", href: $"/Projects/{employerEmail}/{projectName}/Benefits"),
+    new BreadcrumbItem($"{projectName}", href: $"/Projects/{employerEmail}/{projectName}/Configurations"),
+    new BreadcrumbItem("Beneficios", href: null, disabled: true),
 };
 }
 
@@ -64,12 +65,12 @@ else
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="Nombre">
-                        <MudLink Color="Color.Secondary" Href="@($"/Projects/{employerEmail}/{projectName}/Benefits/{context.SubscriptionName}")">
+                        <MudLink Color="Color.Secondary" Underline="Underline.Always" Href="@($"/Projects/{employerEmail}/{projectName}/Benefits/{context.SubscriptionName}")">
                             @context.SubscriptionName
                         </MudLink>
                     </MudTd>
                     <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
-                    <MudTd DataLabel="Costo">@context.Cost</MudTd>
+                    <MudTd DataLabel="Costo"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
                 </RowTemplate>
                 <PagerContent>
                     <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
@@ -87,6 +88,7 @@ else
     private IEnumerable<Subscription> Elements;
     private bool _loading = true;
     public string searchString1 = "";
+    public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
@@ -125,5 +127,11 @@ else
         if (element.SubscriptionName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
+    }
+    
+    private string costFormat(double cost)
+    {
+        string costo = string.Format("{0:N}", cost);
+        return costo;
     }
 }

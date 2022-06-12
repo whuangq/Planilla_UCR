@@ -3,6 +3,7 @@
 @using Domain.Subscriptions.Entities
 @using Presentation.Core.Components
 @using Presentation.Deductions.Components
+@using System.Globalization
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
 @inject NavigationManager nav
@@ -11,9 +12,9 @@
     {
         new BreadcrumbItem("Inicio", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
-        new BreadcrumbItem($"{projectName}", href: $"/Projects/Details/{employerEmail}/{projectName}"),
-        new BreadcrumbItem("Deducciones", href: $"/Projects/{employerEmail}/{projectName}/Deductions"),
-        new BreadcrumbItem("Configuraciones", href: $"/Projects/{employerEmail}/{projectName}/Deductions/Configurations"),
+        new BreadcrumbItem($"{projectName}", href: $"/Projects/{employerEmail}/{projectName}/Configurations"),
+        new BreadcrumbItem("Deducciones voluntarias", href: $"/Projects/{employerEmail}/{projectName}/Deductions"),
+        new BreadcrumbItem("Configuraciones", href: null, disabled: true),
     };
 }
 
@@ -26,49 +27,74 @@
     </MudPaper>
 }
 else
-{
+{   
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-    <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
-        <ToolBarContent>
-            <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones</MudText>
-            <MudSpacer />
-            <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh>Nombre</MudTh>
-            <MudTh>Proveedor</MudTh>
-            <MudTh>Costo</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Nombre">
-                <MudLink Color="Color.Secondary" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Deductions/{@context.SubscriptionName}")">
-                    @context.SubscriptionName
-                </MudLink>
-            </MudTd>
-            <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
-            <MudTd DataLabel="Costo">@context.Cost</MudTd>
-        </RowTemplate>
-        <FooterContent>
-            <MudTd colspan="5">Seleccionar todo</MudTd>
-        </FooterContent>
-        <PagerContent>
-            <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
-        </PagerContent>
-    </MudTable>
-    <MudText Inline="true">Deducciones seleccionadas: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
-    <MudToolBar DisableGutters="true" Class="gap-4">
-        <MudSpacer></MudSpacer>
-        <MudButton Variant="Variant.Filled" OnClick="DeleteDeductions" Color="Color.Error">Borrar</MudButton>
-    </MudToolBar>
+    @if (_empty)
+    {
+        <MudText Typo="Typo.h6" Align="Align.Center">No hay deducciones asociadas al proyecto
+        </MudText>
+        <br>
+        <MudToolBar DisableGutters="true" Class="gap-4">
+            <MudButton></MudButton>
+            <MudSpacer></MudSpacer>
+            <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
+                <MudText> 
+                Crear deducción voluntaria
+                </MudText> 
+            </MudButton>
+            <MudSpacer></MudSpacer>
+            <MudButton></MudButton>
+        </MudToolBar>
+    }
+    else
+    {
+        <MudTable @ref="mudTable" Items="@Elements" RowsPerPage="4" MultiSelection="true" @bind-SelectedItems="selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
+            <ToolBarContent>
+                <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones voluntarias</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Nombre</MudTh>
+                <MudTh>Proveedor</MudTh>
+                <MudTh>Costo</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Nombre">
+                    <MudLink Color="Color.Secondary" Underline="Underline.Always" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Deductions/{@context.SubscriptionName}")">
+                        @context.SubscriptionName
+                    </MudLink>
+                </MudTd>
+                <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
+                <MudTd DataLabel="Costo"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost) </MudTd>
+            </RowTemplate>
+            <FooterContent>
+                <MudTd colspan="5">Seleccionar todo</MudTd>
+            </FooterContent>
+            <PagerContent>
+                <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+            </PagerContent>
+        </MudTable>
+        <MudText Inline="true">Deducciones seleccionadas: @(selectedItems1==null ? "" : string.Join(", ", selectedItems1.OrderBy(x=>x.SubscriptionName).Select(x=>x.SubscriptionName)))</MudText>
+        <br>
+        <br>
+        <br>
+        <MudDivider />
+        <MudToolBar DisableGutters="true" Class="gap-4">
+            <MudButton Variant="Variant.Filled" OnClick="DeleteDeductions" Color="Color.Error">Borrar</MudButton>
+        </MudToolBar>
+    }
 }
 
 @code {
     private bool _loading = true;
+    private bool _empty = true;
     private HashSet<Subscription> selectedItems1 = new HashSet<Subscription>();
     private IEnumerable<Subscription> Elements;
     private MudTable<Subscription> mudTable;
     public string searchString1 = "";
     public string project { get; set; }
+    public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
@@ -76,8 +102,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         Elements = await SubscriptionService.GetDeductionsByProject(employerEmail, projectName);
-        if (Elements.Length() > 0){
         _loading = false;
+        if (Elements.Length() > 0){
+            _empty = false;
         }
     }
 
@@ -122,5 +149,16 @@ else
     private void GoToMain()
     {
         nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions");
+    }
+
+    private void GoToCreate()
+    {
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions/New");
+    }
+
+    private string costFormat(double cost)
+    {
+        string costo = string.Format("{0:N}", cost);
+        return costo;
     }
 }
