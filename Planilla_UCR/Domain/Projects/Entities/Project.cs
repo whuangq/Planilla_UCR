@@ -8,12 +8,12 @@ namespace Domain.Projects.Entities
         public String EmployerEmail { set; get; }
         public String ProjectName { set; get; }
         public String ProjectDescription { set; get; }
-        public int MaximumAmountForBenefits { set; get; }
+        public double MaximumAmountForBenefits { set; get; }
         public int MaximumBenefitAmount { set; get; }
         public String PaymentInterval { set; get; }
 
         public Project(String employerEmail, String projectName,
-                        String projectDescription, int maximumAmountForBenefits,
+                        String projectDescription, double maximumAmountForBenefits,
                         int maximumBenefitAmount, String paymentInterval)
         {
             EmployerEmail = employerEmail;

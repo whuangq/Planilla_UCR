@@ -27,8 +27,8 @@ CREATE TABLE Employer(
 CREATE TABLE Project(
 	EmployerEmail varchar(255) NOT NULL,
 	ProjectName varchar(255) NOT NULL,
-	ProjectDescription varchar(255),
-	MaximumAmountForBenefits int, 
+	ProjectDescription varchar(600),
+	MaximumAmountForBenefits float, 
 	MaximumBenefitAmount int,
 	PaymentInterval varchar(255),
 	PRIMARY KEY(EmployerEmail, ProjectName),

@@ -12,25 +12,27 @@ namespace Infrastructure.Projects.Repositories
     internal class ProjectRepository : IProjectRepository
     {
         private readonly ProjectDbContext _dbContext;
+        
         public IUnitOfWork UnitOfWork => _dbContext;
-
 
         public ProjectRepository(ProjectDbContext unitOfWork)
         {
             _dbContext = unitOfWork;
         }
+        
         public async Task<IEnumerable<Project>> GetAllProjectsAsync()
         {
             return await _dbContext.Projects.Select(t => new
             Project(t.EmployerEmail, t.ProjectName,
-            t.ProjectDescription, t.MaximumAmountForBenefits,
-            t.MaximumBenefitAmount, t.PaymentInterval)).ToListAsync();
+                t.ProjectDescription, t.MaximumAmountForBenefits,
+                t.MaximumBenefitAmount, t.PaymentInterval)).ToListAsync();
         }
 
         public async Task<Project> GetProject(string employerEmail, string projectName)
         {
             IList<Project> projectResult = await _dbContext.Projects.Where
                 (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName).ToListAsync();
+            
             Project project = null;
             if (projectResult.Length() > 0)
             {
@@ -54,7 +56,8 @@ namespace Infrastructure.Projects.Repositories
             }
         }
 
-        public async Task<IEnumerable<Project>> GetEmployerProyects(string email) {
+        public async Task<IEnumerable<Project>> GetEmployerProyects(string email) 
+        {
             IList<Project> projectsResult = await _dbContext.Projects.Where
                 (e => e.EmployerEmail == email).ToListAsync();
             return projectsResult;

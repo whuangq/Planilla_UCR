@@ -6,17 +6,20 @@
 @using Application.ContextMenu
 
 @inject NavigationManager nav
+@using Presentation.Authentication
+
 @inject IProjectService ProjectService
 @inject IContextMenuService ContextMenuService
 
+@inject NavigationManager nav
 
 @{
-List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-{
-    new BreadcrumbItem("Inicio", href: $"/{EmployerEmail}"),
-    new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployerEmail}"),
+    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Inicio", href: $"/{employerEmail}"),
+        new BreadcrumbItem("Proyectos",  href: null, disabled: true),
 
-};
+    };
 }
 
 <AuthorizeView>
@@ -30,104 +33,100 @@ List<BreadcrumbItem> _items = new List<BreadcrumbItem>
 
 @if (_loading)
 {
-    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
          <MudText Align="Align.Center" Typo="Typo.h6">
               <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
          </MudText>
-       
     </MudPaper>
 }
 else
 {
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+    @if (_empty)
+    {
+        <MudText Typo="Typo.h6" Align="Align.Center">No hay proyectos asociados al empleador
+        </MudText>
+        <br>
+        <MudToolBar DisableGutters="true" Class="gap-4">
+            <MudButton></MudButton>
+            <MudSpacer></MudSpacer>
+            <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">
+                <MudText> 
+                    Crear nuevo Proyecto
+                </MudText> 
+            </MudButton>
+            <MudSpacer></MudSpacer>
+            <MudButton></MudButton>
+        </MudToolBar>
+    }
+    else
+    {
+        <MudToolBar DisableGutters="true" Class="gap-4">
+            <MudSpacer></MudSpacer>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
+        </MudToolBar>
 
-    <MudGrid>   
-        <MudSpacer></MudSpacer>
-        <MudSpacer></MudSpacer>
-        <MudSpacer></MudSpacer>
-        <MudSpacer></MudSpacer>
-        <MudItem xs="3">
-            <MudTextField @bind-Value="searchString1" Placeholder="Buscar Proyecto" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </MudItem>
-    </MudGrid>
-    <MudGrid>   
-        <MudItem xs="8">
-            <MudPaper Elevation="0">
-                <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Proyecto</MudButton>
-            </MudPaper>
-        </MudItem>
-        
-        <MudDivider></MudDivider>
-        <MudItem xs="4"></MudItem>
-        <MudItem xs="4"></MudItem>
-        <MudDivider></MudDivider>
-    </MudGrid>
+        <MudTable @ref="mudTable" Items="@elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_empty" LoadingProgressColor="Color.Info" Filter="new Func<Project,bool>(FilterFunc1)">  
 
-    <MudItem xs="2"></MudItem>
+            <ToolBarContent>
+                <MudText Align="Align.Center" Typo="Typo.h6">Lista de proyectos</MudText>
+                <MudSpacer></MudSpacer>
+                <MudTextField @bind-Value="searchString" Placeholder="Buscar Proyecto" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+
+            <HeaderContent>
+                <MudTh>Nombre</MudTh>
+                <MudTh>Descripción</MudTh>
+                <MudTh>Ajustes</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="Nombre" >
+                    <MudLink Color="Color.Secondary" Underline="Underline.Always" Href="@($"/Projects/{@context.EmployerEmail}/{@context.ProjectName}/Configurations")">
+                        @context.ProjectName
+                    </MudLink>
+                </MudTd>
+
+                <MudTd DataLabel="Descripción">@context.ProjectDescription</MudTd>
+            
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="GoToConfigs"/>
+                    <MudSpacer></MudSpacer>
+                </MudTd>
+            </RowTemplate>
+
+            <PagerContent>
+                    <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+            </PagerContent>
+        </MudTable>
+        <br>
+        <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Secondary">Crear Proyecto</MudButton>
+    }    
     
-    <MudTable Items="@Elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" @ref="mudTable" Filter="new Func<Project,bool>(FilterFunc1)">
-        <HeaderContent>
-            <MudTh>Nombre</MudTh>
-            <MudTh>Descripción</MudTh>
-            <MudTh></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Nombre" >
-                <MudLink Color="Color.Secondary" Href="@($"/Projects/Details/{context.EmployerEmail}/{context.ProjectName}")">
-                    @context.ProjectName
-                </MudLink>
-            </MudTd>
-            <MudTd DataLabel="Descripción">@context.ProjectDescription</MudTd>
-            <MudTd>
-                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="@(e => GoToConfigs(@context.ProjectName))"/>
-                
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-                <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
-        </PagerContent>
-    </MudTable>
 }
 
-
 @code {
-    private bool _hidePosition;
+
+    private bool _empty = true;
     private bool _loading = true;
+    public string searchString = "";
     private MudTable<Project> mudTable;
-    private List<string> clickedEvents = new();
-    private IEnumerable<Project> Elements;
-
-    public string searchString1 = "";
-    [Parameter] public string EmployerEmail { get; set; }
-
-    [CascadingParameter]
-    protected EventCallback<string> setEmail { get; set; }
-
+    private IEnumerable<Project> elements;
+    
+    [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string projectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         ContextMenuService.SetProjectsContext(false, "");
-        await setEmail.InvokeAsync(EmployerEmail);
-        Elements = await ProjectService.GetEmployerProyects(EmployerEmail);
+        elements = await ProjectService.GetEmployerProyects(employerEmail);
         _loading = false;
-    }
-
-    private void GoToCreate()
-    {
-        nav.NavigateTo($"/Create_Project/{EmployerEmail}");
-    }
-
-    private void GoToConfigs(string projectName)
-    {
-        nav.NavigateTo($"/Projects/Details/{EmployerEmail}/{projectName}/Configurations");
-    }
-
-    private void PageChanged(int i)
-    {
-        mudTable.NavigateTo(i - 1);
+        if (elements.Length() > 0){
+            _empty = false;
+        }
     }
     
-    private bool FilterFunc1(Project element) => FilterFunc(element, searchString1);
+    private bool FilterFunc1(Project element) => FilterFunc(element, searchString);
 
     private bool FilterFunc(Project element, string searchString)
     {
@@ -136,5 +135,20 @@ else
         if (element.ProjectName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         return false;
+    }
+
+    private void GoToCreate()
+    {
+        nav.NavigateTo($"/Create_Project/{employerEmail}");
+    }
+
+    private void GoToConfigs()
+    {
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Configurations");
+    }
+
+    private void PageChanged(int i)
+    {
+        mudTable.NavigateTo(i - 1);
     }
 }

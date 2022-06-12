@@ -1,5 +1,4 @@
-﻿using Domain.Projects.DTOs;
-using Domain.Projects.Entities;
+﻿using Domain.Projects.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -14,7 +14,7 @@ namespace Infrastructure.Projects
         }
 
         public DbSet<Project> Projects { get; set; } = null!;
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
