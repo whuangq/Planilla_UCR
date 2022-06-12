@@ -3,8 +3,12 @@
 @using Application.Projects
 @using Presentation.Core.Components
 @using Presentation.Projects.Models
+@using Application.ContextMenu
+
 @inject NavigationManager nav
 @inject IProjectService ProjectService
+@inject IContextMenuService ContextMenuService
+
 
 @{
 List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -102,6 +106,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        ContextMenuService.SetProjectsContext(false, "");
         await setEmail.InvokeAsync(EmployerEmail);
         Elements = await ProjectService.GetEmployerProyects(EmployerEmail);
         _loading = false;

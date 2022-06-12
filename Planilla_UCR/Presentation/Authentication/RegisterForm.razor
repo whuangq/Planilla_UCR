@@ -190,7 +190,7 @@
         if (form.IsValid && ValidateInfo(personInfo))
         {
             accountData.Email = personInfo.Email;
-            bool emailExist = await AuthenticationService.emailIsAlreadyRegistered(accountData.Email);
+            bool emailExist = await AuthenticationService.EmailIsAlreadyRegistered(accountData.Email);
             confirmationCodeEmail = CreateConfirmationCode();
             if (emailExist)
             {
@@ -217,7 +217,7 @@
                 await PersonService.CreatePersonAsync(personInfo);
                 await EmployerService.CreateEmployerAsync(personInfo.Email);
                 await AuthenticationService.RegisterRequestAsync(accountData);
-                await AuthorizationService.assignRole( accountData.Email, "Employer");
+                await AuthorizationService.AssignRole( accountData.Email, "Employer");
                 ShowSnackNotification("Cuenta para "+personInfo.Name+" registrada", Severity.Success);
                 await AuthenticationService.SignInRequestAsync(accountData, true);
                 open = false;

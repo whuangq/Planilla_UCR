@@ -41,9 +41,9 @@ namespace Application.Authentication.Implementations
         {
             await _authenticationRepository.SignOut();
         }
-        public async Task<bool> emailIsAlreadyRegistered(string email)
+        public async Task<bool> EmailIsAlreadyRegistered(string email)
         {
-            return await _authenticationRepository.emailIsAlreadyRegistered(email);
+            return await _authenticationRepository.EmailIsAlreadyRegistered(email);
         }
     }
 }

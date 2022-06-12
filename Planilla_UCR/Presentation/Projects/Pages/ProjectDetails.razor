@@ -3,8 +3,12 @@
 @using Application.Projects
 @using Domain.Projects.Entities
 @using Presentation.Core.Components
+@using Application.ContextMenu
+
 @inject NavigationManager nav
+@inject IContextMenuService ContextMenuService
 @inject IProjectService ProjectService
+
 
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
@@ -116,6 +120,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        ContextMenuService.SetProjectsContext(true,ProjectName);
         Project = await ProjectService.GetProject(EmployerEmail, ProjectName);
         MaximumAmountForBenefits = Project.MaximumAmountForBenefits+"";
         MaximumBenefitAmount = Project.MaximumBenefitAmount+"";

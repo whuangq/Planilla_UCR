@@ -9,14 +9,14 @@ namespace Application.Authorization.Implementations
         public AuthorizationService(IAuthorizationRepository authorization) {
             _authorizationRepository = authorization;
         }
-        public async Task configureRoles() {
-            await _authorizationRepository.configureRoles();
+        public async Task ConfigureRoles() {
+            await _authorizationRepository.ConfigureRoles();
         }
-        public async Task assignRole(string email, string role){
-            await _authorizationRepository.assignRole(email,role);
+        public async Task AssignRole(string email, string role){
+            await _authorizationRepository.AssignRole(email,role);
         }
-        public async Task removeRole(string email, string role){
-            await _authorizationRepository.removeRole(email, role);
+        public async Task RemoveRole(string email, string role){
+            await _authorizationRepository.RemoveRole(email, role);
         }
     }
 }

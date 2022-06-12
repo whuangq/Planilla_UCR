@@ -80,7 +80,7 @@
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid){
-            bool emailExist = await AuthenticationService.emailIsAlreadyRegistered(accountData.Email);
+            bool emailExist = await AuthenticationService.EmailIsAlreadyRegistered(accountData.Email);
             if (emailExist)
             {
                 bool validPassword = await AuthenticationService.SignInRequestAsync(accountData, true);

@@ -3,7 +3,10 @@
 @using  Domain.Authentication
 @using Application.Authorization;
 @using Application.Authorization.Implementations;
+@using Application.ContextMenu
+
 @inject IAuthenticationService AuthenticationService
+@inject IContextMenuService ContextMenuService
 
 @page "/"
 
@@ -47,4 +50,9 @@
 </MudPaper>
 
 @code{
+
+     protected override async Task OnInitializedAsync()
+    {
+        ContextMenuService.SetProjectsContext(false, "");
+    }
 }

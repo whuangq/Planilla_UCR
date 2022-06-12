@@ -18,7 +18,7 @@ namespace Infrastructure.Authorization.Repositories
             userManager = userM;
         }
 
-        public async Task configureRoles() {
+        public async Task ConfigureRoles() {
             string[] roleNames = { "Employer", "Employee"};
             IdentityResult roleResult;
             foreach (var roleName in roleNames)
@@ -31,8 +31,8 @@ namespace Infrastructure.Authorization.Repositories
             }
         }
 
-        public async Task assignRole(string email, string role) {
-            await configureRoles();
+        public async Task AssignRole(string email, string role) {
+            await ConfigureRoles();
             var roleExist = await roleManager.RoleExistsAsync(role);
             var user = await userManager.FindByEmailAsync(email);
             if (roleExist && user != null)
@@ -40,7 +40,7 @@ namespace Infrastructure.Authorization.Repositories
                 await userManager.AddToRoleAsync(user, role);
             }
         }
-        public async Task removeRole(string email, string role) {
+        public async Task RemoveRole(string email, string role) {
             var roleExist = await roleManager.RoleExistsAsync(role);
             var user = await userManager.FindByEmailAsync(email);
             if (roleExist && user != null)

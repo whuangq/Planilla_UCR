@@ -139,7 +139,7 @@
             AccountDTO accountData = new AccountDTO(personInfo.Email,personInfo.Name+"_"+personInfo.Ssn+"!A");
             string message = "Sus credenciales son: Usuario = "+accountData.Email+ " Clave =  "+accountData.Password;
             await authService.RegisterRequestAsync(accountData);
-            await AuthorizationService.assignRole(accountData.Email, "Employee");
+            await AuthorizationService.AssignRole(accountData.Email, "Employee");
             snackHandler._saving = false;
             EmailService.SendConfirmationEmail(message, accountData.Email);
             ShowSnackNotification("Cuenta para empleado "+personInfo.Name+" creada", Severity.Success);

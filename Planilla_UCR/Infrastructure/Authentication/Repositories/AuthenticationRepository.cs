@@ -110,7 +110,7 @@ namespace Infrastructure.Authentication.Repositories
             await signInManag.SignOutAsync();
         }
 
-        public async Task<bool> emailIsAlreadyRegistered(string email)
+        public async Task<bool> EmailIsAlreadyRegistered(string email)
         {
             bool isRegistered = false;
             var user = await _userManager.FindByNameAsync(email);
