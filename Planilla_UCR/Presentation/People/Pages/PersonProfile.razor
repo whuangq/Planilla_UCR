@@ -1,13 +1,47 @@
-﻿@page "/Employer_Profile/{employerEmail}"
+﻿@page "/Profile/{userEmail}"
 @using Application.Employers
 @using Application.People
 @using Domain.Employers.Entities
 @using Domain.Employers.DTOs
 @using Domain.People.Entities
 @using Presentation.Core.Components
+@using Domain.Authentication.DTOs
+@using Application.Authentication
+@using  Domain.Authentication
+@using Application.Authorization;
+@using Application.Authorization.Implementations;
 @inject NavigationManager nav
 @inject IPersonService PersonService
 @inject IEmployerService EmployerService
+@inject IAuthenticationService AuthenticationService
+
+
+<AuthorizeView>
+    <Authorized> 
+        <MudText>Esta autenticado</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText>No esta autenticado</MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Employer">
+    <Authorized> 
+        <MudText>Es Employer</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText>No es employer </MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Employee">
+    <Authorized> 
+        <MudText>Es employee</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText>No es employee </MudText>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @if(_loading) {
@@ -24,8 +58,8 @@
           
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Proyectos", href: $"Projects/{employerEmail}"),
-            new BreadcrumbItem("Mi perfil empleador", href: $"Employer_Profile/{employerEmail}")
+            new BreadcrumbItem("Proyectos", href: $"Projects/{userEmail}"),
+            new BreadcrumbItem("Mi perfil", href: $"Profile/{userEmail}")
         };
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -71,12 +105,16 @@
         <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.ContactPhone" Color="@Color.Secondary" /> Teléfono: @personInfo.PhoneNumber</MudField>
         </MudItem> 
 
-        <MudButton Disabled="true"> </MudButton>
-        <MudItem xs="8">
-            <MudButton OnClick="GoToProjects" Variant="Variant.Filled" Color="Color.Transparent">
-            <MudText>Borrar</MudText>
-        </MudButton>
-        </MudItem> 
+        <AuthorizeView Roles="Employer">
+            <Authorized> 
+                <MudButton Disabled="true"> </MudButton>
+                <MudItem xs="8">
+                    <MudButton OnClick="GoToProjects" Variant="Variant.Filled" Color="Color.Transparent">
+                    <MudText>Borrar</MudText>
+                </MudButton>
+                </MudItem> 
+            </Authorized>
+        </AuthorizeView>
         </MudItem>
 
     </MudGrid>
@@ -93,12 +131,12 @@
 @code {
     private bool _loading = true;
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
-    [Parameter] public string employerEmail { get; set; }  
+    [Parameter] public string userEmail { get; set; }  
   
     protected override async Task OnInitializedAsync()
     {
-        personInfo.Email = employerEmail;
-        personInfo = await EmployerService.GetInfoEmployer(personInfo);
+        personInfo.Email = userEmail;
+        personInfo = await PersonService.GetInfoPerson(personInfo);
         if (personInfo != null)
         {
             _loading = false;
@@ -107,11 +145,11 @@
 
     private void GoToProjects()
     {
-        nav.NavigateTo($"Projects/{employerEmail}");
+        nav.NavigateTo($"Projects/{userEmail}");
     }
 
     private void GoToEmployerProfileConfig()
     {
-        nav.NavigateTo($"/Employer_Profile/{employerEmail}/Configurations");
+        nav.NavigateTo($"/Profile/{userEmail}/Configurations");
     }
 }

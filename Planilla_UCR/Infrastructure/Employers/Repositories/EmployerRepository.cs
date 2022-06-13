@@ -37,20 +37,6 @@ namespace Infrastructure.Employers.Repositories
                 employer = employerResult.First();
             }
             return employer;
-        }
-
-        public async Task<Person?> GetInfoEmployer(Person personInfo)
-        {
-            IList<Person> employerInfoResult = await _dbContext.People.FromSqlRaw("EXEC GetInfoEmployer @EmailEmployer",
-                  new SqlParameter("@EmailEmployer", personInfo.Email)).ToListAsync();
-            Person employerInfo = null;
-            if (employerInfoResult.Length() > 0)
-            {
-                employerInfo = employerInfoResult.First();
-            }
-           
-
-            return employerInfo;
-        }
+        } 
     }
 }

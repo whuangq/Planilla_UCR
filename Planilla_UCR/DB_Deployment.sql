@@ -160,15 +160,14 @@ BEGIN
 END
 
 
-
--- Employer Stored Procedures
 GO
-CREATE PROCEDURE GetInfoEmployer(@EmailEmployer varchar(255))
+CREATE PROCEDURE GetInfoPerson(@EmailPerson varchar(255))
 AS
 BEGIN
 	SELECT Person.Email, Person.Name, Person.LastName1, Person.LastName2, Person.SSN, Person.BankAccount, Person.Adress, Person.PhoneNumber
-	FROM  Person JOIN Employer ON  Person.Email  = Employer.Email WHERE Employer.Email = @EmailEmployer
+	FROM  Person WHERE Person.Email = @EmailPerson
 END
+
 
 -- Employee Stored Procedures
 GO

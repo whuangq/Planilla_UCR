@@ -11,6 +11,5 @@ namespace Application.Employers
     {
         Task CreateEmployerAsync(String email);
         Task<Employer>? GetEmployerAsync(String email);
-        Task<Person> GetInfoEmployer(Person personInfo);
     }
 }

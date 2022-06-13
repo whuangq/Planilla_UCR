@@ -31,5 +31,10 @@ namespace Application.People.Implementations
             await _personRepository.UpdatePerson(personInfo);
         }
 
+
+        public async Task<Person> GetInfoPerson(Person personInfo)
+        {
+            return await _personRepository.GetInfoPerson(personInfo);
+        }
     }
 }

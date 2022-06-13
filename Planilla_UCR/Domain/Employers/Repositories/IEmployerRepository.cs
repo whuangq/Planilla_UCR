@@ -11,6 +11,5 @@ namespace Domain.Employers.Repositories
     {
         Task CreateEmployerAsync(String email);
         Task<Employer>? GetEmployerAsync(String email);
-        Task<Person> GetInfoEmployer(Person personInfo);
     }
 }

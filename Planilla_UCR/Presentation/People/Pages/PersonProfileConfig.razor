@@ -1,4 +1,4 @@
-﻿@page "/Employer_Profile/{employerEmail}/Configurations"
+﻿@page "/Profile/{userEmail}/Configurations"
 @using Domain.Authentication.DTOs
 @using Domain.Employers.Entities
 @using Domain.Employers.DTOs
@@ -32,9 +32,9 @@
           
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
-            new BreadcrumbItem("Proyectos", href: $"Projects/{employerEmail}"),
-            new BreadcrumbItem("Mi perfil empleador", href: $"Employer_Profile/{employerEmail}"),
-            new BreadcrumbItem("Configuraciones", href: $"Employer_Profile/{employerEmail}/Configurations")
+            new BreadcrumbItem("Proyectos", href: $"Projects/{userEmail}"),
+            new BreadcrumbItem("Mi perfil", href: $"Profile/{userEmail}"),
+            new BreadcrumbItem("Configuraciones", href: $"Profile/{userEmail}/Configurations")
         };
 
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -42,7 +42,7 @@
     <MudItem xs="10" sm="12">
         <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
             <MudSpacer></MudSpacer>
-            <MudText Align="Align.Center" Typo="Typo.h6">Editar cuenta empleador</MudText>
+            <MudText Align="Align.Center" Typo="Typo.h6">Editar cuenta</MudText>
              <MudSpacer></MudSpacer>
              <MudItem xs="12"></MudItem>
              <MudSpacer></MudSpacer>
@@ -117,7 +117,6 @@
                                 <MudText>Cancelar</MudText>
                         </MudButton>
 
-                         
                      <MudItem xs="2"></MudItem>
 
                 </MudGrid>
@@ -136,7 +135,7 @@
 @code {
     private bool _loading = true;
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
-    [Parameter] public string employerEmail { get; set; }
+    [Parameter] public string userEmail { get; set; }
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
     private string oldName = "";
@@ -149,8 +148,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        personInfo.Email = employerEmail;
-        personInfo = await EmployerService.GetInfoEmployer(personInfo);
+        personInfo.Email = userEmail;
+        personInfo = await PersonService.GetInfoPerson(personInfo);
         oldName = personInfo.Name;
         oldLastName1 = personInfo.LastName1;
         oldLastName2 = personInfo.LastName2;
@@ -171,7 +170,7 @@
         if (form.IsValid && ValidateSsn(personInfo) && ValidateUpdate(personInfo)){
             await PersonService.UpdatePerson(personInfo);
             ShowSnackNotification("Cuenta para "+personInfo.Name+" modificada", Severity.Success);
-            nav.NavigateTo($"/Employer_Profile/{employerEmail}");
+            nav.NavigateTo($"/Profile/{userEmail}");
            
         }
         snackHandler._saving = false;
@@ -232,6 +231,6 @@
 
     private void GoToEmployerProfileConfig()
     {
-        nav.NavigateTo($"Employer_Profile/{employerEmail}/Configurations");
+        nav.NavigateTo($"Profile/{userEmail}/Configurations");
     }
 }

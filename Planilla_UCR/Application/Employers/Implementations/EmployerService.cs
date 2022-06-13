@@ -25,11 +25,5 @@ namespace Application.Employers.Implementations
         {
             return await _employerRepository.GetEmployerAsync(email);
         }
-
-        public async Task<Person> GetInfoEmployer(Person personInfo)
-        {
-            return await _employerRepository.GetInfoEmployer(personInfo);
-        }
-
     }
 }
