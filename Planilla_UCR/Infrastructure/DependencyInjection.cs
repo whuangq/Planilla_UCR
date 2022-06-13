@@ -28,6 +28,9 @@ using Domain.Authentication.Repositories;
 using Infrastructure.Authentication.Repositories;
 using Domain.Authorization.Repositories;
 using Infrastructure.Authorization.Repositories;
+using Domain.ReportOfHours.Repositories;
+using Infrastructure.ReportOfHours.Repositories;
+using Infrastructure.ReportOfHours;
 
 namespace Infrastructure
 {
@@ -57,6 +60,9 @@ namespace Infrastructure
                .AddEntityFrameworkStores<AccountsDbContext>();
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
             services.AddScoped<IAuthorizationRepository, AuthorizationRepository>();
+
+            services.AddDbContext<HoursReportDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IHoursReportRepository, HoursReportRepository>();
 
             services.AddDbContext<AgreementDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IAgreementRepository, AgreementRepository>();

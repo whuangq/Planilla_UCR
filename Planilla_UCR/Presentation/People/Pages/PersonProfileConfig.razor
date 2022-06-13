@@ -22,7 +22,7 @@
 
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
          <MudText Align="Align.Center" Typo="Typo.h6">
-              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+              <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
          </MudText>
        
     </MudPaper>
@@ -97,7 +97,7 @@
                     @*Create buton *@
                     <MudItem xs="2"></MudItem>
                     
-                        <MudButton Disabled="@snackHandler._saving" @onclick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
+                        <MudButton Disabled="@snackHandler._saving" @onclick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Primary">
                             @if (snackHandler._saving)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

@@ -27,7 +27,7 @@
         new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
         new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
         new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
-        new BreadcrumbItem("Nuevo empleado", href: $"/Create_Employee/{email}/{projectName}")
+        new BreadcrumbItem("Nuevo empleado",  href: null, disabled: true)
     };
 }
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -90,7 +90,7 @@
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="8" >
                     
-                        <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Secondary">
+                        <MudButton Disabled="@snackHandler._saving" OnClick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Primary">
                             @if (snackHandler._saving)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

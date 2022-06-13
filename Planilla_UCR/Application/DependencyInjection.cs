@@ -21,6 +21,8 @@ using Application.Authorization;
 using Application.Authorization.Implementations;
 using Application.Email;
 using Application.Email.Implementations;
+using Application.ReportOfHours;
+using Application.ReportOfHours.Implementations;
 using Application.ContextMenu;
 using Application.ContextMenu.Implementations;
 
@@ -39,6 +41,7 @@ namespace Application
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IAuthorizationServices, AuthorizationService>();
+            services.AddTransient<IReportOfHoursService, ReportOfHoursService>();
             services.AddTransient<IEmailServices, EmailServices>();
             services.AddTransient<IAgreementService, AgreementService>();
             services.AddTransient<IAgreementTypeService, AgreementTypeService>();

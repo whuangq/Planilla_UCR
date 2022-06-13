@@ -22,7 +22,11 @@
 
 @if (_loading)
 {
-    <h4 class="text-danger">Benefit not found</h4>
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+    </MudPaper>
 }
 else
 {
@@ -30,10 +34,10 @@ else
         <MudSpacer></MudSpacer>
         @if(_disabled)
         {
-            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="EnableForm"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="EnableForm"/>
         }else
         {
-            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="DisableForm"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="DisableForm"/>
         }
         
     </MudToolBar>
@@ -84,7 +88,7 @@ else
                 @if(_disabled == false)
                 {
                     <MudItem xs="8" >
-                        <MudButton Disabled="@snackHandler._saving" OnClick="SaveBenefit" Variant="Variant.Filled" Color="Color.Secondary">
+                        <MudButton Disabled="@snackHandler._saving" OnClick="SaveBenefit" Variant="Variant.Filled" Color="Color.Primary">
                             @if (snackHandler._saving)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

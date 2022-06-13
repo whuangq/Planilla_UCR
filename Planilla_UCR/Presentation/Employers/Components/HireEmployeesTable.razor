@@ -18,7 +18,7 @@
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
             new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
-            new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}")
+            new BreadcrumbItem("Empleados", href: null, disabled: true)
         }; 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
         <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
@@ -53,7 +53,7 @@
                         </MudTd>
                     </RowTemplate>
                 <PagerContent>
-                    <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Secondary" Class="pa-4"/>
+                    <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
                 </PagerContent>
                 </MudTable>
                  <br>

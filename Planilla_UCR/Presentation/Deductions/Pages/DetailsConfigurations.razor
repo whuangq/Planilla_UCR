@@ -34,10 +34,10 @@ else
         <MudSpacer></MudSpacer>
         @if(_disabled)
         {
-            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="EnableForm"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="EnableForm"/>
         }else
         {
-            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Secondary" OnClick="DisableForm"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="DisableForm"/>
         }
         
     </MudToolBar>
@@ -88,7 +88,7 @@ else
                 @if(_disabled == false)
                 {
                  <MudItem xs="8" >
-                    <MudButton Disabled="@snackHandler._saving" OnClick="SaveDeduction" Variant="Variant.Filled" Color="Color.Secondary">
+                    <MudButton Disabled="@snackHandler._saving" OnClick="SaveDeduction" Variant="Variant.Filled" Color="Color.Primary">
                         @if (snackHandler._saving)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
