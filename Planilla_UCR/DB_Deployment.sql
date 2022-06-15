@@ -81,6 +81,19 @@ CREATE TABLE ReportOfHours(
 	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
 );
 
+CREATE TABLE Subscribes(
+	EmployeeEmail varchar(255) NOT NULL,
+	EmployerEmail varchar(255) NOT NULL,
+	ProjectName varchar(255) NOT NULL,
+	SubscriptionName varchar(255) NOT NULL,
+	Cost float NOT NULL,
+	StartDate date NOT NULL,
+	EndDate date,
+	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, SubscriptionName),
+	FOREIGN KEY(EmployerEmail, ProjectName, SubscriptionName) REFERENCES Subscription(EmployerEmail, ProjectName, SubscriptionName) ON UPDATE CASCADE,
+	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
+);
+
 -- Suscription Stored Procedures
 GO
 CREATE PROCEDURE GetAllBenefits
@@ -88,7 +101,6 @@ AS
 BEGIN
     SELECT * FROM Subscription WHERE TypeSubscription=1 and IsEnabled=1
 END
-
 
 GO 
 CREATE PROCEDURE GetAllDeductions
@@ -107,22 +119,37 @@ CREATE OR ALTER PROCEDURE ModifySubscription(
 	@SubscriptionDescription varchar(600),
 	@Cost float,
 	@TypeSubscription int,
-	@IsEnabled int,
-	@Transaction int output
+	@IsEnabled int
 ) AS
 BEGIN
-	IF ((@NewSubscriptionName in (SELECT SubscriptionName FROM Subscription WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName)) AND (@SubscriptionName <> @NewSubscriptionName))
-	BEGIN 
-		SET @Transaction = 0;
-	END
-	ELSE
-		BEGIN
-			SET @Transaction = 1;
+	UPDATE Subscription
+	SET SubscriptionName = @NewSubscriptionName, SubscriptionDescription = @SubscriptionDescription,Cost = @Cost, ProviderName = @ProviderName 
+	WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName;
+END
 
-			UPDATE Subscription
-			SET SubscriptionName = @NewSubscriptionName, SubscriptionDescription = @SubscriptionDescription,Cost = @Cost, ProviderName = @ProviderName 
-			WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName;
-		END
+GO
+CREATE OR ALTER PROCEDURE DeleteSubscription(
+	@EmployerEmail varchar(255),
+	@ProjectName varchar(255),
+	@SubscriptionName varchar(255)
+) AS
+BEGIN
+	UPDATE Subscription
+	SET IsEnabled = 0
+	WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName;
+END
+
+-- Subscribe Stored Procedures
+GO
+CREATE OR ALTER PROCEDURE GetEmployeesBySubscription(
+	@EmployerEmail varchar(255),
+	@ProjectName varchar(255),
+	@SubscriptionName varchar(255))
+AS
+BEGIN
+	SELECT * 
+	FROM Subscribes 
+	WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName
 END
 
 -- Project Stored Procedures
@@ -390,3 +417,21 @@ INSERT INTO ReportOfHours
 VALUES('leonel@ucr.ac.cr', 'Proyecto 2','mau@ucr.ac.cr', '9999-12-31',22.2)
 Insert into AgreementType
 Values('Por horas', 10)
+
+INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Ayudemos a los niños',
+'mau@ucr.ac.cr',
+25000,
+'2012-07-15'
+)
+
+INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Piscina',
+'mau@ucr.ac.cr',
+25000,
+'2012-07-15'
+)

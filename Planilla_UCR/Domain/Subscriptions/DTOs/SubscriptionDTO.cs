@@ -26,6 +26,5 @@ namespace Domain.Subscriptions.DTOs
             TypeSubscription = typeSubscription;
             IsEnabled = isEnabled;
         }
-
     }
 }

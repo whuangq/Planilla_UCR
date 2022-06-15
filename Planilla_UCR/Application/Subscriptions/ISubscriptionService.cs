@@ -11,6 +11,7 @@ namespace Application.Subscriptions
         Task<Subscription>? GetSubscription(string employerEmail, string projectName, string subscriptionName);
         Task<IEnumerable<Subscription>> GetDeductionsByProject(string employerEmail, string projectName);
         Task<IEnumerable<Subscription>> GetBenefitsByProject(string employerEmail, string projectName);
-        bool ModifySubscription(Subscription subscription, string newName);
+        void ModifySubscription(Subscription subscription, string newName);
+        void DeleteSubscription(Subscription subscription);
     }
 }

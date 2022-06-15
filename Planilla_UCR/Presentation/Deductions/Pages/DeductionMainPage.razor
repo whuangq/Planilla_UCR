@@ -10,7 +10,7 @@
 
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-{
+    {
         new BreadcrumbItem("Inicio", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
         new BreadcrumbItem($"{projectName}", href: $"/Projects/{employerEmail}/{projectName}/Configurations"),
@@ -52,7 +52,7 @@ else
                 <MudSpacer></MudSpacer>
                     <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="GoToConfigs"/>
             </MudToolBar>
-            <MudTable @ref="mudTable" Items="@elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
+            <MudTable @ref="mudTable" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
                 <ToolBarContent>
                     <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones voluntarias</MudText>
                     <MudSpacer />
@@ -86,7 +86,7 @@ else
     private bool _empty = true;
     private MudTable<Subscription> mudTable;
     private List<string> clickedEvents = new();
-    private IEnumerable<Subscription> elements;
+    private IEnumerable<Subscription> _elements;
     private bool _loading = true;
     public string searchString1 = "";
     public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
@@ -96,9 +96,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        elements = await SubscriptionService.GetDeductionsByProject(employerEmail, projectName);
+        _elements = await SubscriptionService.GetDeductionsByProject(employerEmail, projectName);
         _loading = false;
-        if (elements.Length() > 0){
+        if (_elements.Length() > 0)
+        {
             _empty = false;
         }
     }

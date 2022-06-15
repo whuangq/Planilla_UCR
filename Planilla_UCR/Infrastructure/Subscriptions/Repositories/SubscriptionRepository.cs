@@ -65,23 +65,23 @@ namespace Infrastructure.Subscriptions.Repositories
             return subscriptionResult;
         }
 
-        public bool ModifySubscription(Subscription subscription, string newName)
+        public void ModifySubscription(Subscription subscription, string newName)
         {
-            var Transaction = new SqlParameter("Transaction", 0);
-            Transaction.Direction = System.Data.ParameterDirection.Output;
             System.FormattableString query = ($@"EXECUTE ModifySubscription 
                 @EmployerEmail = {subscription.EmployerEmail}, @ProjectName = {subscription.ProjectName},
                 @SubscriptionName = {subscription.SubscriptionName},
                 @NewSubscriptionName = {newName}, @ProviderName = {subscription.ProviderName},
                 @SubscriptionDescription = {subscription.SubscriptionDescription}, @Cost = {subscription.Cost},
-                @TypeSubscription = {subscription.TypeSubscription}, @IsEnabled = {subscription.IsEnabled},
-                @Transaction = {Transaction} OUT");
+                @TypeSubscription = {subscription.TypeSubscription}, @IsEnabled = {subscription.IsEnabled}");
             _dbContext.Database.ExecuteSqlInterpolated(query);
-            if (Convert.ToInt32(Transaction.Value) == 1) {
-                return true;
-            }
-            else
-            return false;
+        }
+
+        public void DeleteSubscription(Subscription subscription) 
+        {
+            System.FormattableString query = ($@"EXECUTE DeleteSubscription 
+                @EmployerEmail = {subscription.EmployerEmail}, @ProjectName = {subscription.ProjectName},
+                @SubscriptionName = {subscription.SubscriptionName}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
     }
 }

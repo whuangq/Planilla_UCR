@@ -19,7 +19,6 @@
 }
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 <MudGrid>
-    @*Text fields *@
     <MudItem xs="12" sm="12">
         <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
             <MudText Align="Align.Center" Typo="Typo.h6">Añadir deducción voluntaria</MudText>
@@ -37,7 +36,7 @@
             </MudItem>
             <MudItem xs="4">
                 <MudNumericField Immediate="true" Label="Costo" Format="N2" Culture="@cultureCR" Variant="Variant.Outlined" @bind-Value="_cost" 
-                    Adornment="Adornment.Start" AdornmentText="@cultureCR.NumberFormat.CurrencySymbol" Required="true" RequiredError="Campo requerido"/>
+                    Adornment="Adornment.Start" AdornmentText="@cultureCR.NumberFormat.CurrencySymbol" Required="true" RequiredError="Campo requerido" Min = "0.0" />
             </MudItem>
 
             <MudItem xs="4">
@@ -56,9 +55,8 @@
             </MudItem>
             <MudItem xs="2">
             </MudItem>
-            @*Create buton *@
             <MudItem xs="8" >
-                <MudButton Disabled="@snackHandler._saving" OnClick="SaveDeduction" Variant="Variant.Filled" Color="Color.Secondary">
+                <MudButton Disabled="@snackHandler._saving" OnClick="SaveDeduction" Variant="Variant.Filled" Color="Color.Primary">
                     @if (snackHandler._saving)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -70,13 +68,11 @@
                     }
                 </MudButton>
                 <MudButton Disabled="true"> </MudButton>
-                @*Clear buton *@
-                <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
+                <MudButton OnClick="GoToMain" Variant="Variant.Filled" Color="Color.Transparent">
                         <MudText>Cancelar</MudText>
                 </MudButton>
             </MudItem>
             <MudItem xs="2"></MudItem>
-
             </MudGrid>
         </MudForm>
         </MudPaper>
@@ -92,7 +88,6 @@
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
-
 
     async Task SaveDeduction()
     {
@@ -116,7 +111,6 @@
                 ShowSnackNotification("Ya existe una deducción con el nombre "+subscriptionToAdd.SubscriptionName, Severity.Error);
             }
         }
-
         snackHandler._saving = false;
     }
 
@@ -135,16 +129,6 @@
                 return Task.CompletedTask;
             };
         });
-    }
-
-
-    void CleanForm()
-    {
-        subscriptionInfo.SubscriptionName = "";
-        subscriptionInfo.ProjectName = "";
-        subscriptionInfo.SubscriptionDescription = "";
-        subscriptionInfo.ProviderName= "";
-        subscriptionInfo.Cost = 0.0;
     }
 
     private void GoToMain()

@@ -31,6 +31,9 @@ using Infrastructure.Authorization.Repositories;
 using Domain.ReportOfHours.Repositories;
 using Infrastructure.ReportOfHours.Repositories;
 using Infrastructure.ReportOfHours;
+using Domain.Subscribes.Repositories;
+using Infrastructure.Subscribes;
+using Infrastructure.Subscribes.Repositories;
 
 namespace Infrastructure
 {
@@ -47,6 +50,9 @@ namespace Infrastructure
 
             services.AddDbContext<SubscriptionDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+
+            services.AddDbContext<SubscribeDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<ISubscribeRepository, SubscribeRepository>();
 
             services.AddDbContext<EmployerDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IEmployerRepository, EmployerRepository>();

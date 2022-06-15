@@ -25,6 +25,5 @@ namespace Infrastructure.Subscriptions.EntityMappings
             builder.Property(p => p.IsEnabled)
                    .IsRequired();
         }
-
     }
 }

@@ -25,6 +25,8 @@ using Application.ReportOfHours;
 using Application.ReportOfHours.Implementations;
 using Application.ContextMenu;
 using Application.ContextMenu.Implementations;
+using Application.Subscribes;
+using Application.Subscribes.Implementations;
 
 namespace Application
 {
@@ -35,7 +37,7 @@ namespace Application
             services.AddTransient<IPersonService, PersonService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
-            services.AddTransient<ISubscriptionService, SubscriptionService>();
+            services.AddTransient<ISubscribeService, SubscribeService>();
             services.AddTransient<IEmployerService, EmployerService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();

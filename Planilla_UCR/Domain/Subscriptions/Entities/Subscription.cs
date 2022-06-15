@@ -13,7 +13,6 @@ namespace Domain.Subscriptions.Entities
         public int TypeSubscription { get; set; }
         public int IsEnabled { get; set; }
 
-
         public Subscription(String employerEmail, String projectName,
             String subscriptionName, String providerName,
             String subscriptionDescription, double cost, int typeSubscription, int isEnabled)
