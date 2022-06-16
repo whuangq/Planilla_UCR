@@ -9,6 +9,6 @@ namespace Domain.Agreements.Repositories
     {
         Task CreateAgreementAsync(Agreement agreement);
         Task<Agreement>? GetContractee(Agreement agreement);
-
+        Task<IEnumerable<Agreement>> GetEmployeeProjects(string employeeEmail);
     }
 }

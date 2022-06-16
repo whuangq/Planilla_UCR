@@ -6,8 +6,9 @@ namespace Application.ContextMenu
     {
         bool GetShowProjectsMenu();
         string GetProjectsContext();
-        void SetProjectsContext(bool show, string projectName);
+        void SetProjectsContext(bool showProjectMenu,bool showProjectSubMenu, string projectName);
         void SetOnChange(Action action);
         void NotifyStateChanged();
+        bool GetShowProjectsSubMenu();
     }
 }

@@ -1,18 +1,16 @@
 ﻿
 <NavLink class="nav-link" href=@href Match="NavLinkMatch.All">
     <MudIconButton Size="Size.Medium"  Disabled="true"></MudIconButton>
-    <span  aria-hidden="true"></span> @text
-    @for (int i = 0; i<2; i++)
-    {
+     <MudIconButton Icon="@Icon" Color="@Color.Secondary" Class="mr-2"/>
+    <span  aria-hidden="true"></span> <MudText> @text </MudText>
         <MudSpacer></MudSpacer>
-        <MudIconButton Size="Size.Medium"  Disabled="true"></MudIconButton>
-    }
 </NavLink>
-
 
 @code{
     [Parameter]
     public string href { get; set; } 
     [Parameter]
     public string text { get; set; } 
+    [Parameter]
+    public string Icon { get; set; } 
 }

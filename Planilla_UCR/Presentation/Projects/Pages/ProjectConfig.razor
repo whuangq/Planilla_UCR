@@ -126,11 +126,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(true, projectName);
+        ContextMenuService.SetProjectsContext(true, true, projectName);
         projectObject = await ProjectService.GetProject(employerEmail, projectName);
         tittle = "Modificar " + projectName;
     }
-
 
     private void GoToContractEmployee(String email, string project)
     {

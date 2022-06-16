@@ -1,13 +1,19 @@
-﻿@page "/Projects/ReportHours/{EmployerEmail}/{ProjectName}/{EmployeeEmail}"
+﻿@page "/ReportHours/{EmployerEmail}/{EmployeeEmail}"
 @using Application.ReportOfHours
 @using Domain.ReportOfHours.Entities
 @using Presentation.Shared.Models
 @using Presentation.Core.Components
 @using Application.Projects
 @using Domain.Projects.Entities
+@using Domain.Agreements.Entities
+@using Application.Agreements
+@using Application.ContextMenu
+
 @inject ISnackbar Snackbar
 @inject IReportOfHoursService HoursReportService
 @inject IProjectService ProjectService
+@inject IAgreementService AgreementService
+@inject IContextMenuService ContextMenuService
 @inject NavigationManager nav
 
 @*Navigation footprint *@
@@ -15,28 +21,31 @@
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployeeEmail}"),
-        new BreadcrumbItem(@projectName, href: $"/Projects/Details/{EmployeeEmail}/{projectName}"),
+        new BreadcrumbItem(hoursReport.ProjectName, href: $"/Projects/{EmployeeEmail}/{ hoursReport.ProjectName}/Configurations"),
+        new BreadcrumbItem("Reporte de horas", $"/ReportHours/{EmployerEmail}/{EmployeeEmail}"),
         new BreadcrumbItem("Nuevo Reporte", href: null, disabled: true),
     };
 }
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 
-@if(_loading) {
+@if(_loading) 
+{
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
          <MudText Align="Align.Center" Typo="Typo.h6">
               <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
          </MudText>
        
     </MudPaper>
-}else{
-    @if (!_loading)
+} else
         {
+    @if (!_loading && !_empty)
+    {
             <MudGrid>
                 <MudItem xs="10" sm="12">
                     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
                         <MudSpacer></MudSpacer>
-                        <MudText Align="Align.Center" Typo="Typo.h6">Reporte de horas</MudText>
+                    <MudText Align="Align.Center" Typo="Typo.h6">Detalles del reporte</MudText>
                         <MudForm @ref="form">
                                 <MudGrid>
                                 <MudItem xs="2"></MudItem>
@@ -93,13 +102,15 @@
                     </MudPaper>
                 </MudItem>
             </MudGrid>
+    }else{
+        <MudText  Align="Align.Center" Typo="Typo.h6">Debe estar contratado en un proyecto para reportar horas</MudText>
         }
     }
 
 @code {
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
-    private IEnumerable<Project> _elements;
+    private IEnumerable<Agreement> _elements;
     private bool _loading = true;
     private bool _empty = true;
 
@@ -114,9 +125,11 @@
     HoursReport hoursReport = new HoursReport("","","",null, 0);
     DateTime? startDate;
 
+
     protected override async Task OnInitializedAsync()
     {
-        _elements = await ProjectService.GetEmployerProyects(EmployerEmail);
+         hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
+        _elements = await AgreementService.GetEmployeeProjects(EmployeeEmail);
         if (_elements.Length() == 0)
         {
             _empty = true;
@@ -130,15 +143,18 @@
         hoursReport.ProjectName = projectName;
         hoursReport.EmployerEmail = EmployerEmail;
         hoursReport.EmployeeEmail = EmployeeEmail;
+        hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
     }
 
     async Task SaveReportInfo()
     {
         snackHandler._saving = true;
         await form.Validate();
-        if (form.IsValid)
+        bool hasKey = await validateKey();
+        if (form.IsValid && ValidateHours() && !hasKey && ValidateDate())
         {
             await HoursReportService.CreateReportAsync(hoursReport);
+            ShowSnackNotification("Reporte de horas creado",Severity.Success);
         }
         snackHandler._saving = false;
         ShowSnackNotification("Reporte de horas creado",Severity.Success);
@@ -168,4 +184,40 @@
         hoursReport.ReportHours = 0;
     }
 
+    bool ValidateHours()
+    {
+        bool valid = true; 
+        if (hoursReport.ReportHours == 0 || hoursReport.ReportHours < 0 || hoursReport.ReportHours > 12)
+        {
+            ShowSnackNotification("Número de horas incorrecto", Severity.Error);
+            valid = false;
+        }
+        return valid;
+    }
+
+    async Task<bool> validateKey()
+    {
+        bool hasKey = await HoursReportService.HasReportAsync(hoursReport);
+        if (hasKey)
+        {
+            ShowSnackNotification("Reporte de horas repetido",Severity.Error);
+        }
+        return hasKey;
+    }
+
+    bool ValidateDate()
+    {
+        bool valid = true; 
+        if (hoursReport.ReportDate > DateTime.Now)
+        {
+            ShowSnackNotification("No es posible reportar horas a futuro", Severity.Error);
+            valid = false;
+        }
+        //if (hoursReport.ReportDate.Value.Day < DateTime.Now.Day) // last pay
+        //{
+        //    ShowSnackNotification("No es posible reportar horas antes del último pago", Severity.Error);
+        //    valid = false;
+        //}
+        return valid;
+    }
 }

@@ -7,52 +7,39 @@
 
 @inject IAuthenticationService AuthenticationService
 @inject IContextMenuService ContextMenuService
+@inject IAuthorizationServices AuthorizationService
+@inject NavigationManager nav
 
 @page "/"
 
 <AuthorizeView>
     <Authorized> 
-        <MudText>Esta autenticado</MudText>
+        <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudText Align="Align.Center" Typo="Typo.h6">
+                <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+            </MudText>
+        </MudPaper>
+        @{
+            email = context.User.Identity.Name;
+            authorized = true;
+        }
     </Authorized>
     <NotAuthorized>
-        <MudText>No esta autenticado</MudText>
     </NotAuthorized>
 </AuthorizeView>
-
-<AuthorizeView Roles="Employer">
-    <Authorized> 
-        <MudText>ES Employer</MudText>
-    </Authorized>
-    <NotAuthorized>
-        <MudText>No es employer </MudText>
-    </NotAuthorized>
-</AuthorizeView>
-
-<AuthorizeView Roles="Employee">
-    <Authorized> 
-        <MudText>Es employee</MudText>
-    </Authorized>
-    <NotAuthorized>
-        <MudText>No es employee </MudText>
-    </NotAuthorized>
-</AuthorizeView>
-
-
-<MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-16" Elevation="0">
-     <MudText Align="Align.Justify" Typo="Typo.h5">Para emprendedores y pequeñas empresas quienes requieren agilizar
-    los pagos de planilla, reduciendo las probabilidades de cometer errores
-    humanos en el proceso, por medio de planilla@ucr, una aplicación web
-    intuitiva que permita asegurar que sus negocios cumplan con todas las
-    disposiciones en la ley del trabajador de Costa Rica.
-    Asimismo, nuestro producto va a ser la herramienta líder en la
-    reducción del uso de papel a la hora de generar informes de planillas y
-    pagos, ya que esta realiza sus tareas de manera totalmente electrónica.</MudText>
-</MudPaper>
 
 @code{
-
-     protected override async Task OnInitializedAsync()
+    public string email { get; set; }
+    public bool authorized { get; set; } = false;
+     //AccountDTO accountData = new AccountDTO("jeremy@ucr.ac.cr","Prueba01!");
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        ContextMenuService.SetProjectsContext(false, "");
+        //await AuthenticationService.RegisterRequestAsync(accountData);
+        //await AuthorizationService.AssignRole(accountData.Email, "Employee");
+        if (firstRender && authorized)
+        {
+             ContextMenuService.SetProjectsContext(false, false, "");
+             nav.NavigateTo($"Projects/{email}/", true);
+        }
     }
 }

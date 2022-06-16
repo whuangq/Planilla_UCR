@@ -6,8 +6,9 @@ namespace Application.ContextMenu.Implementations
     {
         public event Action? OnChange;
 
-        public bool showProjectsMenu { get; set; } = false;
+        public bool _showProjectsMenu { get; set; } = false;
         public string projectContext { get; set; }
+        public bool _showProjectsSubMenu { get; set; } = false;
 
         public string GetProjectsContext()
         {
@@ -19,21 +20,27 @@ namespace Application.ContextMenu.Implementations
             OnChange?.Invoke();
         }  
 
-        public void SetProjectsContext(bool show, string projectName)
+        public void SetProjectsContext(bool showProjectsMenu, bool showProjectsSubMenu, string projectName)
         {
-            showProjectsMenu = show;
+            _showProjectsMenu = showProjectsMenu;
+            _showProjectsSubMenu = showProjectsSubMenu;
             projectContext = projectName;
             NotifyStateChanged();
         }
 
         public bool GetShowProjectsMenu()
         {
-            return showProjectsMenu;
+            return _showProjectsMenu;
         }
 
         public void SetOnChange(Action action)
         {
             OnChange += action;
+        }
+
+        public bool GetShowProjectsSubMenu()
+        {
+            return _showProjectsSubMenu;
         }
     }
 }

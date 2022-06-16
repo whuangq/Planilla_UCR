@@ -1,0 +1,113 @@
+﻿@using Application.People
+@using Domain.People.Entities
+@using Application.Employees
+@using Application.ReportOfHours
+@using Domain.ReportOfHours.Entities
+@using Application.ContextMenu
+
+@inject NavigationManager nav
+@inject IReportOfHoursService HoursReportService
+@inject IContextMenuService ContextMenuService
+
+@page "/Reported_Hours/{email}"
+@if(_loading) {
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+         </MudText>
+       
+    </MudPaper>
+}else{
+    @if (!_loading)
+    {
+        List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
+             new BreadcrumbItem(@projectName, href: $"/Projects/{email}/{ projectName}/Configurations"),
+            new BreadcrumbItem("Histórico de horas", href: null, disabled: true)
+        }; 
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+        <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
+        </MudPaper>
+        if (!empty)
+        {
+                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<HoursReport,bool>(FilterFunc1)">
+                    <ToolBarContent>
+                            <MudText Align="Align.Center" Typo="Typo.h6">Horas reportadas</MudText>
+                            <MudSpacer />
+                            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent> 
+                    <HeaderContent>
+                        <MudTh>Nombre proyecto</MudTh>
+                        <MudTh>Fecha</MudTh>
+                        <MudTh>Horas</MudTh>
+                    </HeaderContent>
+
+                    <RowTemplate>
+                         <MudTd DataLabel="Nombre proyecto">@context.ProjectName</MudTd>
+                         <MudTd DataLabel="Fecha">@context.ReportDate.Value.Date.Day/@context.ReportDate.Value.Date.Month/@context.ReportDate.Value.Date.Year</MudTd>
+                         <MudTd DataLabel="Horas">@context.ReportHours</MudTd>
+                    </RowTemplate>
+                <PagerContent>
+                    <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
+                </PagerContent>
+                </MudTable>
+        }else
+        {
+           
+        }
+    }
+}
+
+@code {
+    private bool _hidePosition;
+    private bool _loading = true;
+    private bool empty = true;
+    string searchString1 = "";
+    private IEnumerable<HoursReport> _elements = new List<HoursReport>();
+    private MudTable<HoursReport> _table;
+    public string tab1 { get; set; } = "Horas reportadas";
+
+    [Parameter]
+    public string email { get; set; }
+    public string projectName { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectName = ContextMenuService.GetProjectsContext();
+        _elements = await HoursReportService.GetAllReportsAsync(email);
+        _elements = _elements.Where(e => e.ProjectName == projectName);
+        _elements = _elements.OrderByDescending (report => report.ReportDate);
+        if (_elements.Length() == 0)
+        {
+            empty = true;
+        }
+        else
+        {
+            empty = false;
+        }
+        _loading = false;
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterFunc1(HoursReport element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(HoursReport element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.ReportDate.ToString().Contains(searchString1, StringComparison.OrdinalIgnoreCase))
+        return true;
+        return false;
+    }
+
+    private void GoToReportHours()
+    {
+       nav.NavigateTo($"/Projects/ReportHours/{"leonel@ucr.ac.cr"}/{email}");
+    }
+
+}

@@ -107,7 +107,7 @@
     <Authorized>
        Página de proyectos del empleado
        @{
-           ContextMenuService.SetProjectsContext(true, "Proyecto Inexistente");
+           ContextMenuService.SetProjectsContext(true, true, "Proyecto 1");
        }
     </Authorized>
     <NotAuthorized>
@@ -127,7 +127,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(false, "");
+        ContextMenuService.SetProjectsContext(false, false, "");
         elements = await ProjectService.GetEmployerProyects(employerEmail);
         _loading = false;
         if (elements.Length() > 0){

@@ -7,7 +7,7 @@
 @if(_loading) {
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
          <MudText Align="Align.Center" Typo="Typo.h6">
-              <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+              <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
          </MudText>
        
     </MudPaper>
@@ -92,6 +92,7 @@
     protected override async Task OnInitializedAsync()
     {
         _elements = await PersonService.GetAllEmployees(projectName);
+        IEnumerable<Person> hiredEmployees = await PersonService.GetProjectEmployees(projectName);
         if (_elements.Length() == 0)
         {
             empty = true;
@@ -99,7 +100,14 @@
         else
         {
             empty = false;
+            foreach (var item in hiredEmployees)
+            {
+                _elements = _elements.Where(e => e.Email != item.Email);
+            }
         }
+
+
+
         _loading = false;
     }
 
