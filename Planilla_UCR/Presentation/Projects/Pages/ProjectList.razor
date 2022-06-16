@@ -16,7 +16,7 @@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Inicio", href: $"/{employerEmail}"),
+        new BreadcrumbItem("Inicio", href: ""),
         new BreadcrumbItem("Proyectos",  href: null, disabled: true),
 
     };
@@ -54,10 +54,6 @@
             }
             else
             {
-                <MudToolBar DisableGutters="true" Class="gap-4">
-                    <MudSpacer></MudSpacer>
-                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="GoToConfigs"/>
-                </MudToolBar>
 
                 <MudTable @ref="mudTable" Items="@elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_empty" LoadingProgressColor="Color.Primary" Filter="new Func<Project,bool>(FilterFunc1)">  
 
@@ -70,7 +66,6 @@
                     <HeaderContent>
                         <MudTh>Nombre</MudTh>
                         <MudTh>Descripción</MudTh>
-                        <MudTh>Ajustes</MudTh>
                     </HeaderContent>
 
                     <RowTemplate Context="row">
@@ -82,10 +77,6 @@
 
                         <MudTd DataLabel="Descripción">@row.ProjectDescription</MudTd>
             
-                        <MudTd>
-                            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="GoToConfigs"/>
-                            <MudSpacer></MudSpacer>
-                        </MudTd>
                     </RowTemplate>
 
                     <PagerContent>
