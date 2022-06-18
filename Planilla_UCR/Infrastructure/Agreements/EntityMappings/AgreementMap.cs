@@ -16,6 +16,10 @@ namespace Infrastructure.Agreements.EntityMappings
                    .IsRequired();
             builder.Property(p => p.ContractFinishDate)
                     .IsRequired();
+            builder.Property(p => p.IsEnabled)
+                    .IsRequired();
+            builder.Property(p => p.Justification)
+                    .IsRequired();
         }
     }
 }

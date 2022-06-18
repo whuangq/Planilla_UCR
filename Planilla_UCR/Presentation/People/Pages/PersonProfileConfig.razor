@@ -17,7 +17,6 @@
 @inject IEmployerService EmployerService
 @inject IPersonService PersonService
 
-
 @if(_loading) {
 
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
@@ -113,7 +112,7 @@
                            
                          <MudButton Disabled="true"> </MudButton>
                         @*Clear buton *@
-                        <MudButton OnClick="GoToEmployerProfileConfig" Variant="Variant.Filled" Color="Color.Transparent">
+                        <MudButton OnClick="GoToProfile" Variant="Variant.Filled" Color="Color.Transparent">
                                 <MudText>Cancelar</MudText>
                         </MudButton>
 
@@ -134,7 +133,7 @@
 
 @code {
     private bool _loading = true;
-    Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
+    Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "",1);
     [Parameter] public string userEmail { get; set; }
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
@@ -170,8 +169,7 @@
         if (form.IsValid && ValidateSsn(personInfo) && ValidateUpdate(personInfo)){
             await PersonService.UpdatePerson(personInfo);
             ShowSnackNotification("Cuenta para "+personInfo.Name+" modificada", Severity.Success);
-            nav.NavigateTo($"/Profile/{userEmail}");
-           
+            nav.NavigateTo($"/Profile/{userEmail}"); 
         }
         snackHandler._saving = false;
     }
@@ -229,8 +227,16 @@
         personInfo.Ssn = 0;
     }
 
-    private void GoToEmployerProfileConfig()
+    async Task  GoToProfile()
     {
-        nav.NavigateTo($"Profile/{userEmail}/Configurations");
+        personInfo.Name= oldName;
+        personInfo.LastName1 = oldLastName1;
+        personInfo.LastName2  = oldLastName2;
+        personInfo.Ssn = oldSsn;
+        personInfo.BankAccount = oldBankAccount;
+        personInfo.Adress = oldAdress;
+        personInfo.PhoneNumber = oldPhoneNumber;
+        personInfo = await PersonService.GetInfoPerson(personInfo);
+        nav.NavigateTo($"Profile/{userEmail}");
     }
 }

@@ -1,48 +1,27 @@
 ﻿@page "/Profile/{userEmail}"
-@using Application.Employers
-@using Application.People
 @using Domain.Employers.Entities
 @using Domain.Employers.DTOs
 @using Domain.People.Entities
-@using Presentation.Core.Components
 @using Domain.Authentication.DTOs
+@using Domain.Authentication
+@using Domain.Projects.Entities
 @using Application.Authentication
-@using  Domain.Authentication
+@using Application.Employers
+@using Application.People
 @using Application.Authorization;
 @using Application.Authorization.Implementations;
+@using Application.Projects
+@using Presentation.Core.Components
+@using Presentation.Shared.Models
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
 @inject NavigationManager nav
 @inject IPersonService PersonService
 @inject IEmployerService EmployerService
 @inject IAuthenticationService AuthenticationService
-
-
-<AuthorizeView>
-    <Authorized> 
-        <MudText>Esta autenticado</MudText>
-    </Authorized>
-    <NotAuthorized>
-        <MudText>No esta autenticado</MudText>
-    </NotAuthorized>
-</AuthorizeView>
-
-<AuthorizeView Roles="Employer">
-    <Authorized> 
-        <MudText>Es Employer</MudText>
-    </Authorized>
-    <NotAuthorized>
-        <MudText>No es employer </MudText>
-    </NotAuthorized>
-</AuthorizeView>
-
-<AuthorizeView Roles="Employee">
-    <Authorized> 
-        <MudText>Es employee</MudText>
-    </Authorized>
-    <NotAuthorized>
-        <MudText>No es employee </MudText>
-    </NotAuthorized>
-</AuthorizeView>
-
+@inject IProjectService ProjectService
+@inject ISnackbar Snackbar
 
 @if(_loading) {
 
@@ -76,10 +55,9 @@
                 </MudItem>
                
                 <MudItem xs="4">
-                    <MudIconButton  Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="GoToEmployerProfileConfig"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="GoToProfileConfig"/>
                 </MudItem>
-                
-
+               
             </MudItem>
             
         </MudGrid>
@@ -95,7 +73,7 @@
         <MudItem xs="8">
         <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.Photo" Color="@Color.Primary" /> Cédula: @personInfo.Ssn </MudField>
         </MudItem>
-            <MudItem xs="8">
+        <MudItem xs="8">
         <MudField Variant="Variant.Text"><MudIcon Icon="@Icons.Filled.CreditCard" Color="@Color.Primary" />  Cuenta bancaria: @personInfo.BankAccount</MudField>
         </MudItem>
         <MudItem xs="8">
@@ -109,7 +87,7 @@
             <Authorized> 
                 <MudButton Disabled="true"> </MudButton>
                 <MudItem xs="8">
-                    <MudButton OnClick="GoToProjects" Variant="Variant.Filled" Color="Color.Transparent">
+                    <MudButton OnClick="ProjectList" Variant="Variant.Filled" Color="Color.Transparent">
                     <MudText>Borrar</MudText>
                 </MudButton>
                 </MudItem> 
@@ -117,6 +95,28 @@
         </AuthorizeView>
         </MudItem>
 
+        <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+            <TitleContent>
+                <MudText Typo="Typo.h6">
+                    <MudIcon Icon="@Icons.Material.Filled.Delete" Color="@Color.Primary" Class="mr-2"/> ¿Está seguro de que desea eliminar su cuenta? ¡Sus proyectos asociados quedaran inactivos! 
+                </MudText>
+            </TitleContent>
+             <DialogContent>
+                <MudTable @ref="mudTable" Items="@projectsList" FixedHeader="@fixed_header" FixedFooter="@fixed_footer" Height="@(fixed_header || fixed_footer ?"300px":"")">
+                    <HeaderContent>
+                    <MudTh>Proyectos:</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Proyectos:"> @context.ProjectName </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </DialogContent>
+
+            <DialogActions>
+                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="DeleteAccountEmployer" Class="px-10">Aceptar</MudButton>
+                  <MudButton Variant="Variant.Filled" Color="Color.Transparent" OnClick="CloseDialog" Class="px-10">Cancelar</MudButton>
+            </DialogActions>
+        </MudDialog>
     </MudGrid>
     </MudPaper>
 
@@ -130,9 +130,22 @@
 
 @code {
     private bool _loading = true;
-    Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "");
+    private bool _empty = true;
+    Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "",1);
     [Parameter] public string userEmail { get; set; }  
-  
+    public string confirmationCodeEmail { get; set; }
+    private bool visible;
+    private bool open;
+    private MudTable<Project> mudTable;
+    private IEnumerable<Project> projectsList;
+    bool fixed_header = true;
+    bool fixed_footer = false;
+    SnackHandler snackHandler = new SnackHandler();
+    private void OpenDialog() => visible = true;
+    void CloseDialog() => visible = false;
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+
     protected override async Task OnInitializedAsync()
     {
         personInfo.Email = userEmail;
@@ -143,13 +156,37 @@
         }
     }
 
-    private void GoToProjects()
-    {
-        nav.NavigateTo($"Projects/{userEmail}");
+    async Task ProjectList(){
+        projectsList = await ProjectService.GetEmployerProyects(userEmail);
+        OpenDialog();
     }
 
-    private void GoToEmployerProfileConfig()
+    private void DeleteAccountEmployer() 
+    {
+        EmployerService.DeleteEmployer(personInfo.Email);
+        ShowSnackNotification("Se ha eliminado la cuenta de "+personInfo.Name, Severity.Success);
+        nav.NavigateTo($"/delete", true);
+    }
+
+    private void GoToProfileConfig()
     {
         nav.NavigateTo($"/Profile/{userEmail}/Configurations");
+    }
+
+    void ShowSnackNotification(string message, Severity severity)
+    {
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PreventDuplicates = false;
+        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Configuration.NewestOnTop = true;
+        Snackbar.Add($"{message}", severity, config =>
+        {
+            config.RequireInteraction = false;
+            config.ShowCloseIcon = true;
+            config.Onclick = snackbar =>
+            {
+                return Task.CompletedTask;
+            };
+        });
     }
 }

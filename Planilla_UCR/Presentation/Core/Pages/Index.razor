@@ -31,11 +31,11 @@
 @code{
     public string email { get; set; }
     public bool authorized { get; set; } = false;
-     //AccountDTO accountData = new AccountDTO("jeremy@ucr.ac.cr","Prueba01!");
+     //AccountDTO accountData = new AccountDTO("leonel@ucr.ac.cr","Prueba01!");
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         //await AuthenticationService.RegisterRequestAsync(accountData);
-        //await AuthorizationService.AssignRole(accountData.Email, "Employee");
+        //await AuthorizationService.AssignRole(accountData.Email, "Employer");
         if (firstRender && authorized)
         {
              ContextMenuService.SetProjectsContext(false, false, "");

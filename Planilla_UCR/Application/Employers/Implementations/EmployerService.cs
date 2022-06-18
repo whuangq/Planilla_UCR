@@ -25,5 +25,11 @@ namespace Application.Employers.Implementations
         {
             return await _employerRepository.GetEmployerAsync(email);
         }
+
+        public void DeleteEmployer(String email)
+        {
+            _employerRepository.DeleteEmployer(email);
+        }
+
     }
 }

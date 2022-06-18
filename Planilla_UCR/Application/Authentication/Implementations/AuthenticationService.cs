@@ -45,5 +45,11 @@ namespace Application.Authentication.Implementations
         {
             return await _authenticationRepository.EmailIsAlreadyRegistered(email);
         }
+
+
+        public async Task DeleteAccount(string email)
+        {
+            await _authenticationRepository.DeleteAccount(email);
+        }
     }
 }

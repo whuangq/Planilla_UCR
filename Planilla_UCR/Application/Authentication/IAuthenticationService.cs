@@ -12,5 +12,6 @@ namespace Application.Authentication
         string Decrypt(string data, string key);
         Task SignOut();
         Task<bool> EmailIsAlreadyRegistered(string email);
+        Task DeleteAccount(string email);
     }
 }

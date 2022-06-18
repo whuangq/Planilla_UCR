@@ -1,11 +1,12 @@
 ﻿using Domain.Core.Repositories;
 using Domain.Projects.Repositories;
 using Domain.Projects.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
 
 namespace Infrastructure.Projects.Repositories
 {
@@ -25,14 +26,27 @@ namespace Infrastructure.Projects.Repositories
             return await _dbContext.Projects.Select(t => new
             Project(t.EmployerEmail, t.ProjectName,
                 t.ProjectDescription, t.MaximumAmountForBenefits,
-                t.MaximumBenefitAmount, t.PaymentInterval)).ToListAsync();
+                t.MaximumBenefitAmount, t.PaymentInterval, t.IsEnabled)).ToListAsync();
         }
 
         public async Task<Project> GetProject(string employerEmail, string projectName)
         {
             IList<Project> projectResult = await _dbContext.Projects.Where
-                (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName).ToListAsync();
+                (e => e.EmployerEmail == employerEmail && 
+                e.ProjectName == projectName && e.IsEnabled == 1).ToListAsync();
             
+            Project project = null;
+            if (projectResult.Length() > 0)
+            {
+                project = projectResult.First();
+            }
+            return project;
+        }
+        public async Task<Project> GetProject(string projectName)
+        {
+            IList<Project> projectResult = await _dbContext.Projects.Where
+                (e => e.ProjectName == projectName).ToListAsync();
+
             Project project = null;
             if (projectResult.Length() > 0)
             {
@@ -61,6 +75,28 @@ namespace Infrastructure.Projects.Repositories
             IList<Project> projectsResult = await _dbContext.Projects.Where
                 (e => e.EmployerEmail == email).ToListAsync();
             return projectsResult;
+        }
+
+        public async Task<IEnumerable<Project>> GetEmployeeProyects(string name)
+        {
+            IList<Project> projectsResult = await _dbContext.Projects.Where
+                (e => e.ProjectName == name && e.IsEnabled == 1).ToListAsync();
+            return projectsResult;
+        }
+
+        public void ModifyProject(Project project, string newProjectName)
+        {
+            System.FormattableString query = ($@"EXECUTE ModifyProject 
+                @ProjectName = {project.ProjectName},
+                @EmployerEmail = {project.EmployerEmail},
+                @NewProjectName = {newProjectName},
+                @NewProjectDescription = {project.ProjectDescription},
+                @NewMaximumAmountForBenefits = {project.MaximumAmountForBenefits},
+                @NewMaximumBenefitAmount = {project.MaximumBenefitAmount},
+                @NewPaymentInterval = {project.PaymentInterval}");
+
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+
         }
     }
 }

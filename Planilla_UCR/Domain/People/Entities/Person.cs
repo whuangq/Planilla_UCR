@@ -12,9 +12,10 @@ namespace Domain.People.Entities
         public String BankAccount { get; set; }
         public String Adress { get; set; }
         public String PhoneNumber { get; set; }
+        public int IsEnabled { get; set; }
 
         public Person(String email, String name, String lastName1, String lastName2, int ssn, String bankAccount, String adress,
-                      String phoneNumber)
+                      String phoneNumber, int isEnabled)
         {
             Email = email;
             Name = name;
@@ -24,6 +25,7 @@ namespace Domain.People.Entities
             BankAccount = bankAccount;
             Adress = adress;
             PhoneNumber = phoneNumber;
+            IsEnabled = isEnabled;
         }
     }
 }

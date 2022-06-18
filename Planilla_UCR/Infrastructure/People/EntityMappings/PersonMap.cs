@@ -28,6 +28,9 @@ namespace Infrastructure.People.EntityMappings
             builder.Property(p => p.Adress);
 
             builder.Property(p => p.PhoneNumber);
+
+            builder.Property(p => p.IsEnabled)
+                   .IsRequired();
         }
     }
 }

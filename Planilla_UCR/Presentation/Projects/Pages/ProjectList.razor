@@ -1,6 +1,8 @@
-﻿@page "/Projects/{EmployerEmail}"
+﻿@page "/Projects/{personEmail}"
 @using Domain.Projects.Entities
+@using Domain.Agreements.Entities
 @using Application.Projects
+@using Application.Agreements
 @using Presentation.Core.Components
 @using Presentation.Projects.Models
 @using Application.ContextMenu
@@ -9,6 +11,7 @@
 @using Presentation.Authentication
 
 @inject IProjectService ProjectService
+@inject IAgreementService AgreementService
 @inject IContextMenuService ContextMenuService
 
 @inject NavigationManager nav
@@ -35,7 +38,7 @@
         else
         {
             <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-            @if (_empty)
+            @if (_emptyProject)
             {
                 <MudText Typo="Typo.h6" Align="Align.Center">No hay proyectos asociados al empleador
                 </MudText>
@@ -55,12 +58,12 @@
             else
             {
 
-                <MudTable @ref="mudTable" Items="@elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_empty" LoadingProgressColor="Color.Primary" Filter="new Func<Project,bool>(FilterFunc1)">  
+                <MudTable @ref="mudTable" Items="@projectElementsList" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_emptyProject" LoadingProgressColor="Color.Primary" Filter="new Func<Project,bool>(FilterFuncProject)">  
 
                     <ToolBarContent>
                         <MudText Align="Align.Center" Typo="Typo.h6">Lista de proyectos</MudText>
                         <MudSpacer></MudSpacer>
-                        <MudTextField @bind-Value="searchString" Placeholder="Buscar Proyecto" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        <MudTextField @bind-Value="_searchString" Placeholder="Buscar Proyecto" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
 
                     <HeaderContent>
@@ -70,7 +73,7 @@
 
                     <RowTemplate Context="row">
                         <MudTd DataLabel="Nombre" >
-                            <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/Projects/{@row.EmployerEmail}/{@row.ProjectName}/Configurations")">
+                            <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/Projects/{@row.EmployerEmail}/{@row.ProjectName}")">
                                 @row.ProjectName
                             </MudLink>
                         </MudTd>
@@ -96,39 +99,120 @@
 
 <AuthorizeView Roles="Employee">
     <Authorized>
-       Página de proyectos del empleado
-       @{
-           ContextMenuService.SetProjectsContext(true, true, "Proyecto 1");
-       }
-    </Authorized>
+        @if (_loading)
+        {
+                <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+                    <MudText Align="Align.Center" Typo="Typo.h6">
+                        <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+                    </MudText>
+            </MudPaper>
+        }
+        else
+        {
+            <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+            @if (_emptyAgreement)
+            {
+                <MudText Typo="Typo.h6" Align="Align.Center">No hay proyectos asociados al empleado
+                </MudText>
+            }
+            else
+            {
+
+                <MudTable @ref="mudTable" Items="@projectElementsList" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_emptyAgreement" LoadingProgressColor="Color.Primary" Filter="new Func<Project,bool>(FilterFuncProject)">  
+
+                    <ToolBarContent>
+                        <MudText Align="Align.Center" Typo="Typo.h6">Lista de proyectos</MudText>
+                        <MudSpacer></MudSpacer>
+                        <MudTextField @bind-Value="_searchString" Placeholder="Buscar Proyecto" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+
+                    <HeaderContent>
+                        <MudTh>Nombre</MudTh>
+                        <MudTh>Email del empleador</MudTh>
+                        <MudTh>Descripción</MudTh>
+                    </HeaderContent>
+
+                    <RowTemplate Context="row">
+                        <MudTd DataLabel="Nombre" >
+                            <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/Projects/{employeeEmail}/{@row.EmployerEmail}/{@row.ProjectName}")">
+                                @row.ProjectName
+                            </MudLink>
+                        </MudTd>
+                        <MudTd DataLabel="Email del empleador">@row.EmployerEmail</MudTd>
+                        <MudTd DataLabel="Descripción">@row.ProjectDescription</MudTd>
+            
+                    </RowTemplate>
+
+                    <PagerContent>
+                            <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
+                    </PagerContent>
+                </MudTable>
+            }    
+    
+        }
+        </Authorized>
     <NotAuthorized>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
 
-    private bool _empty = true;
+    private bool _emptyProject = true;
+    private bool _emptyAgreement = true;
     private bool _loading = true;
-    public string searchString = "";
+    public string _searchString = "";
+    Project tempProject = new Project("", "", "", 0.0, 0, "",1);
     private MudTable<Project> mudTable;
-    private IEnumerable<Project> elements;
-    
-    [Parameter] public string employerEmail { get; set; }
+    private IEnumerable<Project> projectElements;
+    private List<Project> projectElementsList = new List<Project>();
+    private IEnumerable<Agreement> agreementElements;
+
+    [Parameter] public string personEmail { get; set; }
     [Parameter] public string projectName { get; set; }
+    public string employeeEmail { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(false, false, "");
-        elements = await ProjectService.GetEmployerProyects(employerEmail);
+        ContextMenuService.SetProjectsContext(false ,false, "");
+        employeeEmail = personEmail; 
+        projectElements = await ProjectService.GetEmployerProyects(personEmail);
+        agreementElements = await AgreementService.GetEmployeeProjects(personEmail);
         _loading = false;
-        if (elements.Length() > 0){
-            _empty = false;
+        if (projectElements.Length() > 0){
+            _emptyProject = false;
+        }
+        if (agreementElements.Length() > 0){
+            _emptyAgreement = false;
+        }
+        await FindProject(personEmail);
+    }
+
+    private async Task FindProject(string personEmail)
+    {
+        if (!_emptyAgreement) 
+        {
+            foreach (Agreement element in agreementElements) 
+            {
+                tempProject  = await ProjectService.GetProject(element.ProjectName);
+                if (tempProject.IsEnabled == 1)
+                    projectElementsList.Add(tempProject);
+            }
+        }
+        if (!_emptyProject)
+        {
+            foreach (Project element in projectElements) 
+            {
+                tempProject  = await ProjectService.GetProject(element.ProjectName);
+                if (tempProject.IsEnabled == 1)
+                    projectElementsList.Add(tempProject);
+            }
+            
         }
     }
-    
-    private bool FilterFunc1(Project element) => FilterFunc(element, searchString);
 
-    private bool FilterFunc(Project element, string searchString)
+    private bool FilterFuncProject(Project element) => FilterFuncP(element, _searchString);
+
+    private bool FilterFuncP(Project element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -139,12 +223,13 @@
 
     private void GoToCreate()
     {
-        nav.NavigateTo($"/Create_Project/{employerEmail}");
+        nav.NavigateTo($"/Create_Project/{personEmail}");
     }
+    
 
     private void GoToConfigs()
     {
-        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Configurations");
+        nav.NavigateTo($"/Projects/{personEmail}/{projectName}");
     }
 
     private void PageChanged(int i)

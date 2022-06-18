@@ -33,10 +33,23 @@ namespace Application.Projects.Implementations
         {
             return await _projectRepository.GetProject(employerEmail, projectName);
         }
-        
+        public async Task<Project> GetProject(string projectName)
+        {
+            return await _projectRepository.GetProject(projectName);
+        }
+
         public async Task<IEnumerable<Project>> GetEmployerProyects(string email) 
         { 
             return await _projectRepository.GetEmployerProyects(email);
+        }
+        public async Task<IEnumerable<Project>> GetEmployeeProyects(string email)
+        {
+            return await _projectRepository.GetEmployeeProyects(email);
+        }
+
+        public void ModifyProject(Project project, string newProjectName)
+        {
+             _projectRepository.ModifyProject(project, newProjectName);
         }
     }
 }

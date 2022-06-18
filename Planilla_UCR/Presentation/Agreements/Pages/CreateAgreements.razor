@@ -126,7 +126,7 @@
     [Parameter] public string EmployerEmail { get; set; }
     [Parameter] public string ProjectName { get; set; }
 
-    Agreement agreementObject = new Agreement("", "", "", null, "", 0, null);
+    Agreement agreementObject = new Agreement("", "", "", null, "", 0, null, 1, "");
     AgreementType anAgreementType = new AgreementType("",0);
     public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
     public string deductions { get; set; } = "100";
@@ -236,7 +236,7 @@
     {
         bool isValid = true;
         IEnumerable<Employee> employeeList = await EmployeeService.GetEmployeeByEmail(agreementObject.EmployeeEmail);
-        Agreement myAgreement = new Agreement("", "", "", null, "", 0, null);
+        Agreement myAgreement = new Agreement("", "", "", null, "", 0, null, 1, "");
         myAgreement = await AgreementService.GetContractee(agreementObject);
         if (myAgreement != null)
         {
@@ -282,7 +282,7 @@
     async Task<bool> validateProjectName()
     {
         bool isValid = true;
-        Project Project = new Project("","","",0,0,"");
+        Project Project = new Project("","","",0,0,"", 1);
         Project = await ProjectService.GetProject(agreementObject.EmployerEmail, agreementObject.ProjectName);
         if (Project == null)
         {

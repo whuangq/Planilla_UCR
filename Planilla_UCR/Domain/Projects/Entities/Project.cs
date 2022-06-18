@@ -11,10 +11,10 @@ namespace Domain.Projects.Entities
         public double MaximumAmountForBenefits { set; get; }
         public int MaximumBenefitAmount { set; get; }
         public String PaymentInterval { set; get; }
-
+        public int IsEnabled { set; get; }
         public Project(String employerEmail, String projectName,
                         String projectDescription, double maximumAmountForBenefits,
-                        int maximumBenefitAmount, String paymentInterval)
+                        int maximumBenefitAmount, String paymentInterval, int isEnabled)
         {
             EmployerEmail = employerEmail;
             ProjectName = projectName;
@@ -22,6 +22,7 @@ namespace Domain.Projects.Entities
             MaximumAmountForBenefits = maximumAmountForBenefits;
             MaximumBenefitAmount = maximumBenefitAmount;
             PaymentInterval = paymentInterval;
+            IsEnabled = isEnabled;
         }
 
     }

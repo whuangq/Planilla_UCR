@@ -12,6 +12,6 @@ namespace Domain.Authentication.Repositories
         string Decrypt(string data, string key);
         public Task SignOut();
         Task<bool> EmailIsAlreadyRegistered(string email);
-
+        Task DeleteAccount(string email);
     }
 }

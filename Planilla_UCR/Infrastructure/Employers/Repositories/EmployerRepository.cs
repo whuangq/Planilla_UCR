@@ -37,6 +37,12 @@ namespace Infrastructure.Employers.Repositories
                 employer = employerResult.First();
             }
             return employer;
-        } 
+        }
+
+        public void DeleteEmployer(String email)
+        {
+            System.FormattableString query = ($@"EXECUTE DeleteEmployer @EmployerEmail = {email}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
     }
 }

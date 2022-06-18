@@ -12,9 +12,10 @@ namespace Domain.People.DTOs
         public String BankAccount { get; set; }
         public String Adress { get; set; }
         public String PhoneNumber { get; set; }
+        public int IsEnabled { get; set; }
 
         public PersonDTO(String email, String name, String lastName1, String lastName2, int id, String bankAccount,
-                          String adress, String phoneNumber)
+                          String adress, String phoneNumber, int isEnabled)
         {
             Email = email;
             Name = name;
@@ -24,6 +25,7 @@ namespace Domain.People.DTOs
             BankAccount = bankAccount;
             Adress = adress;
             PhoneNumber = phoneNumber;
+            IsEnabled = isEnabled;
         }
     }
 }

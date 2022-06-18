@@ -120,5 +120,12 @@ namespace Infrastructure.Authentication.Repositories
             }
             return isRegistered;
         }
+
+
+        public async Task DeleteAccount(string email)
+        {
+            var user = await _userManager.FindByNameAsync(email);
+            await _userManager.DeleteAsync(user);
+        }
     }
 }

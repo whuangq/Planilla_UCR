@@ -37,6 +37,13 @@ namespace Infrastructure.Authentication
                 context.Response.Redirect("/");
                 return;
             }
+            else if (context.Request.Path.StartsWithSegments("/delete"))
+            {
+                await auth.SignOut();
+                await  auth.DeleteAccount(context.User.Identity.Name);
+                context.Response.Redirect("/");
+                return;
+            }
             await _next.Invoke(context);
         }
     }
