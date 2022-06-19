@@ -27,6 +27,10 @@ using Application.ContextMenu;
 using Application.ContextMenu.Implementations;
 using Application.Subscribes;
 using Application.Subscribes.Implementations;
+using Application.Payments;
+using Application.Payments.Implementations;
+using Application.LegalDeductions.Implementations;
+using Application.LegalDeductions;
 
 namespace Application
 {
@@ -48,6 +52,8 @@ namespace Application
             services.AddTransient<IAgreementService, AgreementService>();
             services.AddTransient<IAgreementTypeService, AgreementTypeService>();
             services.AddScoped<IContextMenuService, ContextMenuService>();
+            services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<ILegalDeductionService, LegalDeductionService>();
             return services;
         }
     }

@@ -29,7 +29,7 @@ namespace Infrastructure.ReportOfHours.Repositories
             bool hasReport = true;
             IEnumerable<HoursReport> reports = await _dbContext.HoursReport.Where
                (e => e.EmployeeEmail == report.EmployeeEmail && e.EmployerEmail == 
-                     report.EmployerEmail && e.ReportDate == report.ReportDate && 
+                     report.EmployerEmail && e.ReportDate.Value.Date == report.ReportDate.Value.Date && 
                      e.ProjectName == report.ProjectName).ToListAsync();
             if(reports.Length() == 0)
             {

@@ -1,6 +1,7 @@
 ﻿@page "/Projects/{employerEmail}/{projectName}"
 @using Application.Projects
 @using Application.Employers
+@using Domain.Agreements.Entities
 @using Domain.Projects.Entities
 @using Domain.Employers.Entities
 @using Presentation.Core.Components
@@ -107,8 +108,6 @@ else
                         <MudItem xs="2"></MudItem>
                         <MudItem xs="2"></MudItem>
                         <MudItem xs="8">
-                            <br />
-                            <MudDivider />
                         </MudItem>
                         <MudItem xs="2"></MudItem>
                         <MudItem xs="2"></MudItem>
@@ -165,7 +164,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(true,true,projectName);
+        ContextMenuService.SetProjectsContext(true,true,projectName, employerEmail, false);
         projectInfo = await ProjectService.GetProject(employerEmail,projectName);
 
         if (projectInfo != null)

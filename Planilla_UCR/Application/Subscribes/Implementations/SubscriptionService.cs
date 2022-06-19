@@ -1,5 +1,6 @@
 ﻿using Domain.Subscribes.Entities;
 using Domain.Subscribes.Repositories;
+using Domain.Subscriptions.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +23,11 @@ namespace Application.Subscribes.Implementations
         public async Task<IEnumerable<Subscribe>> GetEmployeesBySubscription(string employerEmail, string projectName, string subscriptionName)
         {
             return await _subscribeRepository.GetEmployeesBySubscription(employerEmail, projectName, subscriptionName);
+        }
+
+        public async Task<IEnumerable<Subscription>> GetSubscriptionCostsByDate(Subscribe searchSubscription)
+        {
+            return await _subscribeRepository.GetSubscriptionCostsByDate(searchSubscription);
         }
     }
 }

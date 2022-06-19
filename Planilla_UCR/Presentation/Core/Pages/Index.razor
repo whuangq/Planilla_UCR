@@ -38,7 +38,7 @@
         //await AuthorizationService.AssignRole(accountData.Email, "Employer");
         if (firstRender && authorized)
         {
-             ContextMenuService.SetProjectsContext(false, false, "");
+             ContextMenuService.SetProjectsContext(false, false, "", "", false);
              nav.NavigateTo($"Projects/{email}/", true);
         }
     }

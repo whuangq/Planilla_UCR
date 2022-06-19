@@ -92,9 +92,52 @@ CREATE TABLE Subscribes(
 	Cost float NOT NULL,
 	StartDate date NOT NULL,
 	EndDate date,
-	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, SubscriptionName),
+	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, SubscriptionName, StartDate),
 	FOREIGN KEY(EmployerEmail, ProjectName, SubscriptionName) REFERENCES Subscription(EmployerEmail, ProjectName, SubscriptionName) ON UPDATE CASCADE,
 	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
+);
+
+CREATE TABLE LegalDeduction(
+	DeductionName varchar(255) NOT NULL,
+	Cost float NOT NULL,
+	PRIMARY KEY(DeductionName),
+);
+
+CREATE TABLE Payment(
+	EmployeeEmail varchar(255) NOT NULL,
+	EmployerEmail varchar(255) NOT NULL,
+	ProjectName varchar(255) NOT NULL,
+	GrossSalary float NOT NULL, 
+	StartDate date NOT NULL,
+	EndDate date NOT NULL,
+	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, StartDate, EndDate),
+	FOREIGN KEY(EmployerEmail, ProjectName) REFERENCES Project(EmployerEmail, ProjectName) ,
+	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
+);
+
+CREATE TABLE PaymentContainsSubscription(
+	EmployeeEmail varchar(255) NOT NULL,
+	EmployerEmail varchar(255) NOT NULL,
+	ProjectName varchar(255) NOT NULL,
+	StartDate date NOT NULL,
+	EndDate date NOT NULL,
+	SubscriptionName varchar(255) NOT NULL,
+	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, StartDate, EndDate, SubscriptionName),
+	FOREIGN KEY(EmployeeEmail, EmployerEmail,ProjectName, StartDate, EndDate) REFERENCES Payment(EmployeeEmail, EmployerEmail, ProjectName, StartDate, EndDate),
+	FOREIGN KEY(EmployerEmail, ProjectName, SubscriptionName) REFERENCES Subscription(EmployerEmail, ProjectName, SubscriptionName)
+);
+
+
+CREATE TABLE Applies(
+	EmployeeEmail varchar(255) NOT NULL,
+	EmployerEmail varchar(255) NOT NULL,
+	ProjectName varchar(255) NOT NULL,
+	StartDate date NOT NULL,
+	EndDate date NOT NULL,
+	DeductionName varchar(255) NOT NULL,
+	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, StartDate, EndDate, DeductionName),
+	FOREIGN KEY(EmployeeEmail, EmployerEmail,ProjectName, StartDate, EndDate) REFERENCES Payment(EmployeeEmail, EmployerEmail, ProjectName, StartDate, EndDate),
+	FOREIGN KEY(DeductionName) REFERENCES LegalDeduction(DeductionName)
 );
 
 -- Suscription Stored Procedures
@@ -269,6 +312,9 @@ BEGIN
 	Where A.ProjectName IS NULL OR A.ProjectName != @projectName
 	Group by P.Email, P.Name, P.LastName1, P.LastName2, P.SSN, P.BankAccount, P.Adress, P.PhoneNumber, P.IsEnabled
 END
+
+select *
+from Agreement
 
 GO
 CREATE OR ALTER PROCEDURE [dbo].[GetProjectEmployees]
@@ -468,6 +514,28 @@ VALUES('leonel@ucr.ac.cr',
 1
 )
 
+INSERT INTO Subscription
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Starbucks descuento',
+'Starbucks',
+'Descuento en un starbucks',
+12000,
+0,
+1
+)
+
+INSERT INTO Subscription
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Apple del futuro',
+'Apple',
+'Subscripción futura',
+55000,
+0,
+1
+)
+
 Insert into AgreementType
 Values('Tiempo completo', 1000)
 
@@ -481,23 +549,22 @@ Insert into AgreementType
 Values('Por horas', 10)
 
 INSERT INTO Agreement
-VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1','9999-12-31','Por horas', 10, '9999-12-31', 1, '')
+VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1','2022-06-1','Tiempo completo', 1000, '2026-06-1', 1, '')
 
-INSERT INTO Agreement
-VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 2','9999-12-31','Por horas', 10, '9999-12-31', 1, '')
+--INSERT INTO Agreement
+--VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 2','9999-12-31','Por horas', 10, '9999-12-31')
 
+--INSERT INTO ReportOfHours
+--VALUES('leonel@ucr.ac.cr', 'Proyecto 1','jeremy@ucr.ac.cr', '2022-6-15',4)
 
-INSERT INTO ReportOfHours
-VALUES('leonel@ucr.ac.cr', 'Proyecto 1','jeremy@ucr.ac.cr', '2022-6-15',4)
+--INSERT INTO ReportOfHours
+--VALUES('leonel@ucr.ac.cr', 'Proyecto 1','jeremy@ucr.ac.cr', '2022-5-15',5)
 
-INSERT INTO ReportOfHours
-VALUES('leonel@ucr.ac.cr', 'Proyecto 1','jeremy@ucr.ac.cr', '2022-5-15',5)
+--INSERT INTO ReportOfHours
+--VALUES('leonel@ucr.ac.cr', 'Proyecto 2','jeremy@ucr.ac.cr', '2022-6-15',8)
 
-INSERT INTO ReportOfHours
-VALUES('leonel@ucr.ac.cr', 'Proyecto 2','jeremy@ucr.ac.cr', '2022-6-15',8)
-
-INSERT INTO ReportOfHours
-VALUES('leonel@ucr.ac.cr', 'Proyecto 2','jeremy@ucr.ac.cr', '2022-5-15',8)
+--INSERT INTO ReportOfHours
+--VALUES('leonel@ucr.ac.cr', 'Proyecto 2','jeremy@ucr.ac.cr', '2022-5-15',8)
 
 INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
 VALUES('leonel@ucr.ac.cr',
@@ -505,7 +572,7 @@ VALUES('leonel@ucr.ac.cr',
 'Ayudemos a los niños',
 'jeremy@ucr.ac.cr',
 25000,
-'2012-07-15'
+'2022-06-1'
 )
 
 INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
@@ -514,5 +581,107 @@ VALUES('leonel@ucr.ac.cr',
 'Piscina',
 'jeremy@ucr.ac.cr',
 25000,
-'2012-07-15'
+'2022-06-2'
 )
+
+INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate, EndDate)
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Rescate de perros',
+'jeremy@ucr.ac.cr',
+12000,
+'2022-05-10',
+'2022-05-30'
+)
+
+INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Fondo de pensiones',
+'jeremy@ucr.ac.cr',
+12000,
+'2022-05-10'
+)
+
+INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate, EndDate)
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Starbucks descuento',
+'jeremy@ucr.ac.cr',
+12000,
+'2022-05-10',
+'2022-06-8'
+)
+
+INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Apple del futuro',
+'jeremy@ucr.ac.cr',
+55000,
+'2022-07-10'
+)
+
+INSERT INTO LegalDeduction (DeductionName, Cost)
+VALUES('CCSS',
+25000.3
+)
+
+INSERT INTO LegalDeduction (DeductionName, Cost)
+VALUES('Hacienda',
+48000.3
+)
+
+INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName,GrossSalary, StartDate, EndDate)
+VALUES('jeremy@ucr.ac.cr',
+'leonel@ucr.ac.cr',
+'Proyecto 1',
+150000,
+'2022-06-1',
+'2022-06-28'
+)
+
+--INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName, GrossSalary, StartDate, EndDate)
+--VALUES('jeremy@ucr.ac.cr',
+--'leonel@ucr.ac.cr',
+--'Proyecto 1',
+--150000,
+--'2022-05-16',
+--'2022-05-16'
+--)
+
+--INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName, GrossSalary,  StartDate, EndDate)
+--VALUES('jeremy@ucr.ac.cr',
+--'leonel@ucr.ac.cr',
+--'Proyecto 1',
+-- 350000,
+--'2022-04-16',
+--'2022-04-16'
+--)
+
+--INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName, GrossSalary,  StartDate, EndDate)
+--VALUES('jeremy@ucr.ac.cr',
+--'leonel@ucr.ac.cr',
+--'Proyecto 2',
+--250000,
+--'2022-06-16',
+--'2022-06-16'
+--)
+
+--INSERT INTO PaymentContainsSubscription(EmployeeEmail,EmployerEmail, ProjectName,  StartDate, EndDate, SubscriptionName)
+--VALUES('jeremy@ucr.ac.cr',
+--'leonel@ucr.ac.cr',
+--'Proyecto 1',
+--'2022-06-1',
+--'2022-06-28',
+--'Piscina'
+--)
+
+--INSERT INTO PaymentContainsSubscription(EmployeeEmail,EmployerEmail, ProjectName,  StartDate, EndDate, SubscriptionName)
+--VALUES('jeremy@ucr.ac.cr',
+--'leonel@ucr.ac.cr',
+--'Proyecto 1',
+--'2022-06-1',
+--'2022-06-28',
+--'Ayudemos a los niños'
+--)

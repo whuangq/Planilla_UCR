@@ -46,7 +46,7 @@ namespace Infrastructure.Agreements.Repositories
         public async Task<IEnumerable<Agreement>> GetEmployeeProjects(string employeeEmail)
         {
             IList<Agreement> agreementList = await _dbContext.Agreements.Where
-                (e => e.EmployeeEmail == employeeEmail).ToListAsync();
+                (e => e.EmployeeEmail == employeeEmail/* && e.ContractType.Equals("Por horas")*/).ToListAsync();
             return agreementList;
         }
     }

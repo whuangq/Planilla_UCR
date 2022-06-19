@@ -1,0 +1,271 @@
+﻿@using Application.Payments
+@using Application.ContextMenu
+@using Domain.Payments.Entities
+@using Application.Agreements
+@using Domain.Agreements.Entities
+@using Application.Subscriptions
+@using Domain.Subscriptions.Entities
+@using Application.LegalDeductions
+@using Domain.LegalDeductions.Entities
+@using Application.Subscribes
+@using Domain.Subscribes.Entities
+@using System.Globalization
+@using Presentation.Payments.Models
+
+@inject IPaymentService PaymentService
+@inject IContextMenuService ContextMenuService
+@inject IAgreementService AgreementService
+@inject ILegalDeductionService LegalDeductionService
+@inject ISubscribeService SubscribeService
+@inject NavigationManager nav
+@inject ISubscriptionService SuscriptionService
+@page "/Last_Pay/{email}"
+
+@if(_loading) {
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+         <MudText Align="Align.Center" Typo="Typo.h6">
+              <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+        </MudText>
+       
+    </MudPaper>
+}else{
+        @if (!_loading)
+        {
+            List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+            {
+                new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
+                 new BreadcrumbItem(@projectName, href: $"/EmployeeProjects/{email}/{projectName}"),
+                new BreadcrumbItem("Último pago", href: null, disabled: true)
+            }; 
+            <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+            <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
+            </MudPaper>
+            if (!empty)
+            {
+                <MudSimpleTable Style="overflow-x: auto;">
+                    <thead>
+                        <tr>
+                            @foreach (var h in headings)
+                            {
+                               <th>@h</th> 
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in rows)
+                        {
+                            <tr>
+                                @foreach (var x in row.Split("#"))
+                                {
+                                    <td>@x</td> 
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+                <br />
+                <br />
+                 <MudTable @ref="@_table2" Items="@legalDeductions" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<LegalDeduction,bool>(FilterFunc2)">
+                            <ToolBarContent>
+                                    <MudText Align="Align.Center" Typo="Typo.h6">Deducciones legales : </MudText>
+                                    <MudSpacer />
+                                    <MudTextField @bind-Value="searchString2" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            </ToolBarContent> 
+                            <HeaderContent>
+                                <MudTh>Nombre</MudTh>
+                                <MudTh>Pocentaje</MudTh>
+                                <MudTh>Monto</MudTh>
+                            </HeaderContent>
+                     
+
+                            <RowTemplate>
+                                    <MudTd DataLabel="Nombre">@context.DeductionName</MudTd>
+                                    <MudTd DataLabel="Pocentaje"> @salaryCalculator.getTaxPercentage(context.DeductionName, lastPay.GrossSalary) % </MudTd>
+                                    <MudTd DataLabel="Monto"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(salaryCalculator.getTaxAmount(context.DeductionName, lastPay.GrossSalary))</MudTd>
+                            </RowTemplate>
+                  </MudTable>
+                <br />
+                <br />
+                <MudGrid>
+                        <MudItem xs="6">  
+                        <MudTable @ref="@_table" Items="@deductions" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Subscription,bool>(FilterFunc1)">
+                            <ToolBarContent>
+                                    <MudText Align="Align.Center" Typo="Typo.h6">Deducciones :</MudText>
+                                    <MudSpacer />
+                                    <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            </ToolBarContent> 
+                            <HeaderContent>
+                                <MudTh>Nombre</MudTh>
+                                <MudTh>Costo</MudTh>
+                            </HeaderContent>
+
+                            <RowTemplate>
+                                    <MudTd DataLabel="Nombre">@context.SubscriptionName</MudTd>
+                                    <MudTd DataLabel="Costo">@cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                         </MudItem>  
+                        <MudItem xs="6">  
+                        <MudTable @ref="@_table" Items="@benefits" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Subscription,bool>(FilterFunc3)">
+                            <ToolBarContent>
+                                    <MudText Align="Align.Center" Typo="Typo.h6">Beneficios : </MudText>
+                                    <MudSpacer />
+                                    <MudTextField @bind-Value="searchString3" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            </ToolBarContent> 
+                            <HeaderContent>
+                                <MudTh>Nombre</MudTh>
+                                <MudTh>Costo</MudTh>
+                            </HeaderContent>
+                     
+
+                            <RowTemplate>
+                                    <MudTd DataLabel="Nombre">@context.SubscriptionName</MudTd>
+                                    <MudTd DataLabel="Costo">@cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    </MudItem>
+                    <MudSpacer></MudSpacer>
+                    <MudItem xs="6">
+                    </MudItem>  
+                </MudGrid>
+            }else
+            {
+                <MudText Align="Align.Center" Typo="Typo.h6">
+                    No existen pagos para este proyecto
+                </MudText>
+            }
+        }
+}
+
+
+@code {
+    private bool dense = false;
+    private bool hover = true;
+    private bool striped = false;
+    private bool bordered = false;
+    string[] headings = { "Datos del funcionario", "Datos de contrato", "Detalles de pago"};
+    IList<string> rows = new List<string>();
+    public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
+    private bool _hidePosition;
+    private bool _loading = true;
+    private bool empty = true;
+    string searchString1 = "";
+    string searchString2 = "";
+    string searchString3 = "";
+    private IEnumerable<Subscription> subscriptions = new List<Subscription>();
+    private IEnumerable<LegalDeduction> legalDeductions = new List<LegalDeduction>();
+    private IList<Subscription> benefits = new List<Subscription>();
+    private IList<Subscription> deductions = new List<Subscription>();
+    private MudTable<Subscription> _table;
+    private MudTable<LegalDeduction> _table2;
+    public SalaryCalculator salaryCalculator = new SalaryCalculator();
+
+    Payment lastPay;
+    Agreement agreement;
+
+    [Parameter]
+    public string email { get; set; }
+
+    public string projectName { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        projectName = ContextMenuService.GetProjectsContext();
+        lastPay = await PaymentService.GetEmployeeLastPayment(email, ContextMenuService.GetEmployerEmailContext(), projectName);
+
+        if (lastPay == null)
+        {
+            empty = true;
+        }
+        else
+        {
+            Agreement toSearchagreement = new Agreement(email, lastPay.EmployerEmail, projectName, null, "", 0, null, 1, "");
+
+            agreement = await AgreementService.GetContractee(toSearchagreement);
+            legalDeductions = await LegalDeductionService.GetAllAsync();
+            Subscribe searchSubscribe= new Subscribe(email, lastPay.EmployerEmail, projectName, "", 0.0, lastPay.StartDate, lastPay.EndDate);
+            subscriptions = await SubscribeService.GetSubscriptionCostsByDate(searchSubscribe);
+
+            foreach (var item in subscriptions)
+            {
+                if(item.TypeSubscription == 1)
+                {
+                    benefits.Add(item);
+
+                }
+                else
+                {
+                    deductions.Add(item);
+                }
+            }
+
+            empty = false;
+            double netSalary = lastPay.GrossSalary;
+            foreach (var item in benefits)
+            {
+                netSalary += item.Cost;
+            }
+
+            foreach (var item in deductions)
+            {
+                netSalary -= item.Cost;
+            }
+
+            foreach (var item in legalDeductions)
+            {
+                netSalary -= salaryCalculator.getTaxAmount(item.DeductionName, lastPay.GrossSalary);
+            }
+
+
+            rows.Add(@"Empleador: "+lastPay.EmployerEmail +"#"+"Tipo de contrato: "+agreement.ContractType+"#"+"Desde: "+lastPay.StartDate.ToShortDateString() +" Hasta: "+ lastPay.EndDate.ToShortDateString());
+            rows.Add( @"Proyecto: "+lastPay.ProjectName +"#"+" "+"#"+"Salario bruto: "+ cultureCR.NumberFormat.CurrencySymbol+ costFormat(lastPay.GrossSalary));
+            rows.Add( @" "+"#"+" "+"#"+"Salario neto: "+cultureCR.NumberFormat.CurrencySymbol+ costFormat(netSalary));
+        }
+        _loading = false;
+    }
+
+    private void PageChanged(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+
+    private bool FilterFunc1(Subscription element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Subscription element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.SubscriptionName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        return true;
+        return false;
+    }
+
+    private bool FilterFunc2(LegalDeduction element) => FilterFun3(element, searchString2);
+
+    private bool FilterFun3(LegalDeduction element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.DeductionName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        return true;
+        return false;
+    }
+
+    private bool FilterFunc3(Subscription element) => FilterFunc4(element, searchString3);
+
+    private bool FilterFunc4(Subscription element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.SubscriptionName.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        return true;
+        return false;
+    }
+
+    private string costFormat(double cost)
+    {
+        string costo = string.Format("{0:N}", cost);
+        return costo;
+    }
+}
+

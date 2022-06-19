@@ -11,7 +11,6 @@ using Infrastructure.Employers.Repositories;
 using Domain.Employers.Repositories;
 using Infrastructure.Projects.Repositories;
 using Domain.Projects.Repositories;
-//  using Domain.Accounts.Repositories;
 using Infrastructure.Agreements;
 using Infrastructure.Agreements.Repositories;
 using Domain.Agreements.Repositories;
@@ -34,6 +33,12 @@ using Infrastructure.ReportOfHours;
 using Domain.Subscribes.Repositories;
 using Infrastructure.Subscribes;
 using Infrastructure.Subscribes.Repositories;
+using Infrastructure.Payments;
+using Infrastructure.Payments.Repositories;
+using Domain.Payments.Repositories;
+using Infrastructure.LegalDeductions;
+using Infrastructure.LegalDeductions.Repositories;
+using Domain.LegalDeductions.Repositories;
 
 namespace Infrastructure
 {
@@ -75,6 +80,12 @@ namespace Infrastructure
 
             services.AddDbContext<AgreementTypeDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IAgreementTypeRepository, AgreementTypeRepository>();
+
+            services.AddDbContext<PaymentDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+            services.AddDbContext<LegalDeductionDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<ILegalDeductionRepository, LegalDeductionRepository>();
             return services;
         }
     }

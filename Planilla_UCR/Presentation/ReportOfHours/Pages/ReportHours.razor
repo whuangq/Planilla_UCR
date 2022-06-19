@@ -1,5 +1,6 @@
 ﻿@page "/ReportHours/{EmployerEmail}/{EmployeeEmail}"
 @using Application.ReportOfHours
+@using Domain.Payments.Entities
 @using Domain.ReportOfHours.Entities
 @using Presentation.Shared.Models
 @using Presentation.Core.Components
@@ -8,12 +9,15 @@
 @using Domain.Agreements.Entities
 @using Application.Agreements
 @using Application.ContextMenu
+@using Application.Payments
 
 @inject ISnackbar Snackbar
 @inject IReportOfHoursService HoursReportService
 @inject IProjectService ProjectService
 @inject IAgreementService AgreementService
 @inject IContextMenuService ContextMenuService
+@inject IPaymentService PaymentService
+
 @inject NavigationManager nav
 
 @*Navigation footprint *@
@@ -21,9 +25,8 @@
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployeeEmail}"),
-        new BreadcrumbItem(hoursReport.ProjectName, href: $"/Projects/{EmployeeEmail}/{ hoursReport.ProjectName}/Configurations"),
-        new BreadcrumbItem("Reporte de horas", $"/ReportHours/{EmployerEmail}/{EmployeeEmail}"),
-        new BreadcrumbItem("Nuevo Reporte", href: null, disabled: true),
+        new BreadcrumbItem(hoursReport.ProjectName, href: $"/EmployeeProjects/{EmployeeEmail}/{ hoursReport.ProjectName}"),
+        new BreadcrumbItem("Nuevo Reporte de horas", href: null, disabled: true),
     };
 }
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -45,21 +48,9 @@
                 <MudItem xs="10" sm="12">
                     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
                         <MudSpacer></MudSpacer>
-                    <MudText Align="Align.Center" Typo="Typo.h6">Detalles del reporte</MudText>
+                    <MudText Align="Align.Center" Typo="Typo.h6"> Reporte de horas para @hoursReport.ProjectName</MudText>
                         <MudForm @ref="form">
                                 <MudGrid>
-                                <MudItem xs="2"></MudItem>
-                                <MudItem xs="8">
-                                    <MudSelect @bind-Value="hoursReport.ProjectName" Label="Nombre de Proyecto" Variant="Variant.Outlined" Required="true"  RequiredError="El nombre de proyecto es necesario">
-                                        @foreach (var part in _elements)
-                                        {
-                                            <MudSelectItem T="string" Value=part.ProjectName></MudSelectItem>
-
-                                        }
-                                    </MudSelect>
-                                </MudItem>  
-                                <MudItem xs="2"></MudItem>
-
                                 <MudItem xs="2"></MudItem>
                                  <MudItem xs="8">
                                     <MudDatePicker Label="Fecha del reporte" @bind-Date="hoursReport.ReportDate" DateFormat="yyyy.MM.dd" Variant="Variant.Outlined" Required="true" RequiredError="La fecha de reporte es necesaria"/>
@@ -117,8 +108,6 @@
     [Parameter]
     public string EmployerEmail { set; get; }
     [Parameter]
-    public string projectName { set; get; }
-    [Parameter]
     public string EmployeeEmail { set; get; }
 
     public float hours { get; set; } = 5.4f;
@@ -128,7 +117,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-         hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
+        hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
         _elements = await AgreementService.GetEmployeeProjects(EmployeeEmail);
         if (_elements.Length() == 0)
         {
@@ -140,7 +129,6 @@
         }
         _loading = false;
         hoursReport.ReportDate = DateTime.Now;
-        hoursReport.ProjectName = projectName;
         hoursReport.EmployerEmail = EmployerEmail;
         hoursReport.EmployeeEmail = EmployeeEmail;
         hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
@@ -151,13 +139,13 @@
         snackHandler._saving = true;
         await form.Validate();
         bool hasKey = await validateKey();
-        if (form.IsValid && ValidateHours() && !hasKey && ValidateDate())
+        bool validDate = await ValidateDate();
+        if (form.IsValid && ValidateHours() && !hasKey && validDate)
         {
             await HoursReportService.CreateReportAsync(hoursReport);
             ShowSnackNotification("Reporte de horas creado",Severity.Success);
         }
         snackHandler._saving = false;
-        ShowSnackNotification("Reporte de horas creado",Severity.Success);
     }
 
     void ShowSnackNotification(string message, Severity severity)
@@ -180,7 +168,6 @@
     void CleanForm()
     {
         hoursReport.ReportDate = DateTime.Now;
-        hoursReport.ProjectName = projectName;
         hoursReport.ReportHours = 0;
     }
 
@@ -205,19 +192,23 @@
         return hasKey;
     }
 
-    bool ValidateDate()
+    async Task<bool> ValidateDate()
     {
+        Payment lastPay = await PaymentService.GetEmployeeLastPayment(EmployeeEmail, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetProjectsContext());
         bool valid = true; 
         if (hoursReport.ReportDate > DateTime.Now)
         {
             ShowSnackNotification("No es posible reportar horas a futuro", Severity.Error);
             valid = false;
         }
-        //if (hoursReport.ReportDate.Value.Day < DateTime.Now.Day) // last pay
-        //{
-        //    ShowSnackNotification("No es posible reportar horas antes del último pago", Severity.Error);
-        //    valid = false;
-        //}
+        if(lastPay != null)
+        {
+            if (hoursReport.ReportDate.Value.Date < lastPay.EndDate.Date)
+            {
+                ShowSnackNotification("No es posible reportar horas antes del último pago", Severity.Error);
+                valid = false;
+            }
+        }
         return valid;
     }
 }

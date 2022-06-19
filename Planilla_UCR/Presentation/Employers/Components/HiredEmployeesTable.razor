@@ -29,27 +29,18 @@
                             <MudButton Color="Color.Tertiary"> Empleados contratados </MudButton>
                             <MudButton OnClick="SendConmuteSignal"> Contratar Empleados </MudButton>
                             <MudSpacer />
-                            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudTextField @bind-Value="searchString1" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent> 
                         <HeaderContent>
                             <MudTh>Email</MudTh>
                             <MudTh>Nombre completo</MudTh>
                             <MudTh>Cedula</MudTh>
-                            <MudTh>Contrato</MudTh>
                         </HeaderContent>
 
                         <RowTemplate>
                             <MudTd DataLabel="Email">@context.Email</MudTd>
                             <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
                             <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
-                             <MudTd DataLabel="Contrato">
-                                <MudSpacer></MudSpacer>
-                                    <MudButton Variant="Variant.Filled" @onclick="@(e => GoToFireTheEmployee(@context.Email))" Color="Color.Transparent">
-                                    <MudText>
-                                    Terminar
-                                    </MudText> 
-                                </MudButton>
-                            </MudTd>
                             </RowTemplate>
                         <PagerContent>
                             <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>

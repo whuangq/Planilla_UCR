@@ -134,7 +134,7 @@
 
                     <RowTemplate Context="row">
                         <MudTd DataLabel="Nombre" >
-                            <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/Projects/{employeeEmail}/{@row.EmployerEmail}/{@row.ProjectName}")">
+                            <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/EmployeeProjects/{employeeEmail}/{@row.ProjectName}")">
                                 @row.ProjectName
                             </MudLink>
                         </MudTd>
@@ -173,7 +173,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(false ,false, "");
+        ContextMenuService.SetProjectsContext(false ,false, "", "", false);
         employeeEmail = personEmail; 
         projectElements = await ProjectService.GetEmployerProyects(personEmail);
         agreementElements = await AgreementService.GetEmployeeProjects(personEmail);

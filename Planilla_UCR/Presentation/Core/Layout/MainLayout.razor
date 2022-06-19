@@ -31,7 +31,7 @@
             </NotAuthorized>
         </AuthorizeView>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" Elevation="2">
+    <MudDrawer @bind-Open="@_drawerOpen" Elevation="2" Width="300px">
         <AuthorizeView>
             <Authorized>
                 <NavMenu email=@userEmail ></NavMenu>

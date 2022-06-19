@@ -1,4 +1,4 @@
-﻿@page "/Projects/{EmployerEmail}/{ProjectName}/Agreements/New"
+﻿@page "/Projects/{employeeEmail}/Agreements/New"
 @using Presentation.Core.Components
 @using System.ComponentModel.DataAnnotations
 @using Domain.Projects.Entities
@@ -19,6 +19,7 @@
 @using Domain.AgreementTypes.DTOs
 @using Domain.Projects.DTOs
 @using Application.Projects
+@using Application.ContextMenu
 
 
 @inject ISnackbar Snackbar
@@ -28,13 +29,14 @@
 @inject IEmployeeService EmployeeService
 @inject IEmployerService EmployerService
 @inject IProjectService ProjectService
+@inject IContextMenuService ContextService
 
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Inicio", href: ""),
-        new BreadcrumbItem("Contratos", href: $"/Projects/{EmployerEmail}/{ProjectName}/Agreements/New"),
+        new BreadcrumbItem("Contratos", href: null)
     };
 } 
 
@@ -80,35 +82,30 @@
                         <MudNumericField @bind-Value="salaryPerMonth" Label="Monto por hora" Variant="Variant.Outlined" 
                              Required="true" RequiredError="El monto por hora es necesario" HideSpinButtons="true" Min = "0"> </MudNumericField>
                     </MudItem>
-   
-                    <MudItem xs="4">
-                        <MudTextField @bind-Value="deductions" Label="Deducciones" Variant="Variant.Outlined" 
-                            Required="true" ReadOnly="true" RequiredError="El nombre del proyecto es necesario"></MudTextField>
-                    </MudItem>
-                    <MudItem xs="2"> </MudItem>
-                    <MudItem xs="2"> </MudItem>
                     <MudItem xs="4">
                         <MudDatePicker Label="Fecha de inicio" @bind-Date="startDate" DateFormat="yyyy.MM.dd" Variant="Variant.Outlined" Required="true" RequiredError="La fecha de inicio es necesaria"/>
                     </MudItem>
-
+                    <MudItem xs="2"> </MudItem>
+                    <MudItem xs="2"> </MudItem>
                     <MudItem xs="4">
                         <MudDatePicker Label="Fecha de finalización" @bind-Date="endDate" DateFormat="yyyy.MM.dd" Variant="Variant.Outlined" Required="true" RequiredError="La fecha de finalización es necesaria"/>
                     </MudItem> 
+                    <MudItem xs="4"></MudItem> 
                     <MudItem xs="2"> </MudItem>
-                    @*Create buton *@
                     <MudItem xs="2"> </MudItem>
-                           <MudButton Disabled="@_saving" @bind-IsValid="@_canSend" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="TryToAdd">                    
-                                @if (_saving)
-                                {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                    <MudText Class="ms-2">Procesando</MudText>
-                                }
-                                else
-                                {
-                                    <MudText Class="ms-2">Crear</MudText>
-                                }
+                   @*Create buton *@
+                    <MudButton Disabled="@_saving" @bind-IsValid="@_canSend" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="TryToAdd">                    
+                        @if (_saving)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText Class="ms-2">Crear</MudText>
+                        }
 
-                            </MudButton>
+                    </MudButton>
                     @*Clear buton*@
                     <MudButton Disabled = "true"> </MudButton>
                     <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
@@ -123,8 +120,9 @@
 </MudGrid>
 
 @code{
-    [Parameter] public string EmployerEmail { get; set; }
-    [Parameter] public string ProjectName { get; set; }
+    [Parameter] public string employeeEmail { get; set; }
+    public string projectName { get; set; }
+    public string employerEmail { get; set; }
 
     Agreement agreementObject = new Agreement("", "", "", null, "", 0, null, 1, "");
     AgreementType anAgreementType = new AgreementType("",0);
@@ -144,8 +142,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        agreementObject.EmployerEmail = EmployerEmail;
-        agreementObject.ProjectName = ProjectName;
+        agreementObject.EmployerEmail = ContextService.GetEmployerEmailContext();
+        agreementObject.ProjectName = ContextService.GetProjectsContext();
+        agreementObject.EmployeeEmail = employeeEmail;
         _isLoading = false;
     }
 
