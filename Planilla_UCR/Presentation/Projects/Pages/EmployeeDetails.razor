@@ -1,4 +1,4 @@
-﻿@page "/EmployeeProjects/{email}/{projectName}"
+﻿@page "/Projects/{personEmail}/{employerEmail}/{projectName}"
 @using Application.Projects
 @using Application.Agreements
 @using Domain.Projects.Entities
@@ -20,7 +20,7 @@
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Inicio", href: ""),
-        new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{personEmail}"),
         new BreadcrumbItem($"{projectName}", href: null, disabled: true)
     };
 }
@@ -89,6 +89,7 @@
                             <MudItem xs="2"></MudItem>
                             <MudItem xs="8">
                                 <br />
+                                <MudDivider />
                             </MudItem>        
                         </MudGrid>
                     </MudForm>
@@ -107,23 +108,27 @@
     private bool _emptyAgreement = true;
     private double? _maximumAmountForBenefits = 0.0;
 
+
+
     Project projectInfo = new Project("","","",0.0,0,"",1);
     MudForm form;
     SnackHandler snackHandler = new SnackHandler();
     public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
     private IEnumerable<Agreement> agreementElements;
 
-    [Parameter] public string email { get; set; }
+    [Parameter] public string personEmail { get; set; }
+    [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
-    [Parameter] public string flag { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        agreementElements = await AgreementService.GetEmployeeProjects(email);
-
+        ContextMenuService.SetProjectsContext(true,true,projectName, employerEmail, true);
+        agreementElements = await AgreementService.GetEmployeeProjects(personEmail);
+        
         _loading = false;
         if (agreementElements.Length() > 0){
             _emptyAgreement = false;
+
             _loading = false;
             await FindProject();
         }
@@ -131,18 +136,8 @@
     private async Task FindProject()
     {
         foreach (Agreement element in agreementElements) {
-            if (projectName.Equals(element.ProjectName))
-            {
+            if (projectName == element.ProjectName)
                 projectInfo = await ProjectService.GetProject(element.ProjectName);
-                if (element.ContractType.Equals("Por horas"))
-                {
-                    ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, true);
-                }
-                else
-                {
-                    ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, false);
-                }
-            }
         }
     }
 }

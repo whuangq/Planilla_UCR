@@ -33,7 +33,12 @@ namespace Infrastructure.People.Repositories
                 new SqlParameter("email", email)).ToListAsync();
             return peopleList;
         }
-
+        public async Task<IEnumerable<Person>> GetAllPeopleAsync()
+        {
+            return await _dbContext.Persons.Select(t => new
+            Person(t.Email, t.Name, t.LastName1, t.LastName2, t.Ssn,
+                t.BankAccount, t.Adress, t.PhoneNumber, t.IsEnabled)).ToListAsync();
+        }
 
         public async Task UpdatePerson(Person personInfo)
         {
@@ -52,6 +57,18 @@ namespace Infrastructure.People.Repositories
                 infoPerson = personInfoResult.First();
             }
             return infoPerson;
+        }
+        public async Task<Person> GetPerson(string personEmail)
+        {
+            IList<Person> personResult = await _dbContext.Persons.Where
+                (e => e.Email == personEmail).ToListAsync();
+
+            Person person = null;
+            if (personResult.Length() > 0)
+            {
+                person = personResult.First();
+            }
+            return person;
         }
     }
 }

@@ -137,7 +137,7 @@
                         </NavLink>
                     </li>
                     <li class="nav-item px-3">
-                            <TabNavLink Icon="@Icons.Material.Filled.Assignment" href="@($"EmployeeProjects/{email}/{projectName}")" text="Detalles"></TabNavLink>
+                            <TabNavLink Icon="@Icons.Material.Filled.Assignment" href="@($"/Projects/{email}/{ContextMenuService.GetEmployerEmailContext()}/{projectName}")" text="Detalles"></TabNavLink>
                     </li>
 
                     @if (ContextMenuService.GetHoursEmployeeContext())

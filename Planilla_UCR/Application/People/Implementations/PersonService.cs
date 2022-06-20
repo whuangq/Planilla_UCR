@@ -14,7 +14,10 @@ namespace Application.People.Implementations
         {
             _personRepository = personRepository;
         }
-
+        public async Task<IEnumerable<Person>> GetAllPeopleAsync()
+        {
+            return await _personRepository.GetAllPeopleAsync();
+        }
         public async Task CreatePersonAsync(Person personInfo)
         {
             await _personRepository.CreatePersonAsync(personInfo);
@@ -33,6 +36,10 @@ namespace Application.People.Implementations
         public async Task<Person> GetInfoPerson(Person personInfo)
         {
             return await _personRepository.GetInfoPerson(personInfo);
+        }
+        public async Task<Person> GetPerson(string personEmail)
+        {
+            return await _personRepository.GetPerson(personEmail);
         }
     }
 }

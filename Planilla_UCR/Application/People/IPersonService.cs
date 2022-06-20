@@ -9,6 +9,8 @@ namespace Application.People
         Task CreatePersonAsync(Person personInfo);
         Task<IEnumerable<Person>> GetPersonByEmail(string email);
         Task UpdatePerson(Person personInfo);
+        Task<IEnumerable<Person>> GetAllPeopleAsync();
         Task<Person> GetInfoPerson(Person personInfo);
+        Task<Person> GetPerson(string personEmail);
     }
 }
