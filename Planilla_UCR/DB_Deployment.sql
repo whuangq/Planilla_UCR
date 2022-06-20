@@ -1,6 +1,6 @@
-﻿CREATE DATABASE DB_Planilla
+﻿CREATE DATABASE DB_Planilla2
 GO
-USE DB_Planilla
+USE DB_Planilla2
 
 -- Tables
 CREATE TABLE Person(
@@ -113,7 +113,7 @@ CREATE TABLE Payment(
 	StartDate date NOT NULL,
 	EndDate date NOT NULL,
 	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, StartDate, EndDate),
-	FOREIGN KEY(EmployerEmail, ProjectName) REFERENCES Project(EmployerEmail, ProjectName) ,
+	FOREIGN KEY(EmployerEmail, ProjectName) REFERENCES Project(EmployerEmail, ProjectName) ON UPDATE CASCADE,
 	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
 );
 
@@ -125,8 +125,8 @@ CREATE TABLE PaymentContainsSubscription(
 	EndDate date NOT NULL,
 	SubscriptionName varchar(255) NOT NULL,
 	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, StartDate, EndDate, SubscriptionName),
-	FOREIGN KEY(EmployeeEmail, EmployerEmail,ProjectName, StartDate, EndDate) REFERENCES Payment(EmployeeEmail, EmployerEmail, ProjectName, StartDate, EndDate),
-	FOREIGN KEY(EmployerEmail, ProjectName, SubscriptionName) REFERENCES Subscription(EmployerEmail, ProjectName, SubscriptionName)
+	FOREIGN KEY(EmployeeEmail, EmployerEmail,ProjectName, StartDate, EndDate) REFERENCES Payment(EmployeeEmail, EmployerEmail, ProjectName, StartDate, EndDate) ON UPDATE CASCADE,
+	FOREIGN KEY(EmployerEmail, ProjectName, SubscriptionName) REFERENCES Subscription(EmployerEmail, ProjectName, SubscriptionName) 
 );
 
 
@@ -138,7 +138,7 @@ CREATE TABLE Applies(
 	EndDate date NOT NULL,
 	DeductionName varchar(255) NOT NULL,
 	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, StartDate, EndDate, DeductionName),
-	FOREIGN KEY(EmployeeEmail, EmployerEmail,ProjectName, StartDate, EndDate) REFERENCES Payment(EmployeeEmail, EmployerEmail, ProjectName, StartDate, EndDate),
+	FOREIGN KEY(EmployeeEmail, EmployerEmail,ProjectName, StartDate, EndDate) REFERENCES Payment(EmployeeEmail, EmployerEmail, ProjectName, StartDate, EndDate) ON UPDATE CASCADE,
 	FOREIGN KEY(DeductionName) REFERENCES LegalDeduction(DeductionName)
 );
 
@@ -389,14 +389,10 @@ CREATE OR ALTER PROCEDURE ModifyProject(
 	@NewPaymentInterval varchar(255)
 ) AS
 BEGIN
-	IF ((@NewProjectName in (SELECT ProjectName FROM Project WHERE EmployerEmail = @EmployerEmail)) AND (@ProjectName <> @NewProjectName))
-	BEGIN 
-
-		UPDATE Project
-		SET ProjectName = @NewProjectName, ProjectDescription = @NewProjectDescription, MaximumAmountForBenefits = @NewMaximumAmountForBenefits, 
-			MaximumBenefitAmount = @NewMaximumBenefitAmount,PaymentInterval = @NewPaymentInterval
-		WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName;
-	END
+	UPDATE Project
+	SET ProjectName = @NewProjectName, ProjectDescription = @NewProjectDescription, MaximumAmountForBenefits = @NewMaximumAmountForBenefits, 
+		MaximumBenefitAmount = @NewMaximumBenefitAmount,PaymentInterval = @NewPaymentInterval
+	WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName;
 END
 
 
