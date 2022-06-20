@@ -83,5 +83,20 @@ namespace Infrastructure.Subscriptions.Repositories
                 @SubscriptionName = {subscription.SubscriptionName}");
             _dbContext.Database.ExecuteSqlInterpolated(query);
         }
+
+        public async Task<IEnumerable<Subscription>> GetBenefitsByEmployee(string employeeEmail, string projectName)
+        {
+            return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetBenefitsByEmployee @EmployeeEmail," +
+                " @ProjectName",
+                new SqlParameter("EmployeeEmail", employeeEmail),
+                new SqlParameter("ProjectName", projectName)).ToListAsync();
+        }
+        public async Task<IList<Subscription>> GetDeductionsByEmployee(string employeeEmail, string projectName)
+        {
+            return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetDeductionsByEmployee @EmployeeEmail," +
+                " @ProjectName",
+                new SqlParameter("EmployeeEmail", employeeEmail),
+                new SqlParameter("ProjectName", projectName)).ToListAsync();
+        }
     }
 }

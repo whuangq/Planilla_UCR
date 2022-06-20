@@ -92,7 +92,7 @@ CREATE TABLE Subscribes(
 	ProjectName varchar(255) NOT NULL,
 	SubscriptionName varchar(255) NOT NULL,
 	Cost float NOT NULL,
-	StartDate date NOT NULL,
+	StartDate datetime NOT NULL,
 	EndDate date,
 	PRIMARY KEY(EmployeeEmail,EmployerEmail,ProjectName, SubscriptionName, StartDate),
 	FOREIGN KEY(EmployerEmail, ProjectName, SubscriptionName) REFERENCES Subscription(EmployerEmail, ProjectName, SubscriptionName) ON UPDATE CASCADE,
@@ -185,6 +185,38 @@ BEGIN
 	UPDATE Subscription
 	SET IsEnabled = 0
 	WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName;
+
+	DECLARE @EmployeeEmail varchar(255)
+	DECLARE @StartDate datetime
+	DECLARE cursor_Subscribes CURSOR FOR
+	SELECT EmployeeEmail, StartDate
+	FROM Subscribes WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName
+	OPEN cursor_Subscribes
+		FETCH NEXT FROM cursor_Subscribes INTO @EmployeeEmail, @StartDate
+		WHILE @@FETCH_STATUS = 0 BEGIN
+			DELETE FROM Subscribes WHERE  EmployeeEmail = @EmployeeEmail AND EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName AND StartDate = @StartDate
+			FETCH NEXT FROM cursor_Subscribes INTO @EmployeeEmail, @StartDate
+		END
+	CLOSE cursor_Subscribes
+	DEALLOCATE cursor_Subscribes
+END
+
+GO
+CREATE OR ALTER PROCEDURE GetDeductionsByEmployee(@EmployeeEmail varchar(255), @ProjectName varchar(255))
+AS
+BEGIN
+	SELECT S.EmployerEmail, S.ProjectName, S.SubscriptionName, S.ProviderName, S.SubscriptionDescription, S.Cost, S.TypeSubscription, S.IsEnabled
+	FROM Agreement A RIGHT JOIN Subscription S ON A.EmployerEmail = S.EmployerEmail AND A.ProjectName = S.ProjectName
+	WHERE S.TypeSubscription = 0 AND S.IsEnabled = 1 AND A.EmployeeEmail = @EmployeeEmail AND A.ProjectName = @ProjectName AND S.SubscriptionName NOT IN(SELECT SubscriptionName FROM Subscribes WHERE EmployeeEmail = @EmployeeEmail AND EndDate IS NULL)
+END
+
+GO
+CREATE OR ALTER PROCEDURE GetBenefitsByEmployee(@EmployeeEmail varchar(255), @ProjectName varchar(255))
+AS
+BEGIN
+	SELECT S.EmployerEmail, S.ProjectName, S.SubscriptionName, S.ProviderName, S.SubscriptionDescription, S.Cost, S.TypeSubscription, S.IsEnabled
+	FROM Agreement A RIGHT JOIN Subscription S ON A.EmployerEmail = S.EmployerEmail AND A.ProjectName = S.ProjectName
+	WHERE S.TypeSubscription = 1 AND S.IsEnabled = 1 AND A.EmployeeEmail = @EmployeeEmail AND A.ProjectName = @ProjectName AND S.SubscriptionName NOT IN(SELECT SubscriptionName FROM Subscribes WHERE EmployeeEmail = @EmployeeEmail AND EndDate IS NULL)
 END
 
 -- Subscribe Stored Procedures
@@ -198,6 +230,135 @@ BEGIN
 	SELECT * 
 	FROM Subscribes 
 	WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName
+END
+
+GO
+CREATE OR ALTER PROCEDURE GetEmployeeBenefits(@EmployeeEmail varchar(255), @ProjectName varchar(255))
+AS
+BEGIN
+	SELECT S.EmployeeEmail, S.EmployerEmail, S.ProjectName, S.SubscriptionName, S.Cost, S.StartDate, S.EndDate
+	FROM Subscribes S RIGHT JOIN Subscription C ON 
+		S.EmployerEmail = C.EmployerEmail AND
+		S.ProjectName = C.ProjectName AND
+		S.SubscriptionName = C.SubscriptionName
+	WHERE S.EmployeeEmail = @EmployeeEmail AND C.IsEnabled = 1 AND C.TypeSubscription = 1 AND  S.ProjectName =  @ProjectName AND S.EndDate IS NULL
+END
+
+GO
+CREATE OR ALTER PROCEDURE GetEmployeeDeductions(@EmployeeEmail varchar(255), @ProjectName varchar(255))
+AS
+BEGIN
+	SELECT S.EmployeeEmail, S.EmployerEmail, S.ProjectName, S.SubscriptionName, S.Cost, S.StartDate, S.EndDate
+	FROM Subscribes S RIGHT JOIN Subscription C ON 
+		S.EmployerEmail = C.EmployerEmail AND
+		S.ProjectName = C.ProjectName AND
+		S.SubscriptionName = C.SubscriptionName
+	WHERE S.EmployeeEmail = @EmployeeEmail AND C.IsEnabled = 1 AND C.TypeSubscription = 0 AND  S.ProjectName =  @ProjectName AND S.EndDate IS NULL
+END
+
+GO
+CREATE OR ALTER PROCEDURE AddNewSubscribes(
+	@EmployeeEmail varchar(255),
+	@EmployerEmail varchar(255),
+	@ProjectName varchar(255),
+	@SubscriptionName varchar(255),
+	@Cost float,
+	@StartDate datetime,
+	@TypeSubscription tinyint,
+	@ErrorCode tinyint OUTPUT
+)
+AS
+BEGIN
+	SET @ErrorCode = 0
+	IF @TypeSubscription = 0
+		BEGIN
+			SET @ErrorCode = 1
+			INSERT INTO Subscribes (EmployeeEmail,EmployerEmail,ProjectName,SubscriptionName,Cost,StartDate)
+			VALUES (@EmployeeEmail, @EmployerEmail, @ProjectName, @SubscriptionName, @Cost, @StartDate)
+		END
+	ELSE
+		BEGIN
+			DECLARE @MAFB float
+			SELECT @MAFB = MaximumAmountForBenefits FROM Project WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName
+			DECLARE @MBA int
+			SELECT @MBA = MaximumBenefitAmount FROM Project WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName
+			DECLARE @EmployeeAmountForBenefitCount float
+			DECLARE @EmployeeBenefitAmountCount int
+			SELECT @EmployeeAmountForBenefitCount = ISNULL(SUM(S.Cost), 0) + @Cost, @EmployeeBenefitAmountCount = COUNT(S.SubscriptionName) + 1
+			FROM Subscribes S RIGHT JOIN Subscription C ON 
+				S.EmployerEmail = C.EmployerEmail AND
+				S.ProjectName = C.ProjectName AND
+				S.SubscriptionName = C.SubscriptionName
+			WHERE C.TypeSubscription = @TypeSubscription AND EmployeeEmail = @EmployeeEmail AND S.EndDate IS NULL
+		
+			IF(@MAFB = 0 AND @MBA = 0)
+				BEGIN
+					SET @ErrorCode = 1
+					INSERT INTO Subscribes (EmployeeEmail,EmployerEmail,ProjectName,SubscriptionName,Cost,StartDate)
+					VALUES (@EmployeeEmail, @EmployerEmail, @ProjectName, @SubscriptionName, @Cost, @StartDate)
+				END
+			IF(@MAFB > 0 AND @MBA = 0)
+				BEGIN
+					IF (@EmployeeAmountForBenefitCount <= @MAFB)
+						BEGIN
+							SET @ErrorCode = 1
+							INSERT INTO Subscribes (EmployeeEmail,EmployerEmail,ProjectName,SubscriptionName,Cost,StartDate)
+							VALUES (@EmployeeEmail, @EmployerEmail, @ProjectName, @SubscriptionName, @Cost, @StartDate)
+						END
+				END
+			IF(@MAFB = 0 AND @MBA > 0)
+				BEGIN
+					IF (@EmployeeBenefitAmountCount <= @MBA)
+						BEGIN
+							SET @ErrorCode = 1
+							INSERT INTO Subscribes (EmployeeEmail,EmployerEmail,ProjectName,SubscriptionName,Cost,StartDate)
+							VALUES (@EmployeeEmail, @EmployerEmail, @ProjectName, @SubscriptionName, @Cost, @StartDate)
+						END
+				END
+			IF(@MAFB > 0 AND @MBA > 0)
+				BEGIN
+					IF (@EmployeeBenefitAmountCount <= @MBA AND @EmployeeAmountForBenefitCount <= @MAFB)
+						BEGIN
+							SET @ErrorCode = 1
+							INSERT INTO Subscribes (EmployeeEmail,EmployerEmail,ProjectName,SubscriptionName,Cost,StartDate)
+							VALUES (@EmployeeEmail, @EmployerEmail, @ProjectName, @SubscriptionName, @Cost, @StartDate)
+						END
+				END
+		END
+END
+
+GO
+CREATE OR ALTER TRIGGER EndOfSubscribes
+ON Subscribes INSTEAD OF DELETE
+AS
+BEGIN
+	DECLARE @EndDate date
+	SELECT @EndDate = CONVERT(date, GETDATE())
+	
+	DECLARE @EmployeeEmail varchar(255)
+	DECLARE @EmployerEmail varchar(255)
+	DECLARE @ProjectName varchar(255)
+	DECLARE @SubscriptionName varchar(255)
+	DECLARE @StartDate datetime
+	SELECT @EmployeeEmail = D.EmployeeEmail, @EmployerEmail = D.EmployerEmail, @ProjectName = D.ProjectName, @SubscriptionName = D.SubscriptionName, @StartDate =  D.StartDate
+	FROM deleted D
+
+	UPDATE Subscribes
+	SET EndDate = @EndDate
+	WHERE EmployeeEmail = @EmployeeEmail AND EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName AND StartDate =  @StartDate
+END
+
+GO
+CREATE OR ALTER PROCEDURE DeleteSubscribes(
+	@EmployeeEmail varchar(255),
+	@EmployerEmail varchar(255),
+	@ProjectName varchar(255),
+	@SubscriptionName varchar(255)
+)
+AS
+BEGIN
+	DELETE FROM Subscribes
+	WHERE EmployeeEmail = @EmployeeEmail AND EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName 
 END
 
 -- Project Stored Procedures

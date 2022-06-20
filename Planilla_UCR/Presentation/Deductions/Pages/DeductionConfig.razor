@@ -60,7 +60,7 @@ else
             <HeaderContent>
                 <MudTh>Nombre</MudTh>
                 <MudTh>Proveedor</MudTh>
-                <MudTh>Costo</MudTh>
+                <MudTh Style="text-align:right">Costo</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Nombre">
@@ -68,20 +68,18 @@ else
                         @context.SubscriptionName
                     </MudLink>
                 </MudTd>
-                <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
-                <MudTd DataLabel="Costo"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost) </MudTd>
+                <MudTd DataLabel="Proveedor">@context.ProviderName</MudTd>
+                <MudTd DataLabel="Costo" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost) </MudTd>
             </RowTemplate>
-            <FooterContent>
-                <MudTd colspan="5">Seleccionar todo</MudTd>
-            </FooterContent>
             <PagerContent>
                 <MudPagination SelectedChanged="PageChanged" Count="@((_mudTable.GetFilteredItemsCount() + _mudTable.RowsPerPage - 1) / _mudTable.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
             </PagerContent>
         </MudTable>
         <br>
         <MudToolBar DisableGutters="true" Class="gap-4">
-            <MudButton Variant="Variant.Filled" OnClick="OpenDialog" Color="Color.Error">Borrar</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="OpenDialog" Color="Color.Primary">Borrar</MudButton>
         </MudToolBar>
+
         <MudDialog @bind-IsVisible="_visible" Options="dialogOptions">
             <TitleContent>
                 <MudText Typo="Typo.h6">
@@ -144,7 +142,6 @@ else
 
     private bool _visible;
     private bool _open;
-    private void OpenDialog() => _visible = true;
     void CloseDialog() => _visible = false;
     private DialogOptions dialogOptions = new() { FullWidth = true };
 
@@ -166,6 +163,18 @@ else
             _empty = false;
         }
     }
+
+    private void OpenDialog()
+    {
+        if (_selectedItems1.Length() > 0)
+        {
+            _visible = true;
+        }
+        else
+        {
+            Snackbar.Add("Por favor seleccione los elementos a los que se desea suscribir", Severity.Warning);
+        }
+    } 
 
     private async Task DeleteDeductions()
     {

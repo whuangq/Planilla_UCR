@@ -51,7 +51,7 @@ else
     }
     else
     {
-        <MudTable @ref="_mudTable" Items="@_elements" RowsPerPage="6" MultiSelection="true" @bind-SelectedItems="_selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
+        <MudTable @ref="_mudTable" Items="@_elements" RowsPerPage="4" MultiSelection="true" @bind-SelectedItems="_selectedItems1" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<Subscription,bool>(FilterFunc1)">
             <ToolBarContent>
                 <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios </MudText>
                 <MudSpacer />
@@ -60,7 +60,7 @@ else
             <HeaderContent>
                 <MudTh>Nombre</MudTh>
                 <MudTh>Proveedor</MudTh>
-                <MudTh>Costo</MudTh>
+                <MudTh Style="text-align:right">Costo</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Nombre">
@@ -69,20 +69,19 @@ else
                     </MudLink>
                 </MudTd>
                 <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
-                <MudTd DataLabel="Costo"> @cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost) </MudTd>
+                <MudTd DataLabel="Costo" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost) </MudTd>
             </RowTemplate>
-            <FooterContent>
-                <MudTd colspan="5">Seleccionar todo</MudTd>
-            </FooterContent>
             <PagerContent>
                 <MudPagination SelectedChanged="PageChanged" Count="@((_mudTable.GetFilteredItemsCount() + _mudTable.RowsPerPage - 1) / _mudTable.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
             </PagerContent>
         </MudTable>
         <br>
+
         <MudToolBar DisableGutters="true" Class="gap-4">
-            <MudButton Variant="Variant.Filled" OnClick="OpenDialog" Color="Color.Error">Borrar</MudButton>
+            <MudButton Variant="Variant.Filled" OnClick="OpenDialog" Color="Color.Primary">Borrar</MudButton>
         </MudToolBar>
-        <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+
+        <MudDialog @bind-IsVisible="_visible" Options="_dialogOptions">
             <TitleContent>
                 <MudText Typo="Typo.h6">
                     <MudIcon Icon="@Icons.Material.Filled.Delete" Color="@Color.Primary" Class="mr-2"/> ¿Está seguro de borrar estos beneficios?</MudText>
@@ -103,7 +102,7 @@ else
             </DialogActions>
         </MudDialog>
 
-        <MudDialog @bind-IsVisible="visibleEmployees" Options="dialogOptionsEmployees">
+        <MudDialog @bind-IsVisible="_visibleEmployees" Options="_dialogOptionsEmployees">
             <TitleContent>
                 <MudText Typo="Typo.h6">
                     <MudIcon Icon="@Icons.Material.Filled.Delete" Color="@Color.Primary" Class="mr-2"/> Lista de empleados afectados por la operación:</MudText>
@@ -136,24 +135,21 @@ else
     private MudTable<Subscription> _mudTable;
     private MudTable<Subscribe> _table;
     public string searchString1 = "";
-    public string project { get; set; }
     public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
 
-    private bool visible;
-    private bool open;
-    public string benefitListString;
-    private void OpenDialog() => visible = true;
-    void CloseDialog() => visible = false;
-    private DialogOptions dialogOptions = new() { FullWidth = true };
+    private bool _visible;
+    private bool _open;
+    void CloseDialog() => _visible = false;
+    private DialogOptions _dialogOptions = new() { FullWidth = true };
 
-    private bool visibleEmployees;
-    private bool openEmployees;
-    private void OpenDialogEmployee() => visibleEmployees = true;
-    void CloseDialogEmployees() => visibleEmployees = false;
-    private DialogOptions dialogOptionsEmployees = new() { FullWidth = true };
+    private bool _visibleEmployees;
+    private bool _openEmployees;
+    private void OpenDialogEmployee() => _visibleEmployees = true;
+    void CloseDialogEmployees() => _visibleEmployees = false;
+    private DialogOptions _dialogOptionsEmployees = new() { FullWidth = true };
 
     bool fixed_header = true;
     bool fixed_footer = false;
@@ -167,6 +163,18 @@ else
             _empty = false;
         }
     }
+
+    private void OpenDialog()
+    {
+        if (_selectedItems1.Length() > 0)
+        {
+            _visible = true;
+        }
+        else
+        {
+            Snackbar.Add("Por favor seleccione los elementos a los que se desea suscribir", Severity.Warning);
+        }
+    } 
 
     private async Task DeleteBenefits()
     {

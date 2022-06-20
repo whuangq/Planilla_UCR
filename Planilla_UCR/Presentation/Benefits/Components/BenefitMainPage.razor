@@ -1,20 +1,19 @@
-﻿@page "/Projects/{employerEmail}/{projectName}/Deductions"
-@using Domain.Subscriptions.Entities
+﻿@using Domain.Subscriptions.Entities
 @using Application.Subscriptions
 @using Presentation.Core.Components
+@using Presentation.Benefits.Components
 @using Presentation.Authentication
-@using Presentation.Deductions.Components
 @using System.Globalization
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
 
-@{
-    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+
+@{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Inicio", href: ""),
         new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
         new BreadcrumbItem($"{projectName}", href: $"/Projects/{employerEmail}/{projectName}/Configurations"),
-        new BreadcrumbItem("Deducciones voluntarias", href: null, disabled: true),
+        new BreadcrumbItem("Beneficios", href: null, disabled: true),
     };
 }
 
@@ -31,15 +30,15 @@ else
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
         @if (_empty)
         {
-            <MudText Typo="Typo.h6" Align="Align.Center">No hay deducciones asociadas al proyecto
+            <MudText Typo="Typo.h6" Align="Align.Center">No hay beneficios asociados al proyecto
             </MudText>
-            <br>
+            <br>    
             <MudToolBar DisableGutters="true" Class="gap-4">
                 <MudButton></MudButton>
                 <MudSpacer></MudSpacer>
                 <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Primary">
                     <MudText> 
-                    Crear deducción voluntaria
+                        Crear Beneficio
                     </MudText> 
                 </MudButton>
                 <MudSpacer></MudSpacer>
@@ -50,42 +49,40 @@ else
         {
             <MudToolBar DisableGutters="true" Class="gap-4">
                 <MudSpacer></MudSpacer>
-                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="GoToConfigs"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="GoToConfigs"/>
             </MudToolBar>
-            <MudTable @ref="mudTable" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
+            <MudTable @ref="_mudTable" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm"  Loading="@_empty" Filter="new Func<Subscription,bool>(FilterFunc1)">
                 <ToolBarContent>
-                    <MudText Align="Align.Center" Typo="Typo.h6">Lista de deducciones voluntarias</MudText>
+                    <MudText Align="Align.Center" Typo="Typo.h6">Lista de beneficios</MudText>
                     <MudSpacer />
                     <MudTextField @bind-Value="searchString1" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh>Nombre</MudTh>
                     <MudTh>Proveedor</MudTh>
-                    <MudTh>Costo</MudTh>
+                    <MudTh Style="text-align:right">Costo</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="Nombre">
-                        <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/Projects/{employerEmail}/{projectName}/Deductions/{context.SubscriptionName}")">
+                        <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/Projects/{employerEmail}/{projectName}/Benefits/{context.SubscriptionName}")">
                             @context.SubscriptionName
                         </MudLink>
                     </MudTd>
                     <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
-                    <MudTd DataLabel="Costo"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
+                    <MudTd DataLabel="Costo" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
                 </RowTemplate>
                 <PagerContent>
-                        <MudPagination SelectedChanged="PageChanged" Count="@((mudTable.GetFilteredItemsCount() + mudTable.RowsPerPage - 1) / mudTable.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
+                    <MudPagination SelectedChanged="PageChanged" Count="@((_mudTable.GetFilteredItemsCount() + _mudTable.RowsPerPage - 1) / _mudTable.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
                 </PagerContent>
             </MudTable>
-            <br>
-            <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Primary">Crear deducción voluntaria</MudButton>
+            <br>    
+            <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Primary">Crear Beneficio</MudButton>
         }
-
 }
 
 @code {
     private bool _empty = true;
-    private MudTable<Subscription> mudTable;
-    private List<string> clickedEvents = new();
+    private MudTable<Subscription> _mudTable;
     private IEnumerable<Subscription> _elements;
     private bool _loading = true;
     public string searchString1 = "";
@@ -96,32 +93,27 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _elements = await SubscriptionService.GetDeductionsByProject(employerEmail, projectName);
+        _elements = await SubscriptionService.GetBenefitsByProject(employerEmail, projectName);
         _loading = false;
         if (_elements.Length() > 0)
         {
-            _empty = false;
+            _empty = false;   
         }
     }
 
     private void GoToCreate()
     {
-        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions/New");
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Benefits/New");
     }
 
     private void GoToConfigs()
     {
-        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions/Configurations");
-    }
-
-    private void GoToProject()
-    {
-        nav.NavigateTo($"/Projects/Details/{employerEmail}/{projectName}");
+       nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Benefits/Configurations");
     }
 
     private void PageChanged(int i)
     {
-        mudTable.NavigateTo(i - 1);
+        _mudTable.NavigateTo(i - 1);
     }
 
     private bool FilterFunc1(Subscription element) => FilterFunc(element, searchString1);
@@ -134,7 +126,7 @@ else
             return true;
         return false;
     }
-
+    
     private string costFormat(double cost)
     {
         string costo = string.Format("{0:N}", cost);

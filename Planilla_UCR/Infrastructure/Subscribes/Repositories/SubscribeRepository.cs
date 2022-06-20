@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,21 @@ namespace Infrastructure.Subscribes.Repositories
             _dbContext = unitOfWork;
         }
 
+        public int CreateSubscribe(Subscribe subscription, int typeSubscription)
+        {
+            SqlParameter errorCode = new SqlParameter();
+            errorCode.SqlDbType = SqlDbType.Int;
+            errorCode.ParameterName = "@ErrorCode";
+            errorCode.Direction = ParameterDirection.Output;
+            System.FormattableString query = ($@"EXECUTE AddNewSubscribes
+                @EmployeeEmail = {subscription.EmployeeEmail}, @EmployerEmail = {subscription.EmployerEmail},
+                @ProjectName = {subscription.ProjectName}, @SubscriptionName = {subscription.SubscriptionName},
+                @Cost = {subscription.Cost}, @StartDate= {subscription.StartDate},
+                @TypeSubscription = {typeSubscription}, @ErrorCode = {errorCode} OUT");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+            return Convert.ToInt32(errorCode.Value);
+        }
+
         public async Task<IEnumerable<Subscribe>> GetEmployeesBySubscription(string employerEmail, string projectName, string subscriptionName)
         {
             return await _dbContext.Subscribes.FromSqlRaw("EXEC GetEmployeesBySubscription @EmployerEmail," +
@@ -30,10 +46,28 @@ namespace Infrastructure.Subscribes.Repositories
                 new SqlParameter("SubscriptionName", subscriptionName)).ToListAsync();
         }
 
-        public async Task CreateSubscribeAsync(Subscribe subscription)
+        public async Task<IEnumerable<Subscribe>> GetBenefitsByEmployee(string employeeEmail, string projectName)
         {
-            _dbContext.Subscribes.Add(subscription);
-            await _dbContext.SaveEntitiesAsync();
+            return await _dbContext.Subscribes.FromSqlRaw("EXEC GetEmployeeBenefits @EmployeeEmail," +
+               " @ProjectName;",
+               new SqlParameter("EmployeeEmail", employeeEmail),
+               new SqlParameter("ProjectName", projectName)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Subscribe>> GetDeductionsByEmployee(string employeeEmail, string projectName)
+        {
+            return await _dbContext.Subscribes.FromSqlRaw("EXEC GetEmployeeDeductions @EmployeeEmail," +
+               " @ProjectName;",
+               new SqlParameter("EmployeeEmail", employeeEmail),
+               new SqlParameter("ProjectName", projectName)).ToListAsync();
+        }
+
+        public void DeleteSubscribe(Subscribe subscription)
+        {
+            System.FormattableString query = ($@"EXECUTE DeleteSubscribes
+                @EmployeeEmail = {subscription.EmployeeEmail}, @EmployerEmail = {subscription.EmployerEmail},
+                @ProjectName = {subscription.ProjectName}, @SubscriptionName = {subscription.SubscriptionName}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
 
         public async Task<IEnumerable<Subscription>> GetSubscriptionCostsByDate(Subscribe searchSubscription)

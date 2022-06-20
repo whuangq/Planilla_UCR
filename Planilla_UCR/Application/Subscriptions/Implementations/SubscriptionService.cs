@@ -51,5 +51,14 @@ namespace Application.Subscriptions.Implementations
         { 
             _subscriptionRepository.DeleteSubscription(subscription);
         }
+
+        public async Task<IEnumerable<Subscription>> GetBenefitsByEmployee(string employeeEmail, string projectName) 
+        {
+            return await _subscriptionRepository.GetBenefitsByEmployee(employeeEmail, projectName);
+        }
+        public async Task<IList<Subscription>> GetDeductionsByEmployee(string employeeEmail, string projectName) 
+        {
+            return await _subscriptionRepository.GetDeductionsByEmployee(employeeEmail, projectName);
+        }
     }
 }
