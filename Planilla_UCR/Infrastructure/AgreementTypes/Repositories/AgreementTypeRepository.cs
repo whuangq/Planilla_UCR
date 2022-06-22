@@ -34,14 +34,11 @@ namespace Infrastructure.AgreementTypes.Repositories
             var agreementTypeList = await _dbContext.AgreementTypes.FromSqlRaw("EXEC GetTypesOfAgreement").ToListAsync();
             return agreementTypeList;
         }
-
-
         public async Task<IEnumerable<AgreementType?>> GetSalaryPerAgreement(int Agreement)
         {
-            var agreementsSalary = await _dbContext.AgreementTypes.FromSqlRaw("EXEC GetSalaryPerAgreement @Agreement",
+            var agreementsSalary = await _dbContext.AgreementTypes.FromSqlRaw("EXEC CheckSalaryPerAgreement @Agreement",
                 new SqlParameter("@Agreement", Agreement)).ToListAsync();
             return agreementsSalary;
-
         }
 
         public async Task<IEnumerable<AgreementType?>> GetAllAgreementTypes()

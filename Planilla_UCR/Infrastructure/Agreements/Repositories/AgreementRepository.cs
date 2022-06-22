@@ -43,10 +43,28 @@ namespace Infrastructure.Agreements.Repositories
 
         }
 
-        public async Task<IEnumerable<Agreement>> GetEmployeeProjects(string employeeEmail)
+        public async Task<IEnumerable<Agreement?>> GetAllAgreementsByProjectAndEmployer(string projectName, string employerEmail) 
+        {
+            SqlParameter myProjectName = new SqlParameter("@Project", projectName);
+            SqlParameter myEmployerEmail = new SqlParameter("@EmployerEmail", employerEmail);
+
+            var agreementList = await _dbContext.Agreements.FromSqlRaw("EXEC GetAllAgreementsByProjectAndEmployer {0},{1}",
+                myProjectName, myEmployerEmail).ToListAsync();
+            return agreementList;
+
+        }
+
+        public async Task<IEnumerable<Agreement>> GetEmployeeAgreements(string employeeEmail)
         {
             IList<Agreement> agreementList = await _dbContext.Agreements.Where
-                (e => e.EmployeeEmail == employeeEmail).ToListAsync();
+                (e => e.EmployeeEmail == employeeEmail && e.IsEnabled == 1).ToListAsync();
+            return agreementList;
+        }
+
+        public async Task<IEnumerable<Agreement>> GetEmployerAgreements(string employerEmail)
+        {
+            IList<Agreement> agreementList = await _dbContext.Agreements.Where
+                (e => e.EmployerEmail == employerEmail && e.IsEnabled == 1).ToListAsync();
             return agreementList;
         }
 
@@ -63,6 +81,12 @@ namespace Infrastructure.Agreements.Repositories
                (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName
                && e.IsEnabled == 1).ToListAsync();
             return agreementList;
+        }
+
+        public async Task DesactivateAgreement(string employeeEmail, string employerEmail, string projectName, string justification)
+        {
+            System.FormattableString query = $"EXECUTE DesactivateAgreement @EmployeeEmail = {employeeEmail}, @EmployerEmail = {employerEmail}, @ProjectName = {projectName}, @Justification = {justification}";
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
     }
 }

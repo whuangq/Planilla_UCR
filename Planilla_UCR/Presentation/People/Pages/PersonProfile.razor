@@ -1,16 +1,22 @@
 ﻿@page "/Profile/{userEmail}"
+@using Domain.Agreements.Entities
 @using Domain.Employers.Entities
 @using Domain.Employers.DTOs
 @using Domain.People.Entities
+@using Domain.Subscriptions.Entities
 @using Domain.Authentication.DTOs
 @using Domain.Authentication
 @using Domain.Projects.Entities
+
 @using Application.Authentication
 @using Application.Employers
 @using Application.People
 @using Application.Authorization;
 @using Application.Authorization.Implementations;
 @using Application.Projects
+@using Application.Subscriptions
+@using Application.Agreements
+
 @using Presentation.Core.Components
 @using Presentation.Shared.Models
 @using System.Text.RegularExpressions
@@ -21,6 +27,8 @@
 @inject IEmployerService EmployerService
 @inject IAuthenticationService AuthenticationService
 @inject IProjectService ProjectService
+@inject IAgreementService AgreementService
+@inject ISubscriptionService SubscriptionService
 @inject ISnackbar Snackbar
 
 @if(_loading) {
@@ -141,6 +149,13 @@
     bool fixed_header = true;
     bool fixed_footer = false;
     SnackHandler snackHandler = new SnackHandler();
+
+    
+    private IEnumerable<Agreement> agreementsList;
+    private IEnumerable<Subscription> benefitsList;
+    private IEnumerable<Subscription> deductionsList;
+
+
     private void OpenDialog() => visible = true;
     void CloseDialog() => visible = false;
     private DialogOptions dialogOptions = new() { FullWidth = true };
@@ -161,8 +176,30 @@
         OpenDialog();
     }
 
-    private void DeleteAccountEmployer() 
+    async Task DeleteAccountEmployer() 
     {
+        projectsList = await ProjectService.GetEmployerProyects(userEmail);
+        foreach(var project in projectsList)
+        {
+            benefitsList = await SubscriptionService.GetBenefitsByProject(project.EmployerEmail,project.ProjectName);
+            deductionsList = await SubscriptionService.GetDeductionsByProject(project.EmployerEmail,project.ProjectName);
+            agreementsList = await AgreementService.GetAllAgreementsByProjectAndEmployer(project.ProjectName, project.EmployerEmail);
+            
+            foreach(Subscription benefit in benefitsList)
+            {
+                SubscriptionService.DeleteSubscription(benefit);
+            }
+            foreach(Subscription deduction in deductionsList)
+            {
+                SubscriptionService.DeleteSubscription(deduction);
+            }
+            
+            foreach(var agreement in agreementsList)
+            {
+                await AgreementService.DesactivateAgreement(agreement.EmployeeEmail, agreement.EmployerEmail, agreement.ProjectName, "Cierre de negocio");
+            }
+            ProjectService.DisableProject(project.ProjectName, project.EmployerEmail);
+        }
         EmployerService.DeleteEmployer(personInfo.Email);
         ShowSnackNotification("Se ha eliminado la cuenta de "+personInfo.Name, Severity.Success);
         nav.NavigateTo($"/delete", true);

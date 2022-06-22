@@ -7,7 +7,6 @@ namespace Domain.AgreementTypes.DTOs
         public String TypeAgreement { get; set; }
         public int MountPerHour { get; set; }
 
-
         public AgreementTypeDTO(string TypeAgreement, int MountPerHour)
         {
             this.TypeAgreement = TypeAgreement;

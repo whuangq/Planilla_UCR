@@ -46,7 +46,7 @@
                         <MudGrid>
                             <MudItem xs="2"> </MudItem>
                             <MudItem xs="8">
-                                <MudTextField Label="Nombre del Proyecto" Class="mt-3" Variant="Variant.Outlined" ReadOnly="true"
+                                <MudTextField Label="Nombre del proyecto" Class="mt-3" Variant="Variant.Outlined" ReadOnly="true"
                                 @bind-Value="projectInfo.ProjectName">
                                 </MudTextField>
                             </MudItem>
@@ -54,14 +54,14 @@
 
                             <MudItem xs="2"> </MudItem>
                             <MudItem xs="8">
-                                <MudTextField Label="Email del Empleador" Lines="1" Variant="Variant.Outlined" ReadOnly="true"
+                                <MudTextField Label="Email del empleador" Lines="1" Variant="Variant.Outlined" ReadOnly="true"
                                 @bind-Value="projectInfo.EmployerEmail"></MudTextField>
                             </MudItem>
                             <MudItem xs="2"> </MudItem>
 
                             <MudItem xs="2"> </MudItem>
                             <MudItem xs="8">
-                                <MudTextField Label="Descripción del Proyecto" Lines="3" Variant="Variant.Outlined" ReadOnly="true"
+                                <MudTextField Label="Descripción del proyecto" Lines="3" Variant="Variant.Outlined" ReadOnly="true"
                                 @bind-Value="projectInfo.ProjectDescription"></MudTextField>
                             </MudItem>
                             <MudItem xs="2"> </MudItem>
@@ -122,7 +122,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        agreementElements = await AgreementService.GetEmployeeProjects(personEmail);
+        agreementElements = await AgreementService.GetEmployeeAgreements(personEmail);
         
         _loading = false;
         if (agreementElements.Length() > 0){
@@ -132,12 +132,14 @@
             await FindProject();
         }
     }
+
     private async Task FindProject()
     {
         foreach (Agreement element in agreementElements) {
             if (projectName == element.ProjectName)
             {
                 projectInfo = await ProjectService.GetProject(element.ProjectName);
+                _maximumAmountForBenefits = projectInfo.MaximumAmountForBenefits;
                 if (element.ContractType.Equals("Por horas"))
                 {
                     ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, true);

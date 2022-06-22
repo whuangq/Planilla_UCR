@@ -9,8 +9,11 @@ namespace Domain.Agreements.Repositories
     {
         Task CreateAgreementAsync(Agreement agreement);
         Task<Agreement?> GetContractee(Agreement agreement);
-        Task<IEnumerable<Agreement>> GetEmployeeProjects(string employeeEmail);
         Task<Agreement?> GetFirstProjectAgreement(Agreement searchAgreement);
         Task<IList<Agreement>> GetProjectAgreements(string projectName, string employerEmail);
+        Task<IEnumerable<Agreement>> GetEmployeeAgreements(string employeeEmail);
+        Task<IEnumerable<Agreement>> GetEmployerAgreements(string employerEmail);
+        Task<IEnumerable<Agreement?>> GetAllAgreementsByProjectAndEmployer(string projectName, string employerEmail);
+        Task DesactivateAgreement(string employeeEmail, string employerEmail, string projectName, string justification);
     }
 }

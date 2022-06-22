@@ -117,8 +117,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
-        _elements = await AgreementService.GetEmployeeProjects(EmployeeEmail);
+         hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
+        _elements = await AgreementService.GetEmployeeAgreements(EmployeeEmail);
         if (_elements.Length() == 0)
         {
             _empty = true;

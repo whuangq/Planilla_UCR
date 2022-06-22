@@ -48,7 +48,7 @@
                         <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
                          <MudTd DataLabel="Acciones">
                         <MudSpacer></MudSpacer>
-                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email))" Color="Color.Transparent">
+                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee())" Color="Color.Transparent">
                                 <MudText>
                                 Contratar
                                 </MudText> 
@@ -119,9 +119,9 @@
         nav.NavigateTo($"/Create_Employee/{email}/{projectName}");
     }
 
-    private void GoToContractEmployee(string email)
+    private void GoToContractEmployee()
     {
-       nav.NavigateTo($"/Projects/{email}/Agreements/New");
+       nav.NavigateTo($"/Projects/{email}/{projectName}/Agreements/New");
     }
 
     private void PageChanged(int i)

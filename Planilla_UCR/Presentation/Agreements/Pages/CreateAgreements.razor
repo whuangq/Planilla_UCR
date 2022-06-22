@@ -30,15 +30,16 @@
 @inject IEmployerService EmployerService
 @inject IProjectService ProjectService
 @inject IContextMenuService ContextService
+@inject NavigationManager nav
 
 @*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Inicio", href: ""),
-        new BreadcrumbItem("Contratos", href: null)
+        new BreadcrumbItem("Contratos", href: $"/Projects/{employerEmail}/{projectName}/Agreements/New"),
     };
-} 
+}
 
  <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 <MudGrid>
@@ -62,11 +63,12 @@
                     </MudItem>
                     <MudItem xs="2"> </MudItem>
                     <MudItem xs="2"> </MudItem>
-                    <MudItem xs="4">
+                    <MudItem xs="8">
                         <MudTextField @bind-Value="agreementObject.ProjectName" Label="Nombre del proyecto" Variant="Variant.Outlined" Required="true" RequiredError="El nombre del proyecto es necesario">
                         </MudTextField>
                     </MudItem>
-
+                    <MudItem xs="2"> </MudItem>
+                    <MudItem xs="2"> </MudItem>
                     <MudItem xs="4">
                     <MudSelect @bind-Value="agreementObject.ContractType" Label="Tipo de contrato" Variant="Variant.Outlined" Required="true"  RequiredError="El tipo de contrato es necesario">
                         <MudSelectItem Value="@("Tiempo completo")" />
@@ -75,24 +77,25 @@
                         <MudSelectItem Value="@("Por horas")" />
                     </MudSelect>
                     </MudItem>
-                    <MudItem xs="2"> </MudItem>
-        
-                    <MudItem xs="2"> </MudItem>
+                    
                     <MudItem xs="4">
                         <MudNumericField @bind-Value="salaryPerMonth" Label="Monto por hora" Variant="Variant.Outlined" 
                              Required="true" RequiredError="El monto por hora es necesario" HideSpinButtons="true" Min = "0"> </MudNumericField>
                     </MudItem>
+                    <MudItem xs="2"> </MudItem>
+                    <MudItem xs="2"> </MudItem>
                     <MudItem xs="4">
                         <MudDatePicker Label="Fecha de inicio" @bind-Date="startDate" DateFormat="yyyy.MM.dd" Variant="Variant.Outlined" Required="true" RequiredError="La fecha de inicio es necesaria"/>
                     </MudItem>
-                    <MudItem xs="2"> </MudItem>
-                    <MudItem xs="2"> </MudItem>
+                    
+                    
                     <MudItem xs="4">
                         <MudDatePicker Label="Fecha de finalización" @bind-Date="endDate" DateFormat="yyyy.MM.dd" Variant="Variant.Outlined" Required="true" RequiredError="La fecha de finalización es necesaria"/>
                     </MudItem> 
-                    <MudItem xs="4"></MudItem> 
-                    <MudItem xs="2"> </MudItem>
-                    <MudItem xs="2"> </MudItem>
+                    <MudItem xs="2"></MudItem> 
+                    <MudButton Disabled = "true"></MudButton>
+                    <MudButton Disabled = "true"></MudButton>
+                    <MudButton Disabled = "true"></MudButton>
                    @*Create buton *@
                     <MudButton Disabled="@_saving" @bind-IsValid="@_canSend" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="TryToAdd">                    
                         @if (_saving)
@@ -111,7 +114,14 @@
                     <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                         <MudText>Limpiar</MudText>
                     </MudButton>
-                   
+                    <MudButton Disabled = "true"></MudButton>
+                    <MudButton Disabled = "true"></MudButton>
+                    <MudButton Disabled = "true"></MudButton>
+                    <MudButton Disabled = "true"></MudButton>
+                    <MudButton Disabled = "true"></MudButton>
+                    <MudButton OnClick="GoToEmployeeList" Variant="Variant.Filled" Color="Color.Transparent">
+                        <MudText>Volver</MudText>
+                    </MudButton>
                 </MudGrid>
             </MudForm>
         </MudPaper>
@@ -292,6 +302,9 @@
 
     }
     
-
+    private void GoToEmployeeList()
+    {
+        nav.NavigateTo($"/View_Project_Employees/{employerEmail}/{projectName}");
+    }
 
 }

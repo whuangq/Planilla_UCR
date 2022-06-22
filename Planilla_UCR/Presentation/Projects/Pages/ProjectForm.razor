@@ -27,12 +27,12 @@
     <MudItem xs="10" sm="12">
         <MudPaper  Height="220px" Width="100%" Outlined="false " Class="border-none pa-4" Elevation="0">
             <MudForm @ref="form">
-                <MudText Align="Align.Center" Typo="Typo.h6">Crear Proyecto</MudText>
+                <MudText Align="Align.Center" Typo="Typo.h6">Crear proyecto</MudText>
                 <MudGrid>
 
                 <MudItem xs="2"> </MudItem>
                 <MudItem xs="8">
-                    <MudTextField Label="Nombre del Proyecto" Class="mt-3" Variant="Variant.Outlined"  
+                    <MudTextField Label="Nombre del proyecto" Class="mt-3" Variant="Variant.Outlined"  
                     Required="true" RequiredError="Ingrese un nombre para su proyecto" 
                     @bind-Value="projectInfo.ProjectName" For="@(() => limits.projectName)">
                     </MudTextField>
@@ -41,7 +41,7 @@
 
                 <MudItem xs="2"> </MudItem>
                 <MudItem xs="8">
-                    <MudTextField Label="Descripción del Proyecto" Variant="Variant.Outlined"
+                    <MudTextField Label="Descripción del proyecto" Variant="Variant.Outlined"
                     @bind-Value="projectInfo.ProjectDescription"  For="@(() => limits.description )"
                     ></MudTextField>
                 </MudItem>
@@ -50,10 +50,10 @@
                 <MudItem xs="2"> </MudItem>
                 <MudItem xs="8">
                     <MudSelect typeof="int" @bind-Value="projectInfo.PaymentInterval" Label="Intervalo de pago" Variant="Variant.Outlined">
-                        <MudSelectItem Value="@("Quincenal")">Pago Quincenal</MudSelectItem>
-                        <MudSelectItem Value="@("Mensual")">Pago Mensual</MudSelectItem>
-                        <MudSelectItem Value="@("Semanal")">Pago Semanal</MudSelectItem>
-                        <MudSelectItem Value="@("Bisemanal")">Pago Bisemanal</MudSelectItem>
+                        <MudSelectItem Value="@("Quincenal")">Pago quincenal</MudSelectItem>
+                        <MudSelectItem Value="@("Mensual")">Pago mensual</MudSelectItem>
+                        <MudSelectItem Value="@("Semanal")">Pago semanal</MudSelectItem>
+                        <MudSelectItem Value="@("Bisemanal")">Pago bisemanal</MudSelectItem>
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="2"></MudItem>
@@ -107,12 +107,12 @@
 </MudGrid>
 
 @code{
-    private double? _maximumAmountForBenefits;
-    Project projectInfo = new Project("","","",0.0,0,"",1);
     SnackHandler snackHandler = new SnackHandler();
-    LimitsValidationForm limits = new LimitsValidationForm();
-    public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
-    MudForm form;
+    private double? _maximumAmountForBenefits;
+    private Project projectInfo = new Project("","","",0.0,0,"",1);
+    private LimitsValidationForm limits = new LimitsValidationForm();
+    private  CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
+    private MudForm form;
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
@@ -122,6 +122,7 @@
     {
         projectInfo.EmployerEmail = employerEmail;
         projectInfo.MaximumAmountForBenefits = Convert.ToDouble(_maximumAmountForBenefits);
+        projectInfo.ProjectName = projectInfo.ProjectName.Trim();
         Project projectToAdd = projectInfo;
         snackHandler._saving = true;
 
@@ -140,39 +141,39 @@
 
     async Task<bool> ValidateInfo(Project projectInfo)
     {
-        bool name =  await (ValidateName(projectInfo));
-        bool email = await (ValidateEmail(projectInfo));
-        return name && email;
+        bool _name =  await (ValidateName(projectInfo));
+        bool _email = await (ValidateEmail(projectInfo));
+        return _name && _email;
     }
 
     async Task<bool> ValidateEmail(Project project)
     {
-        bool valid = true;
-        Employer emailChecked = await EmployerService.GetEmployerAsync(project.EmployerEmail);
-        if(emailChecked == null)
+        bool _valid = true;
+        Employer _emailChecked = await EmployerService.GetEmployerAsync(project.EmployerEmail);
+        if(_emailChecked == null)
         {
-            valid = false;
-            ShowSnackNotification("El email no pertenece a un empleador", Severity.Error);
+            _valid = false;
+            ShowSnackNotification("El email: " +project.EmployerEmail +", no pertenece a un empleador", Severity.Error);
         }   
-        return valid;
+        return _valid;
     }
 
     async Task<bool> ValidateName(Project project)
     {
-        bool valid = true;
-        IEnumerable<Project> nameCecked = await ProjectService.GetEmployerProyects(project.EmployerEmail);
+        bool _valid = true;
+        IEnumerable<Project> _nameCecked = await ProjectService.GetAllProjectsAsync();
 
-        if (nameCecked.Length() != 0)
+        if (_nameCecked.Length() != 0)
         {
-            foreach (Project element in nameCecked){
-                if (element.ProjectName == project.ProjectName)
-                {
-                    valid=false;
-                    ShowSnackNotification("El nombre de proyecto ya está siendo usado", Severity.Error);
-                }
+            Project _tempProject = await ProjectService.GetProject(project.ProjectName);
+            if (_tempProject != null )
+            {
+                _valid=false;
+                ShowSnackNotification("El nombre del proyecto " + project.ProjectName + " ya está siendo utilizado", Severity.Error);
             }
+            
         }
-        return valid;
+        return _valid;
     }
 
     void ShowSnackNotification(string message, Severity severity)
