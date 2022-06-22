@@ -19,6 +19,12 @@
                             <span  aria-hidden="true"></span> Proyectos
                         </NavLink>
                     </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href=@($"Approve_Projects_Payment/{email}") Match="NavLinkMatch.All">
+                             <MudIconButton Icon="@Icons.Filled.CreditScore" Color="@Color.Secondary" Class="mr-2"/>
+                            <span  aria-hidden="true"></span> Aprobar pagos
+                        </NavLink>
+                    </li>
                 </ul>
             </div>
         }
@@ -32,6 +38,13 @@
                         <NavLink class="nav-link" href=@($"Projects/{email}") Match="NavLinkMatch.All">
                              <MudIconButton Icon="@Icons.Filled.BusinessCenter" Color="@Color.Secondary" Class="mr-2"/>
                             <span  aria-hidden="true"></span> Proyectos
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href=@($"Approve_Projects_Payment/{email}") Match="NavLinkMatch.All">
+                             <MudIconButton Icon="@Icons.Filled.CreditScore" Color="@Color.Secondary" Class="mr-2"/>
+                            <span  aria-hidden="true"></span> Aprobar pagos
                         </NavLink>
                     </li>
 
@@ -59,10 +72,6 @@
 
                         <li class="nav-item px-3">
                             <TabNavLink Icon="@Icons.Material.Filled.Assignment" href="@($"/Projects/{email}/{projectName}")" text="Detalles"></TabNavLink>
-                        </li>
-
-                        <li class="nav-item px-3">
-                            <TabNavLink  Icon="@Icons.Filled.CreditScore" href="" text="Aprobar pagos"></TabNavLink>
                         </li>
 
                         @*<li class="nav-item px-3">

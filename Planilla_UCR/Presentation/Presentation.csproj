@@ -4,6 +4,13 @@
 		<TargetFramework>net5.0</TargetFramework>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Payments\Components\**" />
+	  <Content Remove="Payments\Components\**" />
+	  <EmbeddedResource Remove="Payments\Components\**" />
+	  <None Remove="Payments\Components\**" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
@@ -29,10 +36,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Payments\Components\" />
 	</ItemGroup>
 
 </Project>

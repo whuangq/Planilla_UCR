@@ -15,6 +15,7 @@ namespace Infrastructure.Projects.EntityMappings
             builder.Property(p => p.MaximumBenefitAmount);
             builder.Property(p => p.PaymentInterval);
             builder.Property(p => p.IsEnabled);
+            builder.Property(p => p.LastPaymentDate);
         }
     }
 }

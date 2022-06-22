@@ -29,7 +29,7 @@ namespace Infrastructure.Agreements.Repositories
             await _dbContext.SaveEntitiesAsync();
         }
 
-        public async Task<Agreement>? GetContractee(Agreement agreement)
+        public async Task<Agreement?> GetContractee(Agreement agreement)
         {
             IList<Agreement> agreementList = await _dbContext.Agreements.Where
                 (e => e.EmployeeEmail == agreement.EmployeeEmail && e.EmployerEmail == agreement.EmployerEmail
@@ -46,7 +46,22 @@ namespace Infrastructure.Agreements.Repositories
         public async Task<IEnumerable<Agreement>> GetEmployeeProjects(string employeeEmail)
         {
             IList<Agreement> agreementList = await _dbContext.Agreements.Where
-                (e => e.EmployeeEmail == employeeEmail/* && e.ContractType.Equals("Por horas")*/).ToListAsync();
+                (e => e.EmployeeEmail == employeeEmail).ToListAsync();
+            return agreementList;
+        }
+
+        public async Task<Agreement?> GetFirstProjectAgreement(Agreement searchAgreement)
+        {
+            IEnumerable<Agreement> agreements = await _dbContext.Agreements.Where(e => e.EmployerEmail == searchAgreement.EmployerEmail && e.ProjectName == searchAgreement.ProjectName).OrderBy(a => a.ContractStartDate).ToListAsync();
+            Agreement firstAgreement = agreements.FirstOrDefault();
+            return firstAgreement;
+        }
+
+        public async Task<IList<Agreement>> GetProjectAgreements(string projectName, string employerEmail) 
+        {
+            IList<Agreement> agreementList = await _dbContext.Agreements.Where
+               (e => e.EmployerEmail == employerEmail && e.ProjectName == projectName
+               && e.IsEnabled == 1).ToListAsync();
             return agreementList;
         }
     }

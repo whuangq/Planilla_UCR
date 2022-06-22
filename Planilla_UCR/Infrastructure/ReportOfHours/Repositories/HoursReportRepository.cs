@@ -5,6 +5,7 @@ using Domain.ReportOfHours.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Infrastructure.ReportOfHours.Repositories
 {
@@ -42,6 +43,14 @@ namespace Infrastructure.ReportOfHours.Repositories
         {
             IEnumerable<HoursReport> reports = await _dbContext.HoursReport.Where
                (e => e.EmployeeEmail == email).ToListAsync();
+            return reports;
+        }
+
+        public async Task<IList<HoursReport>> GetEmployeeReports(HoursReport hoursReport, DateTime endDate)
+        {
+            IList<HoursReport> reports = await _dbContext.HoursReport.Where
+                (e=> e.EmployeeEmail == hoursReport.EmployeeEmail &&
+                 (endDate >= e.ReportDate && e.ReportDate >= hoursReport.ReportDate)).ToListAsync();
             return reports;
         }
     }

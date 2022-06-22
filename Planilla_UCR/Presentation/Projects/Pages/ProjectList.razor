@@ -200,7 +200,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        ContextMenuService.SetProjectsContext(false, false, "", personEmail,true);
+        ContextMenuService.SetProjectsContext(false, false, "", "",false);
         if (firstRender)
         {
             if (_isEmployer) 

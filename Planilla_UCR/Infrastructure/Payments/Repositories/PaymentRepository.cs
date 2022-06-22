@@ -28,12 +28,17 @@ namespace Infrastructure.Payments.Repositories
             return lastPay;
         }
 
-        public async Task<IEnumerable<PaymentContainsSubscription>> GetPaymentSubscriptions(Payment payment)
+        public async Task AddPayment(Payment newPayment)
         {
-            IEnumerable<PaymentContainsSubscription> subscriptions = await _dbContext.PaymentContainsSubscriptions.Where(e => e.EmployeeEmail == payment.EmployeeEmail &&
-                                                                            e.EmployerEmail == payment.EmployerEmail && e.ProjectName == payment.ProjectName &&
-                                                                            e.StartDate == payment.StartDate && e.EndDate == payment.EndDate).ToListAsync();
-            return subscriptions;
+            _dbContext.Payments.Add(newPayment);
+            await _dbContext.SaveEntitiesAsync();
+        }
+
+        public async Task<IList<Payment>> GetProjectPayments(Payment payment) 
+        {
+            IList<Payment> payments = await _dbContext.Payments.Where(e => e.EmployerEmail == payment.EmployerEmail
+            && e.ProjectName == payment.ProjectName && e.StartDate == payment.StartDate && e.EndDate == payment.EndDate).ToListAsync();
+            return payments;
         }
     }
 }

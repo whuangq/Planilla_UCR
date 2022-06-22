@@ -51,5 +51,10 @@ namespace Application.Projects.Implementations
         {
              _projectRepository.ModifyProject(project, newProjectName);
         }
+
+        public void UpdatePaymentDate(Project project) 
+        { 
+            _projectRepository.UpdatePaymentDate(project);
+        }
     }
 }

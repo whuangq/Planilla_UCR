@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.ReportOfHours.Entities;
 using Domain.ReportOfHours.Repositories;
@@ -27,6 +28,11 @@ namespace Application.ReportOfHours.Implementations
         public Task<bool> HasReportAsync(HoursReport report)
         {
             return _reportRepository.HasReportAsync(report);
+        }
+
+        public Task<IList<HoursReport>> GetEmployeeReports(HoursReport hoursReport, DateTime endDate) 
+        { 
+            return _reportRepository.GetEmployeeReports(hoursReport, endDate);
         }
     }
 }

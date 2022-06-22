@@ -13,13 +13,10 @@ namespace Infrastructure.Payments
         }
 
         public DbSet<Payment> Payments { get; set; } = null!;
-        public DbSet<PaymentContainsSubscription> PaymentContainsSubscriptions { get; set; } = null!;
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new PaymentMap());
-            modelBuilder.ApplyConfiguration(new PaymentContainsSubscriptionMap());
         }
     }
 }

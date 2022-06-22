@@ -30,6 +30,11 @@ namespace Application.Subscribes.Implementations
             return await _subscribeRepository.GetSubscriptionCostsByDate(searchSubscription);
         }
 
+        public async Task<IEnumerable<Subscription>> GetSubscribes(Subscribe searchSubscription) 
+        { 
+            return await _subscribeRepository.GetSubscribes(searchSubscription);
+        }
+
         public async Task<IEnumerable<Subscribe>> GetDeductionsByEmployee(string employeeEmail, string projectName) 
         {
             return await _subscribeRepository.GetDeductionsByEmployee(employeeEmail, projectName);

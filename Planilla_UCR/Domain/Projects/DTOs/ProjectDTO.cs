@@ -12,6 +12,7 @@ namespace Domain.Projects.DTOs
         public int MaximumBenefitAmount { set; get; }
         public String PaymentInterval { set; get; }
         public int IsEnabled { set; get; }
+        public DateTime LastPaymentDate { get; set; }
 
         public ProjectDTO(String employerEmail, String projectName,
                           String projectDescription, double maximumAmountForBenefits,
@@ -24,7 +25,23 @@ namespace Domain.Projects.DTOs
             MaximumBenefitAmount = maximumBenefitAmount;
             PaymentInterval = paymentInterval;
             IsEnabled = isEnabled;
+            LastPaymentDate = DateTime.Now;
         }
+        public ProjectDTO(String employerEmail, String projectName,
+                  String projectDescription, double maximumAmountForBenefits,
+                  int maximumBenefitAmount, String paymentInterval, int isEnabled,
+                  DateTime lastPaymentDate)
+        {
+            EmployerEmail = employerEmail;
+            ProjectName = projectName;
+            ProjectDescription = projectDescription;
+            MaximumAmountForBenefits = maximumAmountForBenefits;
+            MaximumBenefitAmount = maximumBenefitAmount;
+            PaymentInterval = paymentInterval;
+            IsEnabled = isEnabled;
+            LastPaymentDate = lastPaymentDate;
+        }
+
 
     }
 }

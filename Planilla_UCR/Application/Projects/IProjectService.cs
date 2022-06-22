@@ -14,5 +14,6 @@ namespace Application.Projects
         Task<IEnumerable<Project>> GetEmployerProyects(string email);
         Task<IEnumerable<Project>> GetEmployeeProyects(string email);
         public void ModifyProject(Project project, string newProjectName);
+        public void UpdatePaymentDate(Project project);
     }
 }

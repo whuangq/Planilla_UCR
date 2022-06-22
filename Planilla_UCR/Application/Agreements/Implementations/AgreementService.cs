@@ -21,7 +21,7 @@ namespace Application.Agreements.Implementations
             await _agreementRepository.CreateAgreementAsync(agreement);
         }
 
-        public async Task<Agreement>? GetContractee(Agreement agreement)
+        public async Task<Agreement?> GetContractee(Agreement agreement)
         {
             return await _agreementRepository.GetContractee(agreement);
         }
@@ -29,6 +29,16 @@ namespace Application.Agreements.Implementations
         public Task<IEnumerable<Agreement>> GetEmployeeProjects(string employeeEmail)
         {
             return _agreementRepository.GetEmployeeProjects(employeeEmail);
+        }
+
+        public Task<Agreement?> GetFirstProjectAgreement(Agreement searchAgreement)
+        {
+            return _agreementRepository.GetFirstProjectAgreement(searchAgreement);
+        }
+
+        public Task<IList<Agreement>> GetProjectAgreements(string projectName, string employerEmail)
+        {
+            return _agreementRepository.GetProjectAgreements(projectName, employerEmail);
         }
     }
 }

@@ -14,5 +14,6 @@ namespace Domain.Projects.Repositories
         Task<Project> GetProject(string employerEmail, string projectName);
         Task<Project> GetProject(string projectName);
         public void ModifyProject(Project project, string newProjectName);
+        public void UpdatePaymentDate(Project project);
     }
 }

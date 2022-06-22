@@ -98,5 +98,14 @@ namespace Infrastructure.Projects.Repositories
             _dbContext.Database.ExecuteSqlInterpolated(query);
 
         }
+
+        public void UpdatePaymentDate(Project project)
+        {
+            System.FormattableString query = ($@"EXECUTE UpdatePaymentDate 
+                @ProjectName = {project.ProjectName},
+                @EmployerEmail = {project.EmployerEmail},
+                @LastPaymentDate = {project.LastPaymentDate}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
     }
 }
