@@ -11,6 +11,5 @@ namespace Domain.AgreementTypes.Repositories
 
         Task<IEnumerable<AgreementType>>? GetAllAgreementTypes();
         Task<IEnumerable<AgreementType>>? checkAgreementType(string agreementType, int mountPerHour);
-
     }
 }
