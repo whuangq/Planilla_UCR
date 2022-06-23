@@ -25,6 +25,9 @@
         }
     </Authorized>
     <NotAuthorized>
+        @{
+            nav.NavigateTo($"/Loggin", true);
+        }
     </NotAuthorized>
 </AuthorizeView>
 
@@ -35,7 +38,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         //await AuthenticationService.RegisterRequestAsync(accountData);
-        //await AuthorizationService.AssignRole(accountData.Email, "Employer");
+        //await AuthorizationService.AssignRole(accountData.Email, "Employee");
         if (firstRender && authorized)
         {
              ContextMenuService.SetProjectsContext(false, false, "", "", false);

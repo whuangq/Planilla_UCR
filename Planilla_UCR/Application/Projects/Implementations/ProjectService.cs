@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Application.Projects.Implementations
 {
-    internal class ProjectService : IProjectService
+    public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
         

@@ -7,11 +7,13 @@
 @using Shared.Models
 @using Application.Authentication
 @using Domain.Authentication.DTOs
+@using Application.ContextMenu
 
 @inject NavigationManager nav
 @inject ISnackbar Snackbar
 @inject IPersonService PersonService
 @inject IAuthenticationService AuthenticationService
+@inject IContextMenuService ContexService
 
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -30,40 +32,32 @@
         <MudText Align="Align.Center" Typo="Typo.h6">Ingresar</MudText>
         <MudForm @ref="form">
         <MudGrid>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="8">
+            <MudItem xs="3"></MudItem>
+            <MudItem xs="6">
                 <MudTextField @bind-Value="accountData.Email" Label="Correo electrónico" Required="true" RequiredError="Campo requerido" Variant="Variant.Outlined"></MudTextField>
             </MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="2"></MudItem>
-            <MudItem xs="8">
+            <MudItem xs="3"></MudItem>
+            <MudItem xs="3"></MudItem>
+            <MudItem xs="6">
                 <MudTextField @bind-Value="accountData.Password" Label="Contraseña" Required="true" RequiredError="Campo requerido" InputType="InputType.Password" Variant="Variant.Outlined"></MudTextField>
             </MudItem>
-            <MudItem xs="2"></MudItem>
-
+            <MudItem xs="3"></MudItem>
+             <MudItem xs="3"></MudItem>
             @*Create buton *@
-            <MudItem xs="2"></MudItem>
-                <MudItem xs="8">
+                <MudItem xs="6">
                 <MudButton Disabled="@snackHandler._saving" OnClick="ValidateRegisterAccount" Variant="Variant.Filled" Color="Color.Primary">
-                    @if (snackHandler._saving)
-                    {
-                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                        <MudText Class="ms-2">Procesando</MudText>
-                    }
-                    else
-                    {
                         <MudText>Ingresar</MudText>
-                    }
-                </MudButton>
-                     
-            <MudButton Disabled="true"> </MudButton>
-              
-            <MudButton OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Transparent">
-                <MudText>Registrar cuenta empleador</MudText>
+                </MudButton> 
+                <MudButton Disabled ="true"></MudButton>
+                <MudButton OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Transparent">
+                    <MudText>Registrar cuenta empleador</MudText>
                 </MudButton>
             </MudItem>
+           <MudItem xs="3"></MudItem>
+           <MudItem xs="3"></MudItem>
         </MudGrid>
         </MudForm>
+
     </MudPaper>
     </MudItem>
     <MudItem xs="3">

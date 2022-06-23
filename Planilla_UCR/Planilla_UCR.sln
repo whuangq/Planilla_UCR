@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DB_Planilla", "DB_Planilla"
 		DB_Deployment.sql = DB_Deployment.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "TestProject1\Tests.csproj", "{858DB55F-41F3-4806-B0EB-316949052A4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{B464CFE0-99F6-46FE-A3CA-3387D7428478}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B464CFE0-99F6-46FE-A3CA-3387D7428478}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B464CFE0-99F6-46FE-A3CA-3387D7428478}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858DB55F-41F3-4806-B0EB-316949052A4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858DB55F-41F3-4806-B0EB-316949052A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858DB55F-41F3-4806-B0EB-316949052A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858DB55F-41F3-4806-B0EB-316949052A4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

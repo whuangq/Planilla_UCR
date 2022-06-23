@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Application.People.Implementations
 {
-    internal class PersonService : IPersonService
+    public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
 

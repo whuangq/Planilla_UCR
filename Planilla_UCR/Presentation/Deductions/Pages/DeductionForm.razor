@@ -68,8 +68,8 @@
                     }
                 </MudButton>
                 <MudButton Disabled="true"> </MudButton>
-                <MudButton OnClick="GoToMain" Variant="Variant.Filled" Color="Color.Transparent">
-                        <MudText>Cancelar</MudText>
+                <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
+                        <MudText>Limpiar</MudText>
                 </MudButton>
             </MudItem>
             <MudItem xs="2"></MudItem>
@@ -134,5 +134,13 @@
     private void GoToMain()
     {
         nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions");
+    }
+
+    private void CleanForm()
+    {
+        subscriptionInfo.SubscriptionName = "";
+        subscriptionInfo.ProviderName = "";
+        _cost = null;
+        subscriptionInfo.SubscriptionDescription = "";
     }
 }
