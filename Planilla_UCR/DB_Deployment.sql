@@ -603,7 +603,7 @@ VALUES('mau@ucr.ac.cr',
 )
 
 INSERT INTO Person
-VALUES('nasheazofeifa3003@gmail.com',
+VALUES('naye@ucr.ac.cr',
 'Nasheri',
 'Azofeifa',
 'Porras',
@@ -614,8 +614,24 @@ VALUES('nasheazofeifa3003@gmail.com',
 1
 )
 
+INSERT INTO Person
+VALUES('wendy@ucr.ac.cr',
+'Wendy',
+'Ortiz',
+'',
+242342,
+'CR40324350012',
+'San José, Costa Rica',
+'83355226',
+1
+)
+
+
 INSERT INTO Employer
 VALUES('leonel@ucr.ac.cr')
+
+INSERT INTO Employer
+VALUES('wendy@ucr.ac.cr')
 
 INSERT INTO Employee
 VALUES('mau@ucr.ac.cr')
@@ -624,7 +640,7 @@ INSERT INTO Employee
 VALUES('jeremy@ucr.ac.cr')
 
 INSERT INTO Employee
-VALUES('nasheazofeifa3003@gmail.com')
+VALUES('naye@ucr.ac.cr')
 
 INSERT INTO Project
 VALUES('leonel@ucr.ac.cr',
@@ -633,17 +649,6 @@ VALUES('leonel@ucr.ac.cr',
 15000,
 10,
 'Quincenal',
-1,
-'2022-06-01'
-)
-
-INSERT INTO Project
-VALUES('leonel@ucr.ac.cr',
-'Proyecto 2',
-'Emprendimiento de galletas',
-20000,
-6,
-'Mensual',
 1,
 '2022-06-01'
 )
@@ -759,25 +764,35 @@ VALUES('leonel@ucr.ac.cr',
 )
 
 INSERT INTO AgreementType
-VALUES('Tiempo completo',1000)
+VALUES('Tiempo completo', 1600)
+
+INSERT INTO AgreementType
+VALUES('Servicios profesionales', 2000)
+
+INSERT INTO AgreementType
+VALUES('Medio tiempo', 1600)
 
 INSERT INTO Agreement
-VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1','2022-06-1','Tiempo completo', 1000, '2026-06-1', 1, '')
+VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1','2022-06-1','Tiempo completo', 1600, '2026-06-1', 1, '')
 
---INSERT INTO Agreement
---VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 2','9999-12-31','Por horas', 10, '9999-12-31')
+INSERT INTO Agreement
+VALUES('mau@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1','2022-06-1','Servicios profesionales', 2000, '2026-06-1', 1, '')
 
---INSERT INTO ReportOfHours
---VALUES('leonel@ucr.ac.cr', 'Proyecto 1','jeremy@ucr.ac.cr', '2022-6-15',4)
+INSERT INTO Agreement
+VALUES('naye@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1','2022-06-1','Medio tiempo', 1600, '2026-06-1', 1, '')
 
---INSERT INTO ReportOfHours
---VALUES('leonel@ucr.ac.cr', 'Proyecto 1','jeremy@ucr.ac.cr', '2022-5-15',5)
+INSERT INTO Agreement
+VALUES('naye@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 3','2022-06-1','Medio tiempo', 1600, '2026-06-1', 1, '')
 
---INSERT INTO ReportOfHours
---VALUES('leonel@ucr.ac.cr', 'Proyecto 2','jeremy@ucr.ac.cr', '2022-6-15',8)
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-2',4)
 
---INSERT INTO ReportOfHours
---VALUES('leonel@ucr.ac.cr', 'Proyecto 2','jeremy@ucr.ac.cr', '2022-5-15',8)
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-5',5)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-12',8)
+
 
 INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
 VALUES('leonel@ucr.ac.cr',
@@ -791,48 +806,10 @@ VALUES('leonel@ucr.ac.cr',
 INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
 VALUES('leonel@ucr.ac.cr',
 'Proyecto 1',
-'Piscina',
+'Gym',
 'jeremy@ucr.ac.cr',
-25000,
+12000,
 '2022-06-2'
-)
-
-INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate, EndDate)
-VALUES('leonel@ucr.ac.cr',
-'Proyecto 1',
-'Rescate de perros',
-'jeremy@ucr.ac.cr',
-12000,
-'2022-05-10',
-'2022-05-30'
-)
-
-INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
-VALUES('leonel@ucr.ac.cr',
-'Proyecto 1',
-'Fondo de pensiones',
-'jeremy@ucr.ac.cr',
-12000,
-'2022-05-10'
-)
-
-INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate, EndDate)
-VALUES('leonel@ucr.ac.cr',
-'Proyecto 1',
-'Starbucks descuento',
-'jeremy@ucr.ac.cr',
-12000,
-'2022-05-10',
-'2022-06-8'
-)
-
-INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
-VALUES('leonel@ucr.ac.cr',
-'Proyecto 1',
-'Apple del futuro',
-'jeremy@ucr.ac.cr',
-55000,
-'2022-07-10'
 )
 
 INSERT INTO LegalDeduction (DeductionName, Cost)
@@ -844,57 +821,3 @@ INSERT INTO LegalDeduction (DeductionName, Cost)
 VALUES('Hacienda',
 48000.3
 )
-
---INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName,GrossSalary, StartDate, EndDate)
---VALUES('jeremy@ucr.ac.cr',
---'leonel@ucr.ac.cr',
---'Proyecto 1',
---150000,
---'2022-06-1',
---'2022-06-28'
---)
-
---INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName, GrossSalary, StartDate, EndDate)
---VALUES('jeremy@ucr.ac.cr',
---'leonel@ucr.ac.cr',
---'Proyecto 1',
---150000,
---'2022-05-16',
---'2022-05-16'
---)
-
---INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName, GrossSalary,  StartDate, EndDate)
---VALUES('jeremy@ucr.ac.cr',
---'leonel@ucr.ac.cr',
---'Proyecto 1',
--- 350000,
---'2022-04-16',
---'2022-04-16'
---)
-
---INSERT INTO Payment (EmployeeEmail,EmployerEmail, ProjectName, GrossSalary,  StartDate, EndDate)
---VALUES('jeremy@ucr.ac.cr',
---'leonel@ucr.ac.cr',
---'Proyecto 2',
---250000,
---'2022-06-16',
---'2022-06-16'
---)
-
---INSERT INTO PaymentContainsSubscription(EmployeeEmail,EmployerEmail, ProjectName,  StartDate, EndDate, SubscriptionName)
---VALUES('jeremy@ucr.ac.cr',
---'leonel@ucr.ac.cr',
---'Proyecto 1',
---'2022-06-1',
---'2022-06-28',
---'Piscina'
---)
-
---INSERT INTO PaymentContainsSubscription(EmployeeEmail,EmployerEmail, ProjectName,  StartDate, EndDate, SubscriptionName)
---VALUES('jeremy@ucr.ac.cr',
---'leonel@ucr.ac.cr',
---'Proyecto 1',
---'2022-06-1',
---'2022-06-28',
---'Ayudemos a los niños'
---)

@@ -33,7 +33,7 @@
         {
             new BreadcrumbItem("Proyectos", href: $"Projects/{userEmail}"),
             new BreadcrumbItem("Mi perfil", href: $"Profile/{userEmail}"),
-            new BreadcrumbItem("Configuraciones", href: $"Profile/{userEmail}/Configurations")
+            new BreadcrumbItem("Configuraciones",  href: null, disabled: true)
         };
 
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>

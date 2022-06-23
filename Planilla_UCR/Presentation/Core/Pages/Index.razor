@@ -25,24 +25,27 @@
         }
     </Authorized>
     <NotAuthorized>
-        @{
-            nav.NavigateTo($"/Loggin", true);
-        }
     </NotAuthorized>
 </AuthorizeView>
 
 @code{
     public string email { get; set; }
     public bool authorized { get; set; } = false;
-     //AccountDTO accountData = new AccountDTO("leonel@ucr.ac.cr","Prueba01!");
+    //AccountDTO accountData = new AccountDTO("leonel@ucr.ac.cr","Prueba01!");
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         //await AuthenticationService.RegisterRequestAsync(accountData);
         //await AuthorizationService.AssignRole(accountData.Email, "Employee");
-        if (firstRender && authorized)
+        if (firstRender)
         {
-             ContextMenuService.SetProjectsContext(false, false, "", "", false);
-             nav.NavigateTo($"Projects/{email}/", true);
+            if (authorized)
+            {
+                ContextMenuService.SetProjectsContext(false, false, "", "", false);
+                nav.NavigateTo($"Projects/{email}/", true);
+            }
+            else{
+                nav.NavigateTo($"/Loggin", true);
+            }
         }
     }
 }

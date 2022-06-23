@@ -46,7 +46,7 @@
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"Projects/{userEmail}"),
-            new BreadcrumbItem("Mi perfil", href: $"Profile/{userEmail}")
+            new BreadcrumbItem("Mi perfil",  href: null, disabled: true)
         };
 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>

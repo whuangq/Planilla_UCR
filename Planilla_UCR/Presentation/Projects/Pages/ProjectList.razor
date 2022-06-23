@@ -180,7 +180,7 @@
                         <MudTh Style="text-align:justify-all">Tipo contrato</MudTh>
                         <MudTh Style="text-align:justify-all">Inicio contrato</MudTh>
                         <MudTh Style="text-align:justify-all">Fin contrato</MudTh>
-                        <MudTh Style="text-align:justify-all">Salario</MudTh>
+                        <MudTh Style="text-align:justify-all">Monto por horas</MudTh>
                     </HeaderContent>
 
                     <RowTemplate Context="row">
@@ -193,15 +193,7 @@
                          <MudTd DataLabel="Tipo contrato" Style="text-align:justify-all">@row.ContractType</MudTd>
                         <MudTd DataLabel="Inicio contrato" Style="text-align:justify-all">@row.ContractStartDate.ToShortDateString()</MudTd>
                         <MudTd DataLabel="Fin contrato" Style="text-align:justify-all">@row.ContractFinishDate.ToShortDateString()</MudTd>
-                        @if (row.ContractType == "Por horas")
-                        {
-                            <MudTd DataLabel="Salario" Style="text-align:right" >₡@row.MountPerHour.00/H</MudTd>
-                        } 
-                        else
-                        {
-                            <MudTd DataLabel="Salario" Style="text-align:right" >₡@row.MountPerHour.00</MudTd>
-                        }
-            
+                        <MudTd DataLabel="Monto por horas" Style="text-align:right" >₡@row.MountPerHour.00/H</MudTd>
                     </RowTemplate>
 
                     <PagerContent>

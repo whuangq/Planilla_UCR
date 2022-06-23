@@ -27,6 +27,14 @@
 @inject ISnackbar Snackbar
 @inject NavigationManager nav
 
+@{
+    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Inicio", href: ""),
+        new BreadcrumbItem("Aprobar Pagos",  href: null, disabled: true),
+    };
+}
+
 @if (_loading) {
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
         <MudText Align="Align.Center" Typo="Typo.h6">
@@ -36,6 +44,7 @@
     </MudPaper>
 } else
 {
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     @if (_empty)
     {
         <MudPaper  Height="220px" Width="100%" Outlined="true" Class="pa-32" Elevation="25">  

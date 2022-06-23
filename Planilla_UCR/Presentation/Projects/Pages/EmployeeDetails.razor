@@ -89,7 +89,6 @@
                             <MudItem xs="2"></MudItem>
                             <MudItem xs="8">
                                 <br />
-                                <MudDivider />
                             </MudItem>        
                         </MudGrid>
                     </MudForm>
@@ -140,7 +139,7 @@
             {
                 projectInfo = await ProjectService.GetProject(element.ProjectName);
                 _maximumAmountForBenefits = projectInfo.MaximumAmountForBenefits;
-                if (element.ContractType.Equals("Por horas"))
+                if (element.ContractType.Equals("Servicios profesionales"))
                 {
                     ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, true);
                 }

@@ -46,7 +46,7 @@
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
-            new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
+            new BreadcrumbItem(@projectName, href: $"/Projects/{email}/{projectName}"),
             new BreadcrumbItem("Empleados contratados",  href: null, disabled: true)
         }; 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -237,11 +237,6 @@
         {
             CloseDialog();
         }
-    }
-
-    private void GoToProjectDetails()
-    {
-        nav.NavigateTo($"/Projects/Details/{email}/{projectName}");
     }
 
     private void PageChanged(int i)

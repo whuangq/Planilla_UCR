@@ -173,16 +173,22 @@
             {
                 ServiciosProfesionales = false;
             }
-
+            Subscribe searchSubscribe= new Subscribe(email, lastPay.EmployerEmail, projectName, "", 0.0, lastPay.StartDate, lastPay.EndDate);
+            subscriptions = await SubscribeService.GetSubscriptionCostsByDate(searchSubscribe);
             if(ServiciosProfesionales)
             {
-
+                 foreach (var item in subscriptions)
+                {
+                    if(item.TypeSubscription == 1)
+                    {
+                        benefits.Add(item);
+                    }
+                }
             }
             else
             {
                 legalDeductions = await LegalDeductionService.GetAllAsync();
-                Subscribe searchSubscribe= new Subscribe(email, lastPay.EmployerEmail, projectName, "", 0.0, lastPay.StartDate, lastPay.EndDate);
-                subscriptions = await SubscribeService.GetSubscriptionCostsByDate(searchSubscribe);
+                
 
                 foreach (var item in subscriptions)
                 {
@@ -196,12 +202,6 @@
                         deductions.Add(item);
                     }
                 }
-                
-                foreach (var item in benefits)
-                {
-                    netSalary += item.Cost;
-                    grossSalary += item.Cost;
-                }
 
                 foreach (var item in deductions)
                 {
@@ -214,6 +214,12 @@
                 }
             }
 
+            
+            foreach (var item in benefits)
+            {
+                netSalary += item.Cost;
+                grossSalary += item.Cost;
+            }
             
             Person employer = await PersonService.GetPerson(lastPay.EmployerEmail);
             rows.Add(@"Empleador: "+employer.Name +" "+employer.LastName1 +" "+employer.LastName2  +"#"+"Tipo de contrato: "+agreement.ContractType+"#"+"Desde: "+lastPay.StartDate.ToShortDateString() +" Hasta: "+ lastPay.EndDate.ToShortDateString());

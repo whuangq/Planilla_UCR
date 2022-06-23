@@ -22,7 +22,7 @@
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
-            new BreadcrumbItem(@projectName, href: $"/Projects/Details/{employerEmail}/{projectName}"),
+            new BreadcrumbItem(@projectName, href: $"/Projects/{employerEmail}/{projectName}"),
             new BreadcrumbItem("Contratar empleados", href: null, disabled: true)
         }; 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -154,10 +154,5 @@
     private async Task SendConmuteSignal()
     {
         await SendTableState.InvokeAsync("");
-    }
-
-    private void GoToProjectDetails()
-    {
-        nav.NavigateTo($"/Projects/Details/{employerEmail}/{projectName}");
     }
 }

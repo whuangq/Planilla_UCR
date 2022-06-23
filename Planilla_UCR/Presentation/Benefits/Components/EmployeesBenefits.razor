@@ -2,9 +2,11 @@
 @using Domain.Subscribes.Entities
 @using System
 @using System.Globalization
+@using Application.ContextMenu
 @inject ISnackbar Snackbar
 @inject NavigationManager nav
 @inject ISubscribeService SubscribeService
+@inject IContextMenuService ContextMenuService
 
 @if(_loading) {
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
@@ -18,7 +20,7 @@
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{employeeEmail}"),
-            new BreadcrumbItem(@projectName, href: $"/Projects/Details/{employeeEmail}/{projectName}"),
+            new BreadcrumbItem(@projectName, href: $"/Projects/{employeeEmail}/{ContextMenuService.GetEmployerEmailContext()}/{projectName}"),
             new BreadcrumbItem("Beneficios",  href: null, disabled: true)
         }; 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
@@ -82,6 +84,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        ContextMenuService.SetProjectsContext(true,true, projectName, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetHoursEmployeeContext());
         _elements = await SubscribeService.GetBenefitsByEmployee(employeeEmail, projectName);
         if (_elements.Length() > 0)
         {

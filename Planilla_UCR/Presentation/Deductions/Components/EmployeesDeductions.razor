@@ -20,7 +20,7 @@
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{employeeEmail}"),
-            new BreadcrumbItem(@projectName, href: $"/Projects/Details/{employeeEmail}/{projectName}"),
+            new BreadcrumbItem(@projectName, href: $"/Projects/{employeeEmail}/{ContextMenuService.GetEmployerEmailContext()}/{projectName}"),
             new BreadcrumbItem("Beneficios",  href: null, disabled: true)
         }; 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
