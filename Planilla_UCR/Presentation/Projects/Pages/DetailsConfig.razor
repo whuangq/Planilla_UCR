@@ -353,7 +353,8 @@
         _projectInfo.PaymentInterval = _oldPaymentInterval;
         _projectInfo.IsEnabled = _oldIsEnabled;
         _projectInfo = await ProjectService.GetProject(personEmail,projectName);
-        nav.NavigateTo($"/Projects/{personEmail}");
+        _disabled = true;
+        nav.NavigateTo($"/Projects/{personEmail}/{projectName}/");
     }
 
     private void EnableForm()
