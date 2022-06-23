@@ -53,5 +53,10 @@ namespace Application.Agreements.Implementations
         {
             return _agreementRepository.GetProjectAgreements(projectName, employerEmail);
         }
+        public async Task<IEnumerable<Agreement>>? CheckAgreementTypeOfContractee(Agreement agreement)
+        {
+            return await _agreementRepository.CheckAgreementTypeOfContractee(agreement);
+        }
+
     }
 }

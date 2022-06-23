@@ -14,7 +14,8 @@ namespace Presentation.Agreements.Models
         public string Name { get; set; }
         public string LastName1 { get; set; }
         public string LastName2 { get; set; }
-        public JoinedTables() {
+        public JoinedTables()
+        {
             this.PaymentInterval = "";
             this.EmployeeEmail = "";
             this.ContractType = "";
@@ -28,7 +29,7 @@ namespace Presentation.Agreements.Models
 
         public JoinedTables(string PaymentInterval, string EmployeeEmail, string ContractType, DateTime ContractStartDate, DateTime ContractFinishDate, int MountPerHour, string Name, string LastName1, string LastName2)
         {
-            this.PaymentInterval = PaymentInterval; 
+            this.PaymentInterval = PaymentInterval;
             this.EmployeeEmail = EmployeeEmail;
             this.ContractType = ContractType;
             this.ContractStartDate = ContractStartDate;

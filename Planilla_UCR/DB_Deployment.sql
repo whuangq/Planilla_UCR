@@ -500,12 +500,6 @@ END
 
 -- AgreementType Stored procedures
 
-GO
-CREATE or ALTER PROCEDURE CheckSalaryPerAgreement(@MountPerHour int)
-AS
-BEGIN 
-	SELECT * FROM AgreementType WHERE MountPerHour = @MountPerHour
-END
 
 GO
 CREATE OR ALTER PROCEDURE GetAllAgreementTypes
@@ -515,26 +509,37 @@ BEGIN
 	FROM AgreementType AS ATP
 END
 
-
--- Agreements stored procedures
 GO
-CREATE OR ALTER PROCEDURE GetContracteeByEmail(@ContracteeEmail varchar(255))
+CREATE OR ALTER PROCEDURE checkAgreementType(
+@AgreementType varchar(255),
+@MountPerHour int) 
 AS
-BEGIN 
-	SELECT * FROM Agreement WHERE EmployeeEmail = @ContracteeEmail AND IsEnabled = 1
+BEGIN
+	SELECT *
+	FROM AgreementType AS ATP
+	Where ATP.TypeAgreement = @AgreementType and ATP.MountPerHour = @MountPerHour
 END
 
+-- Agreements stored procedures
+
 GO
-CREATE OR ALTER PROCEDURE GetAllAgreementsByProjectAndEmployer(@Project varchar(255), @EmployerEmail varchar(255))
+CREATE OR ALTER PROCEDURE GetAllAgreementsByProjectAndEmployer(
+@Project varchar(255), 
+@EmployerEmail varchar(255))
 AS
 BEGIN
 	SELECT *
 	FROM Agreement as A
-	WHERE A.ProjectName = @Project AND A.EmployerEmail = @EmployerEmail AND A.IsEnabled = 1
+	WHERE A.ProjectName = @Project AND A.EmployerEmail = @EmployerEmail AND A.IsEnabled = 1 AND A.ContractFinishDate > GETDATE()
 END
 
+
 GO
-CREATE OR ALTER PROCEDURE DesactivateAgreement(@EmployeeEmail varchar(255), @EmployerEmail varchar(255), @ProjectName varchar(255), @Justification varchar(max))
+CREATE OR ALTER PROCEDURE DesactivateAgreement(
+@EmployeeEmail varchar(255), 
+@EmployerEmail varchar(255),
+@ProjectName varchar(255), 
+@Justification varchar(max))
 AS
 BEGIN
 	UPDATE Agreement
@@ -542,20 +547,21 @@ BEGIN
 	WHERE Agreement.EmployeeEmail = @EmployeeEmail AND Agreement.EmployerEmail = @EmployerEmail AND Agreement.ProjectName = @ProjectName AND Agreement.IsEnabled = 1;
 END
 
---Agreement Stored procedure
 GO
-CREATE OR ALTER PROCEDURE GetAllAgreementTypes
-AS
-BEGIN
-	SELECT *
-	FROM AgreementType AS ATP
-END
-
-GO
-CREATE or ALTER PROCEDURE GetSalaryPerAgreement(@MountPerHour int)
+CREATE or ALTER PROCEDURE CheckAgreementTypeOfContractee(
+@EmployeeEmail varchar(255), 
+@EmployerEmail varchar(255), 
+@ProjectName varchar(255), 
+@ContractType varchar(255))
 AS
 BEGIN 
-	SELECT * FROM AgreementType WHERE MountPerHour = @MountPerHour
+	SELECT * 
+	FROM Agreement AS A 
+	WHERE A.IsEnabled = 1 AND 
+	A.EmployeeEmail = @EmployeeEmail AND 
+	A.EmployerEmail = @EmployerEmail AND
+	A.ProjectName = @ProjectName AND
+	A.ContractType = @ContractType
 END
 
 -- Data Insert
@@ -752,17 +758,8 @@ VALUES('leonel@ucr.ac.cr',
 1
 )
 
-Insert into AgreementType
-Values('Tiempo completo', 1000)
-
-Insert into AgreementType
-Values('Medio tiempo', 500)
-
-Insert into AgreementType
-Values('Servicios profesionales', 700)
-
-Insert into AgreementType
-Values('Por horas', 10)
+INSERT INTO AgreementType
+VALUES('Tiempo completo',1000)
 
 INSERT INTO Agreement
 VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 1','2022-06-1','Tiempo completo', 1000, '2026-06-1', 1, '')
@@ -901,4 +898,3 @@ VALUES('Hacienda',
 --'2022-06-28',
 --'Ayudemos a los niños'
 --)
-

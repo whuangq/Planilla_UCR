@@ -28,23 +28,21 @@ namespace Infrastructure.AgreementTypes.Repositories
             _dbContext.AgreementTypes.Add(agreement);
             await _dbContext.SaveEntitiesAsync();
         }
-  
-        public async Task<IEnumerable<AgreementType>>? GetTypesOfAgreement() 
-        {
-            var agreementTypeList = await _dbContext.AgreementTypes.FromSqlRaw("EXEC GetTypesOfAgreement").ToListAsync();
-            return agreementTypeList;
-        }
-        public async Task<IEnumerable<AgreementType?>> GetSalaryPerAgreement(int Agreement)
-        {
-            var agreementsSalary = await _dbContext.AgreementTypes.FromSqlRaw("EXEC CheckSalaryPerAgreement @Agreement",
-                new SqlParameter("@Agreement", Agreement)).ToListAsync();
-            return agreementsSalary;
-        }
 
         public async Task<IEnumerable<AgreementType?>> GetAllAgreementTypes()
         {
             var agreementTypeList = await _dbContext.AgreementTypes.FromSqlRaw("EXEC GetAllAgreementTypes").ToListAsync();
             return agreementTypeList;
         }
+
+        public async Task<IEnumerable<AgreementType>>? checkAgreementType(string agreementType, int mountPerHour) 
+        {
+            SqlParameter myAgreementType = new SqlParameter("@AgreementType", agreementType);
+            SqlParameter myMountPerHour = new SqlParameter("@MountPerHour", mountPerHour);
+            var agreementTypeList = await _dbContext.AgreementTypes.FromSqlRaw("EXEC checkAgreementType {0}, {1}",
+                myAgreementType, myMountPerHour).ToListAsync();
+            return agreementTypeList;
+        }
+
     }
 }

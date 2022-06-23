@@ -33,14 +33,13 @@ namespace Infrastructure.Agreements.Repositories
         {
             IList<Agreement> agreementList = await _dbContext.Agreements.Where
                 (e => e.EmployeeEmail == agreement.EmployeeEmail && e.EmployerEmail == agreement.EmployerEmail
-                && e.ProjectName == agreement.ProjectName).ToListAsync();
+                && e.ProjectName == agreement.ProjectName && e.IsEnabled == 1).ToListAsync();
             Agreement myAgreement = null;
             if (agreementList.Length() > 0)
             {
                 myAgreement = agreementList.First();
             }
             return myAgreement;
-
         }
 
         public async Task<IEnumerable<Agreement?>> GetAllAgreementsByProjectAndEmployer(string projectName, string employerEmail) 
@@ -87,6 +86,18 @@ namespace Infrastructure.Agreements.Repositories
         {
             System.FormattableString query = $"EXECUTE DesactivateAgreement @EmployeeEmail = {employeeEmail}, @EmployerEmail = {employerEmail}, @ProjectName = {projectName}, @Justification = {justification}";
             _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
+
+        public async Task<IEnumerable<Agreement?>> CheckAgreementTypeOfContractee(Agreement agreement)
+        {
+            SqlParameter myEmployeeEmail = new SqlParameter("@EmployeeEmail", agreement.EmployeeEmail);
+            SqlParameter myEmployerEmail = new SqlParameter("@EmployerEmail", agreement.EmployerEmail);
+            SqlParameter myProjectName = new SqlParameter("@ProjectName", agreement.ProjectName);
+            SqlParameter myContractType = new SqlParameter("@ContractType", agreement.ContractType);
+
+            var agreementsSalary = await _dbContext.Agreements.FromSqlRaw("EXEC CheckAgreementTypeOfContractee {0},{1},{2},{3}",
+                myEmployeeEmail, myEmployerEmail, myProjectName, myContractType).ToListAsync();
+            return agreementsSalary;
         }
     }
 }
