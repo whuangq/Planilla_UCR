@@ -80,7 +80,7 @@ namespace Infrastructure.Projects.Repositories
         public async Task<IEnumerable<Project>> GetEmployeeProyects(string name)
         {
             IList<Project> projectsResult = await _dbContext.Projects.Where
-                (e => e.ProjectName == name && e.IsEnabled == 1).ToListAsync();
+                (e => e.ProjectName == name).ToListAsync();
             return projectsResult;
         }
 
