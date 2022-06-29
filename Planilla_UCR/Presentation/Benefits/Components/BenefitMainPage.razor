@@ -69,7 +69,7 @@ else
                         </MudLink>
                     </MudTd>
                     <MudTd DataLabel="Descripción">@context.ProviderName</MudTd>
-                    <MudTd DataLabel="Costo" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
+                    <MudTd DataLabel="Costo" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost)</MudTd>
                 </RowTemplate>
                 <PagerContent>
                     <MudPagination SelectedChanged="PageChanged" Count="@((_mudTable.GetFilteredItemsCount() + _mudTable.RowsPerPage - 1) / _mudTable.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
@@ -127,9 +127,9 @@ else
         return false;
     }
     
-    private string costFormat(double cost)
+    private string CostFormat(double cost)
     {
-        string costo = string.Format("{0:N}", cost);
-        return costo;
+        string formatedCost = string.Format("{0:N}", cost);
+        return formatedCost;
     }
 }

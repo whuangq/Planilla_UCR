@@ -56,7 +56,7 @@
                             <MudTextField @bind-Value="context.SubscriptionDescription" Lines="2"  T="string" Variant="Variant.Text" ReadOnly = "true"></MudTextField>
                         </MudItem>
                     </MudTd>
-                    <MudTd DataLabel="Monto sugerido" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
+                    <MudTd DataLabel="Monto sugerido" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost)</MudTd>
                 </RowTemplate>
 
                 <PagerContent>
@@ -195,9 +195,9 @@
         await SendConmuteSignal();
     }
 
-    private string costFormat(double cost)
+    private string CostFormat(double cost)
     {
-        string costo = string.Format("{0:N}", cost);
-        return costo;
+        string formatedCost = string.Format("{0:N}", cost);
+        return formatedCost;
     }
 }

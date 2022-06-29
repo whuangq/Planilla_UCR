@@ -77,7 +77,7 @@
             <RowTemplate>
                 <MudTd DataLabel="Nombre">@context.FullName</MudTd>
                 <MudTd DataLabel="Tipo de contrato">@context.ContractType</MudTd>
-                <MudTd DataLabel="Costo" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.MountToPay) </MudTd>
+                <MudTd DataLabel="Costo" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.MountToPay) </MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudPagination SelectedChanged="PageChanged" Count="@((_mudTable.GetFilteredItemsCount() + _mudTable.RowsPerPage - 1) / _mudTable.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
@@ -100,7 +100,6 @@
     private bool _loading = true;
     private bool _empty = true;
     private DateTime _nextPay = DateTime.Now;
-    private bool _canPay = false;
     private IList<Agreement> _employees = new List<Agreement>();
     private IEnumerable<EmployeeAgreement> _employeesPayment = new List<EmployeeAgreement>();
     private PaymentCalculator _calculator = new PaymentCalculator();
@@ -115,15 +114,24 @@
     protected override async Task OnParametersSetAsync()
     {
         ContextService.SetProjectsContext(true,true, projectName, email, ContextService.GetHoursEmployeeContext());
-        _employees = await AgreementService.GetProjectAgreements(ContextService.GetProjectsContext(), email); 
+        _employees = await AgreementService.GetProjectAgreements(ContextService.GetProjectsContext(), email);
         await GetProjectInfo();
         GetNextPay();
         if(_nextPay <= DateTime.Now)
         {
-            _canPay = true;
             await CreateTable();
         }
         _loading = false;
+    }
+
+    async Task GetProjectInfo()
+    {
+        _projectInfo = await ProjectService.GetProject(email,  projectName);
+        if(_projectInfo == null)
+        {
+            _projectInfo =  new Project("","","",0.0,0,"",1);
+        }
+        _nextPay = _projectInfo.LastPaymentDate;
     }
 
     private async Task CreateTable()
@@ -178,25 +186,46 @@
 
     private async Task<double> GetSalary(int mountPerHour, string contractType, string employeeEmail, DateTime startDate)
     {
-        int workedDays = GetWorkedDays(employeeEmail, startDate);
-        double salary = 0;
         double appliedBenefits = await GetEmployeeBenefits(employeeEmail);
+        double salary = await GetSalaryByType(mountPerHour, employeeEmail, contractType, startDate);
+        salary += appliedBenefits;
+        return salary;
+    }
 
+    private async Task<double> GetSalaryByType(int mountPerHour, string employeeEmail, string contractType, DateTime startDate)
+    {
+        int workedDays = GetWorkedDays(employeeEmail, startDate);
+        double grossSalary = 0;
         if (contractType == "Tiempo completo")
         {
-            salary = _calculator.GetFullTimeSalary(mountPerHour, workedDays);
+            grossSalary = _calculator.GetFullTimeSalary(mountPerHour, workedDays);
         }
         if (contractType == "Medio tiempo")
         {
-            salary = _calculator.GetPartTimeSalary(mountPerHour, workedDays);
+            grossSalary = _calculator.GetPartTimeSalary(mountPerHour, workedDays);
         }
         if (contractType == "Servicios profesionales")
         {
             double workedHours = await GetWorkedHours(employeeEmail);
-            salary = _calculator.GetSalaryPerHours(mountPerHour, workedHours);
+            grossSalary = _calculator.GetSalaryPerHours(mountPerHour, workedHours);
         }
-        salary += appliedBenefits;
-        return salary;
+        return grossSalary;
+    }
+
+    private int GetWorkedDays(string employeeEmail, DateTime startDate)
+    {
+        int _workedDays = Convert.ToInt32(_daysInterval);
+        if (startDate.Month == _nextPay.Month)
+        {
+            _workedDays = _nextPay.Day - startDate.Day;
+            int _workedWeeks = _workedDays / 7;
+            _workedDays -= _workedWeeks;
+            if (startDate.Date > _nextPay.Date)
+            {
+                _workedDays = 0;
+            }
+        }
+        return _workedDays;
     }
 
     private async Task<double> GetEmployeeBenefits(string employeeEmail)
@@ -224,32 +253,6 @@
         return _workedHours;
     }
 
-    private int GetWorkedDays(string employeeEmail, DateTime startDate)
-    {
-        int _workedDays = Convert.ToInt32(_daysInterval);
-        if (startDate.Month == _nextPay.Month)
-        {
-            _workedDays = _nextPay.Day - startDate.Day;
-            int _workedWeeks = _workedDays / 7;
-            _workedDays -= _workedWeeks;
-            if (startDate.Date > _nextPay.Date)
-            {
-                _workedDays = 0;
-            }
-        }
-        return _workedDays;
-    }
-
-    async Task GetProjectInfo()
-    {
-        _projectInfo = await ProjectService.GetProject(email,  projectName);
-        if(_projectInfo == null)
-        {
-            _projectInfo =  new Project("","","",0.0,0,"",1);
-        }
-        _nextPay = _projectInfo.LastPaymentDate;
-    }
-
     public void GetNextPay()
     {
         GetDaysInterval();
@@ -272,62 +275,45 @@
                 }break;
             case "Quincenal":
                 {
-                    if (lastPaymentDate.Day == 14)
-                    {
-                        _daysInterval = 14.0;
-                    }
-                    else
-                    {
-                        if (lastPaymentDate.Day == 28)
-                        {
-                            DateTime nextFortnight = lastPaymentDate.AddMonths(1);
-                            nextFortnight = nextFortnight.AddDays(-14);
-                            TimeSpan t = nextFortnight - lastPaymentDate;
-                            _daysInterval = t.Days;
-                        }
-                        else
-                        {
-                            if (lastPaymentDate.Day < 14)
-                            {
-                                _daysInterval = 14 - lastPaymentDate.Day;
-                            }
-                            else
-                            {
-                                _daysInterval = 28 - lastPaymentDate.Day;
-                            }
-                        }
-                    }
-            }break;
+                    fortnightDays(lastPaymentDate);
+                }break;
             case "Mensual": 
-            {
-                DateTime nextMonth = lastPaymentDate.AddMonths(1);
-                TimeSpan t = nextMonth - lastPaymentDate;
-                _daysInterval = t.Days;
-            }break;
+                {
+                    DateTime nextMonth = lastPaymentDate.AddMonths(1);
+                    TimeSpan t = nextMonth - lastPaymentDate;
+                    _daysInterval = t.Days;
+                }break;
 
         }
     }
 
-    private bool FilterFunc1(EmployeeAgreement element) => FilterFunc(element, searchString1);
-
-    private bool FilterFunc(EmployeeAgreement element, string searchString)
+    private void fortnightDays(DateTime lastPaymentDate)
     {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if (element.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        return false;
-    }
-
-    private void PageChanged(int i)
-    {
-        _mudTable.NavigateTo(i - 1);
-    }
-
-    private string costFormat(double cost)
-    {
-        string costo = string.Format("{0:N}", cost);
-        return costo;
+        if (lastPaymentDate.Day == 14)
+        {
+            _daysInterval = 14.0;
+        }
+        else
+        {
+            if (lastPaymentDate.Day == 28)
+            {
+                DateTime nextFortnight = lastPaymentDate.AddMonths(1);
+                nextFortnight = nextFortnight.AddDays(-14);
+                TimeSpan t = nextFortnight - lastPaymentDate;
+                _daysInterval = t.Days;
+            }
+            else
+            {
+                if (lastPaymentDate.Day < 14)
+                {
+                    _daysInterval = 14 - lastPaymentDate.Day;
+                }
+                else
+                {
+                    _daysInterval = 28 - lastPaymentDate.Day;
+                }
+            }
+        }
     }
 
     private async Task RegisterPayment()
@@ -353,5 +339,27 @@
         {
             Snackbar.Add("Por favor seleccione los pagos a aprobar", Severity.Warning);
         }
+    }
+
+    private bool FilterFunc1(EmployeeAgreement element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(EmployeeAgreement element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void PageChanged(int i)
+    {
+        _mudTable.NavigateTo(i - 1);
+    }
+
+    private string CostFormat(double cost)
+    {
+        string formatedCost = string.Format("{0:N}", cost);
+        return formatedCost;
     }
 }

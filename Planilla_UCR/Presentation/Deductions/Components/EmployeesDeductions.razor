@@ -48,7 +48,7 @@
                     <RowTemplate>
                         <MudTd DataLabel="Deducción voluntaria">@context.SubscriptionName</MudTd>
                         <MudTd DataLabel="Fecha de Inicio">@context.StartDate.ToString("MM/dd/yyyy")</MudTd>
-                        <MudTd DataLabel="Monto Pagado" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @costFormat(context.Cost)</MudTd>
+                        <MudTd DataLabel="Monto Pagado" Style="text-align:right"> @cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost)</MudTd>
                     </RowTemplate>
 
                     <PagerContent>
@@ -132,9 +132,9 @@
         }
     }
 
-    private string costFormat(double cost)
+    private string CostFormat(double cost)
     {
-        string costo = string.Format("{0:N}", cost);
-        return costo;
+        string formatedCost = string.Format("{0:N}", cost);
+        return formatedCost;
     }
 }
