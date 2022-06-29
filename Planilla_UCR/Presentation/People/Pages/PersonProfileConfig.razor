@@ -167,7 +167,7 @@
         snackHandler._saving = true;
         await form.Validate();
         if (form.IsValid && ValidateSsn(personInfo) && ValidateUpdate(personInfo)){
-            await PersonService.UpdatePerson(personInfo);
+            PersonService.UpdatePerson(personInfo);
             ShowSnackNotification("Cuenta para "+personInfo.Name+" modificada", Severity.Success);
             nav.NavigateTo($"/Profile/{userEmail}"); 
         }

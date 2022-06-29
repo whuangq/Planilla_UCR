@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Linq;
 
 
@@ -40,12 +39,14 @@ namespace Infrastructure.People.Repositories
                 t.BankAccount, t.Adress, t.PhoneNumber, t.IsEnabled)).ToListAsync();
         }
 
-        public async Task UpdatePerson(Person personInfo)
+        public void UpdatePerson(Person personInfo)
         {
-            System.FormattableString query = $"EXECUTE UpdatePerson @EmailPerson = {personInfo.Email}, @NewName = {personInfo.Name}, @NewLastName1 = {personInfo.LastName1}, @NewLastName2 = {personInfo.LastName2}, @NewSSN = {personInfo.Ssn}, @NewBankAccount = {personInfo.BankAccount}, @NewAdress = {personInfo.Adress}, @NewPhoneNumber = {personInfo.PhoneNumber}";
+            System.FormattableString query = ($@"EXECUTE UpdatePerson @EmailPerson = {personInfo.Email}, 
+                @NewName = {personInfo.Name}, @NewLastName1 = {personInfo.LastName1}, @NewLastName2 = {personInfo.LastName2}, 
+                @NewSSN = {personInfo.Ssn}, @NewBankAccount = {personInfo.BankAccount}, @NewAdress = {personInfo.Adress}, 
+                @NewPhoneNumber = {personInfo.PhoneNumber}");
             _dbContext.Database.ExecuteSqlInterpolated(query);
         }
-
 
         public async Task<Person?> GetInfoPerson(Person personInfo)
         {

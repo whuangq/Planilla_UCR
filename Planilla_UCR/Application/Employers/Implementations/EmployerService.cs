@@ -2,8 +2,6 @@
 using Domain.Employers.Entities;
 using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Domain.People.Entities;
 
 namespace Application.Employers.Implementations
 {

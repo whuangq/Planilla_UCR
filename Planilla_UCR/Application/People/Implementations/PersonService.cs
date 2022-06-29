@@ -28,9 +28,9 @@ namespace Application.People.Implementations
             return await _personRepository.GetPersonByEmail(email);
         }
 
-        public async Task UpdatePerson(Person personInfo)
+        public void UpdatePerson(Person personInfo)
         {
-            await _personRepository.UpdatePerson(personInfo);
+           _personRepository.UpdatePerson(personInfo);
         }
 
         public async Task<Person> GetInfoPerson(Person personInfo)

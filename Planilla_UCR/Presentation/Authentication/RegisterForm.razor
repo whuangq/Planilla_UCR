@@ -25,7 +25,6 @@
 @inject IAuthorizationServices AuthorizationService
 @inject IEmailServices EmailService
 
-@*Navigation footprint *@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
@@ -33,7 +32,6 @@
         new BreadcrumbItem("Cuenta",  href: null, disabled: true),
     };
 }
-
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 
 <MudGrid>
@@ -52,7 +50,6 @@
                         <MudTextField @bind-Value="personInfo.Email" Label="Email" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
-
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.LastName1" Label="Primer Apellido" Variant="Variant.Outlined"></MudTextField>
@@ -61,37 +58,31 @@
                         <MudTextField @bind-Value="personInfo.LastName2" Label="Segundo Apellido" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
-
                      <MudItem xs="2"></MudItem>
                      <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.PhoneNumber" Label="Teléfono" Variant="Variant.Outlined" ></MudTextField>
                     </MudItem>
-
                     <MudItem xs="4">
                         <MudTextField @bind-Value="personInfo.Ssn" Label="Cedula" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     </MudItem>
                       <MudItem xs="2"></MudItem>
-
                     @*Large fields *@
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="8">
                         <MudTextField @bind-Value="personInfo.Adress" Label="Dirección" Variant="Variant.Outlined"></MudTextField>
                     </MudItem>
                     <MudItem xs="2"></MudItem>
-
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="8">
                         <MudTextField @bind-Value="personInfo.BankAccount" Label="Cuenta Bancaria" Variant="Variant.Outlined" Required="true" RequiredError="Campo requerido"></MudTextField>
                     <MudDivider />
                     </MudItem>
                     <MudItem xs="2"></MudItem>
-                   
                     <MudItem xs="2"></MudItem>
                     <MudItem xs="4">
                        <MudTextField @bind-Value="accountData.Password" Label="Contraseña" Variant="Variant.Outlined" @ref="pwField1" InputType="InputType.Password"  Required="true" RequiredError="Campo requerido" 
                             Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" ></MudTextField>
                    </MudItem>
-                    
                    <MudItem xs="4">
                        <MudTextField T="string" Label="Confirmación de Contraseña" Variant="Variant.Outlined" InputType="InputType.Password"  Validation="@(new Func<string, string>(PasswordMatch))" Required="true" RequiredError="Campo requerido" ></MudTextField>
                     </MudItem>
@@ -105,7 +96,6 @@
                     <MudSpacer></MudSpacer>
                     @*Create buton *@
                     <MudItem xs="2"></MudItem>
-                    
                         <MudButton Disabled="@snackHandler._saving" @onclick="SavePersonInfo" Variant="Variant.Filled" Color="Color.Primary">
                             @if (snackHandler._saving)
                             {
@@ -117,18 +107,13 @@
                                 <MudText>Registrar</MudText>
                                     
                             }
-                          
                         </MudButton>
-                           
                          <MudButton Disabled="true"> </MudButton>
                         @*Clear buton *@
                         <MudButton OnClick="CleanForm" Variant="Variant.Filled" Color="Color.Transparent">
                                 <MudText>Limpiar</MudText>
                         </MudButton>
-
-                         
                      <MudItem xs="2"></MudItem>
-
                      <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
                         <TitleContent>
                             <MudText Typo="Typo.h6">
@@ -150,11 +135,8 @@
             </MudForm>
         </MudPaper>
     </MudItem>
-
-    @*File uploader *@
     <MudItem xs="3">
     </MudItem>
-
 </MudGrid>
 
 @code {
@@ -169,16 +151,13 @@
     private bool visible;
     private bool open;
 
-
     private void OpenDialog() => visible = true;
     void CloseDialog() => visible = false;
-
     private DialogOptions dialogOptions = new() { FullWidth = true };
-
 
     private string CreateConfirmationCode()
     {
-        int confirmationCode = 1;
+        int confirmationCode = random.Next(100000,999999);
         string confirmationCodeString = confirmationCode.ToString();
         return confirmationCodeString;
     }
@@ -204,7 +183,6 @@
         }
         snackHandler._saving = false;
     }
-
 
     async Task AcceptConfirmationCode(){
         OpenDialog();
@@ -251,7 +229,6 @@
         }   
     }
 
-
     bool ConfirmationCodeMatch(string confirmationCodeEmployer, string confirmationCodeString)
     {
         bool valid = true;
@@ -276,7 +253,6 @@
     bool ValidateEmail(Person personInfo)
     {
         bool valid = true;
-
         valid = personInfo.Email.Contains('@');
         if (!valid)
         {

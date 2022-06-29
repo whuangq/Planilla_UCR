@@ -11,7 +11,8 @@ namespace Application.Email
     {
         public EmailSender() { }
         private string user = "i/MVRXAfhPPNVbUc0F0ILYn2xj4vSGjeCu1sXhBD7I0fFZBI5H7wD/8GHhHlMzPo";
-        private string key = "p/ZNHkzgSrYi7TogkFKN7qRHrBb0lc/XTw8DmUZ2Jro=";
+        private string key = "KCcTc++sjHqdinzLN97KAM3pQgz2yzb4z8SJ7Ie6hB1KH7Ra6VPvU33WsNOqe4jy";
+     
         public void SendMail(string email, string subject, string htmlContent)
         {
             try

@@ -149,12 +149,9 @@
     bool fixed_header = true;
     bool fixed_footer = false;
     SnackHandler snackHandler = new SnackHandler();
-
-    
     private IEnumerable<Agreement> agreementsList;
     private IEnumerable<Subscription> benefitsList;
     private IEnumerable<Subscription> deductionsList;
-
 
     private void OpenDialog() => visible = true;
     void CloseDialog() => visible = false;
@@ -181,28 +178,41 @@
         projectsList = await ProjectService.GetEmployerProyects(userEmail);
         foreach(var project in projectsList)
         {
-            benefitsList = await SubscriptionService.GetBenefitsByProject(project.EmployerEmail,project.ProjectName);
-            deductionsList = await SubscriptionService.GetDeductionsByProject(project.EmployerEmail,project.ProjectName);
-            agreementsList = await AgreementService.GetAllAgreementsByProjectAndEmployer(project.ProjectName, project.EmployerEmail);
-            
-            foreach(Subscription benefit in benefitsList)
-            {
-                SubscriptionService.DeleteSubscription(benefit);
-            }
-            foreach(Subscription deduction in deductionsList)
-            {
-                SubscriptionService.DeleteSubscription(deduction);
-            }
-            
-            foreach(var agreement in agreementsList)
-            {
-                await AgreementService.DesactivateAgreement(agreement.EmployeeEmail, agreement.EmployerEmail, agreement.ProjectName, "Cierre de negocio");
-            }
+            await DeleteBenefits(project.EmployerEmail,project.ProjectName);
+            await DeleteDeductions(project.EmployerEmail,project.ProjectName);
+            await DeleteAgreetments(project.EmployerEmail,project.ProjectName);
             ProjectService.DisableProject(project.ProjectName, project.EmployerEmail);
         }
         EmployerService.DeleteEmployer(personInfo.Email);
         ShowSnackNotification("Se ha eliminado la cuenta de "+personInfo.Name, Severity.Success);
         nav.NavigateTo($"/delete", true);
+    }
+
+    private async Task DeleteBenefits(string employerEmail, string projectName)
+    {
+        benefitsList = await SubscriptionService.GetBenefitsByProject(employerEmail,projectName);
+        foreach(Subscription benefit in benefitsList)
+        {
+            SubscriptionService.DeleteSubscription(benefit);
+        }
+    }
+
+    private async Task DeleteDeductions(string employerEmail, string projectName)
+    {
+        deductionsList = await SubscriptionService.GetDeductionsByProject(employerEmail,projectName);
+        foreach(Subscription deduction in deductionsList)
+        {
+            SubscriptionService.DeleteSubscription(deduction);
+        }
+    }
+
+    private async Task DeleteAgreetments(string employerEmail, string projectName)
+    {
+        agreementsList = await AgreementService.GetAllAgreementsByProjectAndEmployer(employerEmail, projectName);
+        foreach(var agreement in agreementsList)
+        {
+            await AgreementService.DesactivateAgreement(agreement.EmployeeEmail, agreement.EmployerEmail, agreement.ProjectName, "Cierre de negocio");
+        }
     }
 
     private void GoToProfileConfig()
