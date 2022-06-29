@@ -31,11 +31,11 @@
 @code{
     public string email { get; set; }
     public bool authorized { get; set; } = false;
-    //AccountDTO accountData = new AccountDTO("leonel@ucr.ac.cr","Prueba01!");
+    //AccountDTO accountData = new AccountDTO("nyazofeifa3003@gmail.com","Prueba01!");
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         //await AuthenticationService.RegisterRequestAsync(accountData);
-        //await AuthorizationService.AssignRole(accountData.Email, "Employee");
+        //await AuthorizationService.AssignRole(accountData.Email, "Employer");
         if (firstRender)
         {
             if (authorized)

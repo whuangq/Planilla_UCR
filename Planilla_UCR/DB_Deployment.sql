@@ -626,12 +626,39 @@ VALUES('wendy@ucr.ac.cr',
 1
 )
 
+INSERT INTO Person
+VALUES('nyazofeifa3003@gmail.com',
+'Nayeri',
+'Azofeifa',
+'Porras',
+118070615,
+'CR4024',
+'San José, Costa Rica',
+'89433965',
+1
+)
+
+INSERT INTO Person
+VALUES('nayeri.azofeifa@ucr.ac.cr',
+'NayNay',
+'Azofeifa',
+'Porras',
+118070615,
+'CR4024',
+'San José, Costa Rica',
+'89433965',
+1
+)
+
 
 INSERT INTO Employer
 VALUES('leonel@ucr.ac.cr')
 
 INSERT INTO Employer
-VALUES('wendy@ucr.ac.cr')
+VALUES('nyazofeifa3003@gmail.com')
+
+INSERT INTO Employer
+VALUES('naye@ucr.ac.cr')
 
 INSERT INTO Employee
 VALUES('mau@ucr.ac.cr')
@@ -641,6 +668,9 @@ VALUES('jeremy@ucr.ac.cr')
 
 INSERT INTO Employee
 VALUES('naye@ucr.ac.cr')
+
+INSERT INTO Employee
+VALUES('nayeri.azofeifa@ucr.ac.cr')
 
 INSERT INTO Project
 VALUES('leonel@ucr.ac.cr',
@@ -685,6 +715,18 @@ VALUES('leonel@ucr.ac.cr',
 1,
 '2022-06-01'
 )
+
+INSERT INTO Project
+VALUES('nyazofeifa3003@gmail.com',
+'Patatas',
+'Emprendimiento de comida',
+20000,
+5,
+'Mensual',
+1,
+'2022-06-01'
+)
+
 
 INSERT INTO Subscription
 VALUES('leonel@ucr.ac.cr',

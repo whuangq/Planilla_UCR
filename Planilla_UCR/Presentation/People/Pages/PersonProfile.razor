@@ -16,6 +16,7 @@
 @using Application.Projects
 @using Application.Subscriptions
 @using Application.Agreements
+@using Application.Email
 
 @using Presentation.Core.Components
 @using Presentation.Shared.Models
@@ -29,6 +30,7 @@
 @inject IProjectService ProjectService
 @inject IAgreementService AgreementService
 @inject ISubscriptionService SubscriptionService
+@inject IEmailServices EmailService
 @inject ISnackbar Snackbar
 
 @if(_loading) {
@@ -140,6 +142,7 @@
     private bool _loading = true;
     private bool _empty = true;
     Person personInfo = new Person("", "", "", "", Int32.Parse("0"), "", "", "",1);
+    Person firedEmployee= new Person("", "", "", "", Int32.Parse("0"), "", "", "",1);
     [Parameter] public string userEmail { get; set; }  
     public string confirmationCodeEmail { get; set; }
     private bool visible;
@@ -206,12 +209,24 @@
         }
     }
 
-    private async Task DeleteAgreetments(string employerEmail, string projectName)
+    async Task DeleteAgreetments(string employerEmail, string projectName)
     {
-        agreementsList = await AgreementService.GetAllAgreementsByProjectAndEmployer(employerEmail, projectName);
+        agreementsList = await AgreementService.GetAllAgreementsByProjectAndEmployer(projectName,employerEmail);
+        var justification = "cierre de negocio";
+        EmailObject emailData = new EmailObject("", "", "", "", "");
         foreach(var agreement in agreementsList)
         {
-            await AgreementService.DesactivateAgreement(agreement.EmployeeEmail, agreement.EmployerEmail, agreement.ProjectName, "Cierre de negocio");
+            firedEmployee.Email = agreement.EmployeeEmail;
+            firedEmployee = await PersonService.GetInfoPerson(firedEmployee);
+            var firedEmployeeName = firedEmployee.Name + " " + firedEmployee.LastName1;
+            var employerName = personInfo.Name+ " " + personInfo.LastName1 + " " + personInfo.LastName2;
+            await AgreementService.DesactivateAgreement(agreement.EmployeeEmail, agreement.EmployerEmail, agreement.ProjectName, justification);
+            emailData.EmployeeName = firedEmployeeName;
+            emailData.EmployerName = employerName;
+            emailData.ProjectName = agreement.ProjectName;
+            emailData.Message = justification;
+            emailData.Destiny = agreement.EmployeeEmail;
+            EmailService.SendFiredEmployeeEmail(emailData);
         }
     }
 
