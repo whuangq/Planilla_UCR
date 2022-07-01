@@ -13,8 +13,6 @@
 @inject IProjectService ProjectService
 @inject IAgreementService AgreementService
 @inject IContextMenuService ContextMenuService
-@inject NavigationManager nav
-@inject ISnackbar Snackbar
 
 @{ 
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -24,6 +22,7 @@
         new BreadcrumbItem($"{projectName}", href: null, disabled: true)
     };
 }
+
 <AuthorizeView Roles="Employee">
     <Authorized>
     @if (_loading)
@@ -76,7 +75,7 @@
                             <MudItem xs="2"> </MudItem>
                             <MudItem xs="4">
                                 <MudTextField Label="Monto máximo para beneficios" Format="N2" Culture="@cultureCR"
-                                ReadOnly="true" Variant="Variant.Outlined" @bind-Value="_maximumAmountForBenefits" Adornment="Adornment.Start" 
+                                ReadOnly="true" Variant="Variant.Outlined" @bind-Value="projectInfo.MaximumAmountForBenefits" Adornment="Adornment.Start" 
                                 AdornmentText="@cultureCR.NumberFormat.CurrencySymbol"/>
                             </MudItem>
 
@@ -103,15 +102,9 @@
 
 @code {
     private bool _loading = true;
-    private bool _disabled = true;
-    private bool _emptyAgreement = true;
-    private double? _maximumAmountForBenefits = 0.0;
 
-
-
-    Project projectInfo = new Project("","","",0.0,0,"",1);
     MudForm form;
-    SnackHandler snackHandler = new SnackHandler();
+    Project projectInfo = new Project("","","",0.0,0,"",1);
     public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
     private IEnumerable<Agreement> agreementElements;
 
@@ -122,11 +115,9 @@
     protected override async Task OnInitializedAsync()
     {
         agreementElements = await AgreementService.GetEmployeeAgreements(personEmail);
-        
         _loading = false;
-        if (agreementElements.Length() > 0){
-            _emptyAgreement = false;
-
+        if (agreementElements.Length() > 0)
+        {
             _loading = false;
             await FindProject();
         }
@@ -134,11 +125,11 @@
 
     private async Task FindProject()
     {
-        foreach (Agreement element in agreementElements) {
+        foreach (Agreement element in agreementElements) 
+        {
             if (projectName == element.ProjectName)
             {
-                projectInfo = await ProjectService.GetProject(element.ProjectName);
-                _maximumAmountForBenefits = projectInfo.MaximumAmountForBenefits;
+                projectInfo = await ProjectService.GetProject(element.EmployerEmail, element.ProjectName);
                 if (element.ContractType.Equals("Servicios profesionales"))
                 {
                     ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, true);
@@ -147,8 +138,8 @@
                 {
                     ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, false);
                 }
-            }
-            
+                break;
+            }  
         }
     }
 }

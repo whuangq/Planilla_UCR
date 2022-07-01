@@ -1,0 +1,167 @@
+﻿@using Domain.Projects.Entities
+@using Domain.Agreements.Entities
+@using Domain.People.Entities
+@using Domain.AgreementTypes.Entities
+@using Application.Projects
+@using Application.Agreements
+@using Application.People
+@using Application.AgreementTypes
+@using Presentation.Core.Components
+@using Presentation.Projects.Models
+@using Application.ContextMenu
+@using Presentation.Authentication
+
+@inject NavigationManager nav
+@inject ISnackbar Snackbar
+
+@inject IPersonService PersonService
+@inject IProjectService ProjectService
+@inject IAgreementService AgreementService
+@inject IAgreementTypeService AgreementTypeService
+@inject IContextMenuService ContextMenuService
+
+
+@{
+    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Inicio", href: ""),
+        new BreadcrumbItem("Proyectos",  href: null, disabled: true),
+
+    };
+}
+
+@if (_loading)
+{
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudText Align="Align.Center" Typo="Typo.h6">
+                <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+            </MudText>
+    </MudPaper>
+}
+else
+{
+    @if (_emptyAgreement)
+    {
+        <MudText Typo="Typo.h6" Align="Align.Center">No hay proyectos asociados al empleado
+        </MudText>
+    }
+    else
+    {
+        <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+        <MudTable @ref="@_table" Items="@_joinTable" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_emptyAgreement" LoadingProgressColor="Color.Primary"  Filter="new Func<EmployeeList,bool>(FilterFuncEmployee)">  
+
+            <ToolBarContent>
+                <MudText Align="Align.Center" Typo="Typo.h6">Lista de proyectos en los que está contratado</MudText>
+                <MudSpacer></MudSpacer>
+                <MudTextField @bind-Value="_searchString" Placeholder="Buscar proyecto" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+
+            <HeaderContent>
+                <MudTh Style="text-align:justify-all">Nombre proyecto</MudTh>
+                <MudTh Style="text-align:justify-all">Nombre empleador</MudTh>
+                <MudTh Style="text-align:justify-all">Tipo contrato</MudTh>
+                <MudTh Style="text-align:justify-all">Inicio contrato</MudTh>
+                <MudTh Style="text-align:justify-all">Fin contrato</MudTh>
+                <MudTh Style="text-align:justify-all">Monto por horas</MudTh>
+            </HeaderContent>
+
+            <RowTemplate Context="row">
+                <MudTd DataLabel="Nombre proyecto" >
+                    <MudLink Color="Color.Primary" Underline="Underline.Always" Href="@($"/Projects/{personEmail}/{@row.EmployerEmail}/{@row.ProjectName}")">
+                        @row.ProjectName
+                    </MudLink>
+                </MudTd>
+                <MudTd DataLabel="Nombre del empleador" Style="text-align:justify-all">@row.EmployerName @row.EmployerLastName1 @row.EmployerLastName2</MudTd>
+                    <MudTd DataLabel="Tipo contrato" Style="text-align:justify-all">@row.ContractType</MudTd>
+                <MudTd DataLabel="Inicio contrato" Style="text-align:justify-all">@row.ContractStartDate.ToShortDateString()</MudTd>
+                <MudTd DataLabel="Fin contrato" Style="text-align:justify-all">@row.ContractFinishDate.ToShortDateString()</MudTd>
+                <MudTd DataLabel="Monto por horas" Style="text-align:right" >₡@row.MountPerHour.00/H</MudTd>
+            </RowTemplate>
+
+            <PagerContent>
+                    <MudPagination SelectedChanged="PageChangedE" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
+            </PagerContent>
+        </MudTable>
+    }    
+    
+}
+
+
+@code {
+    private bool _emptyAgreement = true;
+    private bool _loading = true;
+    private string _searchString = "";
+
+    private IEnumerable<Person> _people;
+    private IEnumerable<Project> _projectElements;
+    private IEnumerable<EmployeeList> _joinTable = new List<EmployeeList>();
+    private IEnumerable<AgreementType> _agreementType = new List<AgreementType>();
+    private IEnumerable<Agreement> _agreements = new List<Agreement>();
+
+
+    [Parameter] public string personEmail { get; set; }
+    [Parameter] public string projectName { get; set; }
+
+
+    private MudTable<EmployeeList> _table;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEmployee();
+    }       
+
+    
+    private async Task LoadEmployee() 
+    {
+        _agreements = await AgreementService.GetEmployeeAgreements(personEmail);
+        
+        if (_agreements.Length() > 0)
+        {
+            _people = await PersonService.GetAllPeopleAsync();
+            _agreementType = await AgreementTypeService.GetAllAgreementTypes();
+            _projectElements = await ProjectService.GetAllProjectsAsync();
+            _emptyAgreement = false;
+            CreateEmployeeList();
+        }
+        _loading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    void CreateEmployeeList()
+    {
+        _joinTable = from A in _agreements
+                     join Pe in _people on A.EmployerEmail equals Pe.Email 
+                     join P in _projectElements on A.ProjectName equals P.ProjectName
+                     join ATP in _agreementType on A.ContractType equals ATP.TypeAgreement
+                     where P.IsEnabled == 1 && P.EmployerEmail == A.EmployerEmail && ATP.MountPerHour == A.MountPerHour
+                     select new EmployeeList
+                     {
+                        ProjectName = P.ProjectName,
+                        EmployerName = Pe.Name,
+                        EmployerLastName1 = Pe.LastName1,
+                        EmployerLastName2 =  Pe.LastName2,
+                        EmployerEmail = A.EmployerEmail,
+                        ContractType = A.ContractType,
+                        ContractStartDate = (DateTime) A.ContractStartDate,
+                        ContractFinishDate = (DateTime) A.ContractFinishDate,
+                        MountPerHour = ATP.MountPerHour
+
+                     };
+    }
+    private bool FilterFuncEmployee(EmployeeList element) => FilterFuncE(element, _searchString);
+
+    private bool FilterFuncE(EmployeeList element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.ProjectName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void PageChangedE(int i)
+    {
+        _table.NavigateTo(i - 1);
+    }
+}

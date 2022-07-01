@@ -11,6 +11,10 @@
 	  <None Remove="Payments\Components\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Remove="Projects\Pages\EmployeeProjectList.razor" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
@@ -36,6 +40,18 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Projects\Pages\EmployeeProjectList.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="Projects\Pages\EmployeeProjectList.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Projects\Models\EmployeeProjectList.razor" />
 	</ItemGroup>
 
 </Project>

@@ -13,15 +13,15 @@ namespace Application.Projects.Implementations
         {
             _projectRepository = projectRepository;
         }
-        
-        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
-        {
-            return await _projectRepository.GetAllProjectsAsync();
-        }
-        
+
         public async Task CreateProjectAsync(Project project)
         {
             await _projectRepository.CreateProjectAsync(project);
+        }
+
+        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
+        {
+            return await _projectRepository.GetAllProjectsAsync();
         }
         
         public async Task<IEnumerable<Project>> GetAllNameProjects(string name)
@@ -33,6 +33,7 @@ namespace Application.Projects.Implementations
         {
             return await _projectRepository.GetProject(employerEmail, projectName);
         }
+
         public async Task<Project> GetProject(string projectName)
         {
             return await _projectRepository.GetProject(projectName);
@@ -42,6 +43,7 @@ namespace Application.Projects.Implementations
         { 
             return await _projectRepository.GetEmployerProyects(email);
         }
+
         public async Task<IEnumerable<Project>> GetEmployeeProyects(string email)
         {
             return await _projectRepository.GetEmployeeProyects(email);

@@ -26,219 +26,136 @@
         new BreadcrumbItem($"{projectName}", href: null, disabled: true)
     };
 }
-<AuthorizeView Roles="Employer">
-    <Authorized>
-        @if (_loading)
+
+@if (_loading)
+{
+    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+            <MudText Align="Align.Center" Typo="Typo.h6">
+                <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
+            </MudText>
+    </MudPaper>
+}
+else
+{
+    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
+
+    
+    <MudToolBar DisableGutters="true" Class="gap-4">
+        <MudSpacer></MudSpacer>
+        @if(_disabled)
         {
-            <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-                 <MudText Align="Align.Center" Typo="Typo.h6">
-                      <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
-                 </MudText>
-            </MudPaper>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="EnableForm"/>
         }
         else
         {
-            <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-
-    
-            <MudToolBar DisableGutters="true" Class="gap-4">
-                <MudSpacer></MudSpacer>
-                @if(_disabled)
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="DisableForm"/>
+        }
+        
+    </MudToolBar>
+    <MudGrid>
+        @*Text fields *@
+        <MudItem xs="12" sm="12">
+            <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+                @if (_disabled)
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="EnableForm"/>
+                    <MudText Align="Align.Center" Typo="Typo.h6">Detalles del proyecto</MudText>
                 }
                 else
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Primary" OnClick="DisableForm"/>
+                    <MudText Align="Align.Center" Typo="Typo.h6">Configuraciones del proyecto</MudText>
                 }
-        
-            </MudToolBar>
-            <MudGrid>
-                @*Text fields *@
-                <MudItem xs="12" sm="12">
-                    <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-                        @if (_disabled)
-                        {
-                            <MudText Align="Align.Center" Typo="Typo.h6">Detalles del proyecto</MudText>
-                        }
-                        else
-                        {
-                            <MudText Align="Align.Center" Typo="Typo.h6">Configuraciones del proyecto</MudText>
-                        }
-                        <MudForm @ref="_form">
-                            <MudGrid>
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="8">
-                                    <MudTextField Label="Nombre del proyecto" Class="mt-3" Variant="Variant.Outlined" ReadOnly="@_disabled"  
-                                    Required="true" RequiredError="Ingrese un nombre para su proyecto" 
-                                    @bind-Value="_newName" For="@(() => _limits.projectName)">
-                                    </MudTextField>
-                                </MudItem>
-                                <MudItem xs="2"> </MudItem>
+                <MudForm @ref="_form">
+                    <MudGrid>
+                        <MudItem xs="2"> </MudItem>
+                        <MudItem xs="8">
+                            <MudTextField Label="Nombre del proyecto" Class="mt-3" Variant="Variant.Outlined" ReadOnly="@_disabled"  
+                            Required="true" RequiredError="Ingrese un nombre para su proyecto" 
+                            @bind-Value="_newName" For="@(() => _limits.projectName)">
+                            </MudTextField>
+                        </MudItem>
+                        <MudItem xs="2"> </MudItem>
 
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="8">
-                                    <MudTextField Label="Descripción del proyecto" Lines="6" Variant="Variant.Outlined" ReadOnly="@_disabled"
-                                    @bind-Value="_projectInfo.ProjectDescription"  For="@(() => _limits.description )"
-                                    ></MudTextField>
-                                </MudItem>
-                                <MudItem xs="2"> </MudItem>
+                        <MudItem xs="2"> </MudItem>
+                        <MudItem xs="8">
+                            <MudTextField Label="Descripción del proyecto" Lines="6" Variant="Variant.Outlined" ReadOnly="@_disabled"
+                            @bind-Value="_projectInfo.ProjectDescription"  For="@(() => _limits.description )"
+                            ></MudTextField>
+                        </MudItem>
+                        <MudItem xs="2"> </MudItem>
                 
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="8">
-                                    <MudSelect typeof="int" @bind-Value="_projectInfo.PaymentInterval" Label="Intervalo de pago" Variant="Variant.Outlined"
-                                    ReadOnly="@_disabled" >
-                                        <MudSelectItem Value="@("Quincenal")">Pago quincenal</MudSelectItem>
-                                        <MudSelectItem Value="@("Mensual")">Pago mensual</MudSelectItem>
-                                        <MudSelectItem Value="@("Semanal")">Pago semanal</MudSelectItem>
-                                        <MudSelectItem Value="@("Bisemanal")">Pago bisemanal</MudSelectItem>
-                                    </MudSelect>
-                                </MudItem>
-                                <MudItem xs="2"></MudItem>
+                        <MudItem xs="2"> </MudItem>
+                        <MudItem xs="8">
+                            <MudSelect typeof="int" @bind-Value="_projectInfo.PaymentInterval" Label="Intervalo de pago" Variant="Variant.Outlined"
+                            ReadOnly="@_disabled" >
+                                <MudSelectItem Value="@("Quincenal")">Pago quincenal</MudSelectItem>
+                                <MudSelectItem Value="@("Mensual")">Pago mensual</MudSelectItem>
+                                <MudSelectItem Value="@("Semanal")">Pago semanal</MudSelectItem>
+                                <MudSelectItem Value="@("Bisemanal")">Pago bisemanal</MudSelectItem>
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="2"></MudItem>
 
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="4">
-                                    <MudNumericField Immediate="true" Label="Monto máximo para beneficios" Format="N2" Culture="@_cultureCR"
-                                    ReadOnly="@_disabled" Variant="Variant.Outlined" @bind-Value="_maximumAmountForBenefits" Adornment="Adornment.Start" 
-                                    AdornmentText="@_cultureCR.NumberFormat.CurrencySymbol" Required="false" RequiredError="Campo no requerido"/>
-                                </MudItem>
+                        <MudItem xs="2"> </MudItem>
+                        <MudItem xs="4">
+                            <MudNumericField Immediate="true" Label="Monto máximo para beneficios" Format="N2" Culture="@_cultureCR"
+                            ReadOnly="@_disabled" Variant="Variant.Outlined" @bind-Value="_maximumAmountForBenefits" Adornment="Adornment.Start" 
+                            AdornmentText="@_cultureCR.NumberFormat.CurrencySymbol" Required="false" RequiredError="Campo no requerido"/>
+                        </MudItem>
 
-                                <MudItem xs="4">
-                                    <MudNumericField @bind-Value="_projectInfo.MaximumBenefitAmount" Min=0 ReadOnly="@_disabled" Label="Cantidad máxima de beneficios" 
-                                    Variant="Variant.Outlined"></MudNumericField>
-                                </MudItem>
+                        <MudItem xs="4">
+                            <MudNumericField @bind-Value="_projectInfo.MaximumBenefitAmount" Min=0 ReadOnly="@_disabled" Label="Cantidad máxima de beneficios" 
+                            Variant="Variant.Outlined"></MudNumericField>
+                        </MudItem>
 
-                                <MudItem xs="2"></MudItem>
-                                <MudItem xs="2"></MudItem>
-                                <MudItem xs="8">
-                                    <br />
-                                    <MudDivider />
-                                </MudItem>
-                                <MudItem xs="2"></MudItem>
-                                <MudItem xs="2"></MudItem>
+                        <MudItem xs="2"></MudItem>
+                        <MudItem xs="2"></MudItem>
+                        <MudItem xs="8">
+                            <br />
+                            <MudDivider />
+                        </MudItem>
+                        <MudItem xs="2"></MudItem>
+                        <MudItem xs="2"></MudItem>
 
-                                @if(_disabled == false) {
-                                    <MudItem xs="8"> 
-                                        <MudButton Disabled="@snackHandler._saving" OnClick="SaveProject" 
-                                        Variant="Variant.Filled" Color="Color.Primary">
-                                            @if (@snackHandler._saving)
-                                            {
-                                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                                <MudText Class="ms-2">Actualizando</MudText>
-                                            }
-                                            else
-                                            {
-                                                <MudText>Actualizar</MudText>
-                                            }
-                                        </MudButton>
-                                        <MudButton Disabled="true"> </MudButton>
+                        @if(_disabled == false) {
+                            <MudItem xs="8"> 
+                                <MudButton Disabled="@snackHandler._saving" OnClick="ValidProject" 
+                                Variant="Variant.Filled" Color="Color.Primary">
+                                    @if (@snackHandler._saving)
+                                    {
+                                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                        <MudText Class="ms-2">Actualizando</MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudText>Actualizar</MudText>
+                                    }
+                                </MudButton>
+                                <MudButton Disabled="true"> </MudButton>
 
-                                        <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Transparent">
-                                            <MudText>Cancelar</MudText>
-                                        </MudButton>
-                                    </MudItem>
-                                }
-                            </MudGrid>
-                        </MudForm>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
-        }
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
-
-<AuthorizeView Roles="Employee">
-    <Authorized>
-        @if (_loading)
-        {
-            <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-                 <MudText Align="Align.Center" Typo="Typo.h6">
-                      <MudProgressCircular Color="Color.Secondary" Style="height:70px;width:70px;" Indeterminate="true" />
-                 </MudText>
+                                <MudButton OnClick="Cancel" Variant="Variant.Filled" Color="Color.Transparent">
+                                    <MudText>Cancelar</MudText>
+                                </MudButton>
+                            </MudItem>
+                        }
+                    </MudGrid>
+                </MudForm>
             </MudPaper>
-        }
-        else
-        {
-            <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-            <MudGrid>
-                @*Text fields *@
-                <MudItem xs="12" sm="12">
-                    <MudPaper  Height="250px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
-                        <MudText Align="Align.Center" Typo="Typo.h6">Detalles del proyecto</MudText>
-                        <MudForm @ref="_form">
-                            <MudGrid>
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="8">
-                                    <MudTextField Label="Nombre del proyecto" Class="mt-3" Variant="Variant.Outlined" ReadOnly="true"
-                                    @bind-Value="_newName">
-                                    </MudTextField>
-                                </MudItem>
-                                <MudItem xs="2"> </MudItem>
+        </MudItem>
+    </MudGrid>
+}
 
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="8">
-                                    <MudTextField Label="Email del empleador" Lines="1" Variant="Variant.Outlined" ReadOnly="true"
-                                    @bind-Value="_projectInfo.EmployerEmail"></MudTextField>
-                                </MudItem>
-                                <MudItem xs="2"> </MudItem>
-
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="8">
-                                    <MudTextField Label="Descripción del proyecto" Lines="3" Variant="Variant.Outlined" ReadOnly="true"
-                                    @bind-Value="_projectInfo.ProjectDescription"></MudTextField>
-                                </MudItem>
-                                <MudItem xs="2"> </MudItem>
-                
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="8">
-                                    <MudTextField typeof="int" @bind-Value="_projectInfo.PaymentInterval" Label="Intervalo de pago" 
-                                    Variant="Variant.Outlined" ReadOnly="true"></MudTextField>
-                                </MudItem>
-                                <MudItem xs="2"></MudItem>
-
-                                <MudItem xs="2"> </MudItem>
-                                <MudItem xs="4">
-                                    <MudTextField Label="Monto máximo para beneficios" Format="N2" Culture="@_cultureCR"
-                                    ReadOnly="true" Variant="Variant.Outlined" @bind-Value="_maximumAmountForBenefits" Adornment="Adornment.Start" 
-                                    AdornmentText="@_cultureCR.NumberFormat.CurrencySymbol"/>
-                                </MudItem>
-
-                                <MudItem xs="4">
-                                    <MudTextField @bind-Value="_projectInfo.MaximumBenefitAmount" ReadOnly="true" Label="Cantidad máxima de beneficios" 
-                                    Variant="Variant.Outlined"></MudTextField>
-                                </MudItem>
-
-                                <MudItem xs="2"></MudItem>
-                                <MudItem xs="2"></MudItem>
-                                <MudItem xs="8">
-                                    <br />
-                                    <MudDivider />
-                                </MudItem>        
-                            </MudGrid>
-                        </MudForm>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
-        }
-    </Authorized>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
 
 @code {
     private bool _loading = true;
     private bool _disabled = true;
-    private string _newName = "";
 
-    private string _oldpersonEmail = "";
-    private string _oldProjectName = "";
-    private string _oldProjectDescription = "";
+    
+    private string _newName = "";
     private double? _maximumAmountForBenefits = 0.0;
-    private int _oldMaximumBenefitAmount = 0;
+    private string _oldDescription = "";
     private string _oldPaymentInterval = "";
-    private int _oldIsEnabled = 1;
+    private int _oldMaximumBenefitAmount = 0;
+    
 
     private CultureInfo _cultureCR = CultureInfo.GetCultureInfo("es-CR");
     private LimitsValidationForm _limits = new LimitsValidationForm();
@@ -246,11 +163,10 @@
     private IEnumerable<Agreement> _agreementElements;
     private MudForm _form;
     SnackHandler snackHandler = new SnackHandler();
-    
+
 
     [Parameter] public string personEmail { get; set; }
     [Parameter] public string projectName { get; set; }
-    public string disabled { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -260,22 +176,18 @@
 
         if (_projectInfo != null)
         {
-            _newName = _projectInfo.ProjectName;
-            _oldpersonEmail = _projectInfo.EmployerEmail;
-            _oldProjectName = _projectInfo.ProjectName;
-            _oldProjectDescription = _projectInfo.ProjectDescription;
             _maximumAmountForBenefits = _projectInfo.MaximumAmountForBenefits;
-            _oldMaximumBenefitAmount = _projectInfo.MaximumBenefitAmount;
+            _newName= projectName;
+            _oldDescription = _projectInfo.ProjectDescription;
             _oldPaymentInterval = _projectInfo.PaymentInterval;
-            _oldIsEnabled = _projectInfo.IsEnabled;
+            _oldMaximumBenefitAmount = _projectInfo.MaximumBenefitAmount;
             _loading = false;
         }
     }
 
-    async Task SaveProject()
+    async Task ValidProject()
     {
         snackHandler._saving = true;
-
         await _form.Validate();
         bool _valid = true;
         _newName = _newName.Trim();
@@ -287,16 +199,22 @@
 
         if (_form.IsValid && _valid)
         {
-            snackHandler._saving = false;
-            _projectInfo.MaximumAmountForBenefits = (double)_maximumAmountForBenefits;
-            ProjectService.ModifyProject(_projectInfo, _newName);
-            _projectInfo.ProjectName = _newName;
-            projectName = _newName;
-            ShowSnackNotification(_projectInfo.ProjectName + " modificado exitosamente", Severity.Success);
-            DisableForm();
-
+            SaveProject();
         }
         snackHandler._saving = false;
+    }
+
+    void SaveProject()
+    {
+
+        snackHandler._saving = false;
+        _projectInfo.MaximumAmountForBenefits = (double)_maximumAmountForBenefits;
+        ProjectService.ModifyProject(_projectInfo, _newName);
+        _projectInfo.ProjectName = _newName;
+        projectName = _newName;
+        ShowSnackNotification(_projectInfo.ProjectName + " modificado exitosamente", Severity.Success);
+        DisableForm();
+
     }
 
     async Task<bool> ValidName()
@@ -307,7 +225,7 @@
         if (_tempProject != null)
         {
             _valid = false;
-            ShowSnackNotification("El nombre del proyecto " + _newName + " ya está siendo utilizado", Severity.Error);
+            ShowSnackNotification("El nombre: " + _newName + ", ya está siendo utilizado", Severity.Error);
             DisableForm();
         }
         return _valid;
@@ -343,16 +261,13 @@
         });
     }
 
-    async Task  Cancel()
+    void Cancel()
     {
-        _projectInfo.EmployerEmail = _oldpersonEmail;
-        _projectInfo.ProjectName = _oldProjectName;
-        _projectInfo.ProjectDescription = _oldProjectDescription;
-        _projectInfo.MaximumAmountForBenefits = (double)_maximumAmountForBenefits;
-        _projectInfo.MaximumBenefitAmount = _oldMaximumBenefitAmount;
+        _newName = _projectInfo.ProjectName;
+        _projectInfo.ProjectDescription = _oldDescription;
         _projectInfo.PaymentInterval = _oldPaymentInterval;
-        _projectInfo.IsEnabled = _oldIsEnabled;
-        _projectInfo = await ProjectService.GetProject(personEmail,projectName);
+        _maximumAmountForBenefits = _projectInfo.MaximumAmountForBenefits;
+        _projectInfo.MaximumBenefitAmount = _oldMaximumBenefitAmount;
         _disabled = true;
         nav.NavigateTo($"/Projects/{personEmail}/{projectName}/");
     }

@@ -125,18 +125,20 @@
         projectInfo.ProjectName = projectInfo.ProjectName.Trim();
         Project projectToAdd = projectInfo;
         snackHandler._saving = true;
+        await ValidProject(projectToAdd);
+        snackHandler._saving = false;
+        GoToMain();
+    }
 
+    async Task ValidProject(Project projectToAdd)
+    {
         await form.Validate();
         if (form.IsValid && await (ValidateInfo(projectInfo)))
         {
-
             await ProjectService.CreateProjectAsync(projectToAdd);
             snackHandler._saving = false;
             ShowSnackNotification(projectInfo.ProjectName + " creado exitosamente", Severity.Success);
-
         }
-        snackHandler._saving = false;
-        GoToMain();
     }
 
     async Task<bool> ValidateInfo(Project projectInfo)
@@ -161,17 +163,16 @@
     async Task<bool> ValidateName(Project project)
     {
         bool _valid = true;
-        IEnumerable<Project> _nameCecked = await ProjectService.GetAllProjectsAsync();
+        IEnumerable<Project> _nameCecked = await ProjectService.GetEmployerProyects(project.EmployerEmail);
 
         if (_nameCecked.Length() != 0)
         {
-            Project _tempProject = await ProjectService.GetProject(project.ProjectName);
+            Project _tempProject = await ProjectService.GetProject(project.EmployerEmail, project.ProjectName);
             if (_tempProject != null )
             {
                 _valid=false;
                 ShowSnackNotification("El nombre del proyecto " + project.ProjectName + " ya está siendo utilizado", Severity.Error);
-            }
-            
+            }  
         }
         return _valid;
     }
