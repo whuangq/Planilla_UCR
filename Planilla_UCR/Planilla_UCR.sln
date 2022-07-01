@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DB_Planilla", "DB_Planilla"
 		DB_Deployment.sql = DB_Deployment.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "TestProject1\Tests.csproj", "{858DB55F-41F3-4806-B0EB-316949052A4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "TestProject1\Tests.csproj", "{858DB55F-41F3-4806-B0EB-316949052A4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

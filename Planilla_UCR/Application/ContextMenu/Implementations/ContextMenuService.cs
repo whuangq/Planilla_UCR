@@ -4,15 +4,16 @@ namespace Application.ContextMenu.Implementations
 {
     public class ContextMenuService : IContextMenuService
     {
-        public event Action? OnChange;
-        public bool _showProjectsMenu { get; set; } = false;
-        public string projectContext { get; set; }
-        public string employerEmailContext { get; set; }
-        public bool _showProjectsSubMenu { get; set; } = false;
-        public bool _hoursEmployee { get; set; } = false;
+        private event Action? OnChange;
+        private bool _showProjectsMenu { get; set; } = false;
+        private string _projectContext { get; set; }
+        private string _employerEmailContext { get; set; }
+        private bool _showProjectsSubMenu { get; set; } = false;
+        private bool _hoursEmployee { get; set; } = false;
+
         public string GetProjectsContext()
         {
-            return projectContext;
+            return _projectContext;
         }
 
         public void NotifyStateChanged()
@@ -24,8 +25,8 @@ namespace Application.ContextMenu.Implementations
         {
             _showProjectsMenu = showProjectsMenu;
             _showProjectsSubMenu = showProjectsSubMenu;
-            projectContext = projectName;
-            employerEmailContext = employerEmail;
+            _projectContext = projectName;
+            _employerEmailContext = employerEmail;
             _hoursEmployee = hoursEmployee;
             NotifyStateChanged();
         }
@@ -47,7 +48,7 @@ namespace Application.ContextMenu.Implementations
 
         public string GetEmployerEmailContext()
         {
-            return employerEmailContext;
+            return _employerEmailContext;
         }
 
         public bool GetHoursEmployeeContext()

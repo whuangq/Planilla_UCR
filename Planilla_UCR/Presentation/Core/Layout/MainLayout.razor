@@ -1,6 +1,5 @@
-﻿@inherits LayoutComponentBase
-@using Presentation
-@using Presentation.Authentication
+﻿@using Presentation.Core.Layout.NavMenu
+@inherits LayoutComponentBase
 @inject NavigationManager nav
 
 <MudThemeProvider/>
@@ -14,27 +13,20 @@
         <AuthorizeView>
             <Authorized> 
                 @{
-                    userEmail = context.User.Identity.Name;
+                    _email = context.User.Identity.Name;
                 }
                 <MudSpacer />
-                <MudSpacer />
-                <MudLink Color="Color.Primary" Href="@($"/logout")"> Salir  
-                </MudLink>
-                <MudIconButton Icon="@Icons.Filled.Person" Size="Size.Large" Color="Color.Primary" OnClick="GoToProfile"></MudIconButton>
+                <MudLink Color="Color.Primary" Href="@($"/logout")"> Salir </MudLink>
+                <MudIconButton Icon="@Icons.Filled.Person" Size="Size.Large" Color="Color.Primary" OnClick="GoToProfile"> </MudIconButton>
             </Authorized>
             <NotAuthorized>
-                <MudSpacer />
-                <MudSpacer />
-                @*<MudLink Href="/Loggin" Color="Color.Primary">Ingresar</MudLink>
-                <MudButton Disabled=true></MudButton>
-                <MudLink Href="/Register_Form" Color="Color.Primary">Registrar</MudLink>*@
             </NotAuthorized>
         </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="2" Width="300px">
         <AuthorizeView>
             <Authorized>
-                <NavMenu email=@userEmail ></NavMenu>
+                <NavMenu email=@_email ></NavMenu>
             </Authorized>
             <NotAuthorized>
             </NotAuthorized>
@@ -48,11 +40,7 @@
 </MudLayout>
 
 @code {
-    public string userEmail { get; set; } = "unknown";
-    bool _loading = true;
-    bool authenticationState = false;
-    private bool _isDarkMode = true;
-
+    private string _email { get; set; } = "";
     bool _drawerOpen = true;
 
     void DrawerToggle()
@@ -62,6 +50,6 @@
 
     public void GoToProfile()
     {
-        nav.NavigateTo($"/Profile/{userEmail}"); 
+        nav.NavigateTo($"/Profile/{_email}"); 
     }
 }
