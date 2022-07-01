@@ -39,6 +39,8 @@ using Domain.Payments.Repositories;
 using Infrastructure.LegalDeductions;
 using Infrastructure.LegalDeductions.Repositories;
 using Domain.LegalDeductions.Repositories;
+using Infrastructure.TaxCalculator.Repositories;
+using Domain.TaxCalculator.Repositories;
 
 namespace Infrastructure
 {
@@ -86,6 +88,8 @@ namespace Infrastructure
 
             services.AddDbContext<LegalDeductionDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<ILegalDeductionRepository, LegalDeductionRepository>();
+
+            services.AddScoped<ITaxCalculatorRepository, TaxCalculatorRepository>();
             return services;
         }
     }

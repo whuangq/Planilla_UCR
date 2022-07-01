@@ -1,5 +1,6 @@
 ﻿@using Application.ContextMenu
 @using Presentation.Core.Components
+
 @inject IContextMenuService ContextMenuService
 
 @{
@@ -27,7 +28,7 @@
             <TabNavLink  Icon="@Icons.Filled.MoreTime" href="@($"/ReportHours/{ContextMenuService.GetEmployerEmailContext()}/{email}")"  text="Reporte de horas"></TabNavLink>
             <TabNavLink  Icon="@Icons.Filled.Timer" href="@($"/Reported_Hours/{email}/")" text="Histórico de horas"></TabNavLink>
         }        
-        <TabNavLink  Icon="@Icons.Filled.CreditCard" href="@($"/Last_Pay/{email}/")" text="Último pago"></TabNavLink>
+        <TabNavLink  Icon="@Icons.Filled.CreditCard" href="@($"/Last_Pay/{email}/{_projectName}")" text="Último pago"></TabNavLink>
         <TabNavLink  Icon="@Icons.Material.Filled.CardGiftcard" href="@($"/Projects/{email}/{_projectName}/Benefits")" text="Beneficios"></TabNavLink>
         <TabNavLink  Icon="@Icons.Material.Filled.CardMembership" href="@($"/Projects/{email}/{_projectName}/Deductions")" text="Deducciones Voluntarias"></TabNavLink>
     }
