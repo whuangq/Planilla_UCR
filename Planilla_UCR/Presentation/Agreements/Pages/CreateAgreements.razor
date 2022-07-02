@@ -1,4 +1,4 @@
-﻿@page "/Agreements/{employerEmail}/{projectName}/{employeeEmail}/New"
+﻿@page "/Agreements/{employerEmail}/{projectName}/{employeeEmail}/{employeeName}/New"
 @using Presentation.Core.Components
 @using System.ComponentModel.DataAnnotations
 @using Domain.Projects.Entities
@@ -56,26 +56,28 @@
                     @*Small fields *@
                     <MudItem xs="2"> </MudItem>
                     <MudItem xs="4">
-                        <MudTextField @bind-Value="myAgreement.EmployeeEmail" Label="Email del empleado" Variant="Variant.Outlined" Required="true" RequiredError="El email del empleado es necesario"
-                            Validation="@(new EmailAddressAttribute() {ErrorMessage = "Por favor, digite un correo válido"})" ></MudTextField>
-
+                        <MudTextField @bind-Value="employeeName" Label="Nombre del empleado" Variant="Variant.Outlined" ReadOnly="true" >
+                        </MudTextField>
                     </MudItem>
 
                     <MudItem xs="4">
-                        <MudTextField @bind-Value="myAgreement.EmployerEmail" Label="Email del empleador" Variant="Variant.Outlined" Required="true" RequiredError="El email del empleador es necesario"
-                         Validation="@(new EmailAddressAttribute() {ErrorMessage = "Por favor, digite un correo válido"})" ></MudTextField>
+                        <MudTextField @bind-Value="myAgreement.EmployeeEmail" Label="Email del empleado" Variant="Variant.Outlined" ReadOnly="true" >
+                        </MudTextField>
                     </MudItem>
                     <MudItem xs="2"> </MudItem>
                     <MudItem xs="2"> </MudItem>
-                    <MudItem xs="8">
-                    <MudSelect @bind-Value="myAgreement.ProjectName" Label="Nombre del proyecto" Variant="Variant.Outlined" Required="true"  RequiredError="El nombre del proyecto es necesario">
-                        @foreach (var project in _projects)
-                        {
-                            <MudSelectItem T="string" Value="@project.ProjectName">@project.ProjectName</MudSelectItem>
-                        }
-                    </MudSelect>
+                    <MudItem xs="4">
+                        <MudSelect @bind-Value="myAgreement.ProjectName" Label="Nombre del proyecto" Variant="Variant.Outlined" Required="true"  RequiredError="El nombre del proyecto es necesario">
+                            @foreach (var project in _projects)
+                            {
+                                <MudSelectItem T="string" Value="@project.ProjectName">@project.ProjectName</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
 
-
+                    <MudItem xs="4">
+                        <MudTextField @bind-Value="myAgreement.EmployerEmail" Label="Email del empleador" Variant="Variant.Outlined" ReadOnly="true" >
+                     </MudTextField>
                     </MudItem>
                     <MudItem xs="2"> </MudItem>
                     <MudItem xs="2"> </MudItem>
@@ -90,7 +92,7 @@
                     
                     <MudItem xs="4">
 
-                        <MudNumericField @bind-Value="salaryPerHour" Label="Monto por hora" Variant="Variant.Outlined" Format="N2" Culture="@cultureCR"
+                        <MudNumericField @bind-Value="_salaryPerHour" Label="Monto por hora" Variant="Variant.Outlined" Format="N2" Culture="@cultureCR"
                              Adornment="Adornment.Start" AdornmentText="@cultureCR.NumberFormat.CurrencySymbol" Required="true" RequiredError="El monto por hora es necesario" HideSpinButtons="true" Min = "0"> 
                         </MudNumericField>
 
@@ -146,6 +148,7 @@
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
     [Parameter] public string employeeEmail { get; set; }
+    [Parameter] public string employeeName { get; set; }
     Agreement myAgreement = new Agreement("", "", "", null, "", 0, null, 1, "");
     AgreementType myAgreementType = new AgreementType("",0);
     public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
@@ -153,8 +156,7 @@
     MudForm form;
     DateTime? startDate;
     DateTime? endDate;
-    int? salaryPerHour;
-    string format = "yyyy/MM/dd";
+    private int? _salaryPerHour;
     private bool _isLoading = true;
     private bool _saving = false;
     private bool _canSend = false;
@@ -294,7 +296,7 @@
     private async Task<bool> validateAgreementTypeOfContractee()
     {
         bool isValid = true;
-        myAgreement.MountPerHour = (int)salaryPerHour;
+        myAgreement.MountPerHour = (int)_salaryPerHour;
 
         IEnumerable<Agreement> salaryList = await AgreementService.CheckAgreementTypeOfContractee(myAgreement);
 
@@ -327,7 +329,7 @@
     private void parseAgreementType()
     {
         myAgreementType.TypeAgreement = myAgreement.ContractType;
-        myAgreementType.MountPerHour = (int)salaryPerHour;
+        myAgreementType.MountPerHour = (int)_salaryPerHour;
     }
 
     private async Task<bool> checkAgreementType(string myAgreement, int mountPerHour)

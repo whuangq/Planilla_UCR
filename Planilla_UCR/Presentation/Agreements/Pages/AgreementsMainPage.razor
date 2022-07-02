@@ -17,8 +17,6 @@
        
     </MudPaper>
 }else{
-    @if (!_loading)
-    {
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
@@ -35,7 +33,7 @@
                     <ToolBarContent>
                             <MudText> Contratar empleados </MudText>
                             <MudSpacer />
-                            <MudTextField @bind-Value="mySearchString" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudTextField @bind-Value="_mySearchString" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent> 
                     <HeaderContent>
                         <MudTh>Email</MudTh>
@@ -50,7 +48,7 @@
                         <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
                          <MudTd DataLabel="Acciones">
                         <MudSpacer></MudSpacer>
-                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email))" Color="Color.Transparent">
+                            <MudButton Variant="Variant.Filled" @onclick="@(e => GoToContractEmployee(@context.Email, @context.Name, @context.LastName1, @context.LastName2))" Color="Color.Transparent">
                                 <MudText>
                                 Contratar
                                 </MudText> 
@@ -69,7 +67,7 @@
             <MudToolBar>
                 <MudText> Contratar Empleados </MudText>
                 <MudSpacer />
-                <MudTextField @bind-Value="mySearchString" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                <MudTextField @bind-Value="_mySearchString" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </MudToolBar> 
                 <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
                 </MudPaper>
@@ -84,40 +82,31 @@
             Registrar Empleados
             </MudText> 
         </MudButton>
-    }
 }
 
 @code {
-    private bool _hidePosition;
-    private bool _loading = true;
-    private bool _empty = true;
-    string mySearchString = "";
-    public string Disabled { get; set; } = "Empleados Contratados";
-    private IEnumerable<Person> _elements = new List<Person>();
-    private MudTable<Person> _table;
-    public string tab1 { get; set; } = "Contratar empleados";
-    public string tab2 { get; set; } = "Empleados contratados";
-
     [Parameter]
     public string employerEmail { get; set; }
-
     [Parameter]
     public string projectName { get; set; }
-
-    [Parameter]
-    public EventCallback<string> SendTableState { get; set; }
+    private IEnumerable<Person> _elements = new List<Person>();
+    private MudTable<Person> _table;
+    private bool _hidePosition;
+    private bool _loading = true;
+    private bool _empty = false;
+    private string _mySearchString = "";
+   
 
     protected override async Task OnInitializedAsync()
     {
         ContextMenuService.SetProjectsContext(true, true, projectName, employerEmail, false);
         _elements = await PersonService.GetAllEmployees(projectName);
         IEnumerable<Person> hiredEmployees = await PersonService.GetProjectEmployees(projectName);
-        _empty = false;
         foreach (var item in hiredEmployees)
         {
             _elements = _elements.Where(e => e.Email != item.Email);
         }
-        
+
         if (_elements.Length() == 0)
         {
             _empty = true;
@@ -130,9 +119,10 @@
         nav.NavigateTo($"/Create_Employee/{employerEmail}/{projectName}");
     }
 
-    private void GoToContractEmployee(string employeeEmail)
+    private void GoToContractEmployee(string employeeEmail, string name, string lastname1, string lastname2)
     {
-       nav.NavigateTo($"/Agreements/{employerEmail}/{projectName}/{employeeEmail}/New");
+        string employeeName = name + " " + lastname1 + " " + lastname2;
+        nav.NavigateTo($"/Agreements/{employerEmail}/{projectName}/{employeeEmail}/{employeeName}/New");
     }
 
     private void PageChanged(int i)
@@ -140,7 +130,7 @@
         _table.NavigateTo(i - 1);
     }
 
-    private bool FilterFunc1(Person element) => FilterFunc(element, mySearchString);
+    private bool FilterFunc1(Person element) => FilterFunc(element, _mySearchString);
 
     private bool FilterFunc(Person element, string searchString)
     {
@@ -151,8 +141,4 @@
         return false;
     }
 
-    private async Task SendConmuteSignal()
-    {
-        await SendTableState.InvokeAsync("");
-    }
 }
