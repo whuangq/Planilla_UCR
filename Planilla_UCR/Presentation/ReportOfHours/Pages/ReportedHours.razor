@@ -23,19 +23,19 @@
         List<BreadcrumbItem> _items = new List<BreadcrumbItem>
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
-            new BreadcrumbItem(@projectName, href: $"/EmployeeProjects/{email}/{ projectName}"),
+            new BreadcrumbItem(@_projectName, href: $"/Projects/{email}/{ContextMenuService.GetEmployerEmailContext()}/{_projectName}"),
             new BreadcrumbItem("Histórico de horas", href: null, disabled: true)
         }; 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
         <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
         </MudPaper>
-        if (!empty)
+        if (!_empty)
         {
-                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<HoursReport,bool>(FilterFunc1)">
+                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<HoursReport,bool>(FilterFunction)">
                     <ToolBarContent>
                             <MudText Align="Align.Center" Typo="Typo.h6">Horas reportadas</MudText>
                             <MudSpacer />
-                            <MudTextField @bind-Value="searchString1" Placeholder="Buscar fecha" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudTextField @bind-Value="searchString" Placeholder="Buscar fecha" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent> 
                     <HeaderContent>
                         <MudTh>Nombre proyecto</MudTh>
@@ -63,31 +63,25 @@
 }
 
 @code {
-    private bool _hidePosition;
-    private bool _loading = true;
-    private bool empty = true;
-    string searchString1 = "";
-    private IEnumerable<HoursReport> _elements = new List<HoursReport>();
-    private MudTable<HoursReport> _table;
-    public string tab1 { get; set; } = "Horas reportadas";
-
     [Parameter]
     public string email { get; set; }
-    public string projectName { get; set; }
+    private bool _hidePosition;
+    private bool _loading = true;
+    private bool _empty = true;
+    public string searchString = "";
+    private IEnumerable<HoursReport> _elements = new List<HoursReport>();
+    private MudTable<HoursReport> _table;
+    private string _projectName { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        projectName = ContextMenuService.GetProjectsContext();
+        _projectName = ContextMenuService.GetProjectsContext();
         _elements = await HoursReportService.GetAllReportsAsync(email);
-        _elements = _elements.Where(e => e.ProjectName == projectName);
+        _elements = _elements.Where(e => e.ProjectName == _projectName);
         _elements = _elements.OrderByDescending (report => report.ReportDate);
-        if (_elements.Length() == 0)
+        if (_elements.Length() != 0)
         {
-            empty = true;
-        }
-        else
-        {
-            empty = false;
+            _empty = false;
         }
         _loading = false;
     }
@@ -97,13 +91,13 @@
         _table.NavigateTo(i - 1);
     }
 
-    private bool FilterFunc1(HoursReport element) => FilterFunc(element, searchString1);
+    private bool FilterFunction(HoursReport element) => Filter(element, searchString);
 
-    private bool FilterFunc(HoursReport element, string searchString)
+    private bool Filter(HoursReport element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if (element.ReportDate.ToString().Contains(searchString1, StringComparison.OrdinalIgnoreCase))
+        if (element.ReportDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
         return true;
         return false;
     }

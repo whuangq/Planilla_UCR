@@ -1,5 +1,4 @@
-﻿@page "/ReportHours/{EmployerEmail}/{EmployeeEmail}"
-@using Application.ReportOfHours
+﻿@using Application.ReportOfHours
 @using Domain.Payments.Entities
 @using Domain.ReportOfHours.Entities
 @using Presentation.Shared.Models
@@ -17,6 +16,7 @@
 @inject IAgreementService AgreementService
 @inject IContextMenuService ContextMenuService
 @inject IPaymentService PaymentService
+@page "/ReportHours/{employerEmail}/{employeeEmail}"
 
 @inject NavigationManager nav
 
@@ -24,8 +24,8 @@
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Proyectos", href: $"/Projects/{EmployeeEmail}"),
-        new BreadcrumbItem(hoursReport.ProjectName, href: $"/EmployeeProjects/{EmployeeEmail}/{ hoursReport.ProjectName}"),
+        new BreadcrumbItem("Proyectos", href: $"/Projects/{employeeEmail}"),
+        new BreadcrumbItem(hoursReport.ProjectName, href:$"/Projects/{employeeEmail}/{employerEmail}/{ContextMenuService.GetProjectsContext()}"),
         new BreadcrumbItem("Nuevo Reporte de horas", href: null, disabled: true),
     };
 }
@@ -99,26 +99,24 @@
     }
 
 @code {
+    [Parameter]
+    public string employerEmail { set; get; }
+    [Parameter]
+    public string employeeEmail { set; get; }
     SnackHandler snackHandler = new SnackHandler();
     MudForm form;
     private IEnumerable<Agreement> _elements;
     private bool _loading = true;
     private bool _empty = true;
 
-    [Parameter]
-    public string EmployerEmail { set; get; }
-    [Parameter]
-    public string EmployeeEmail { set; get; }
-
-    public float hours { get; set; } = 5.4f;
+    // Form data
     HoursReport hoursReport = new HoursReport("","","",null, 0);
     DateTime? startDate;
-
 
     protected override async Task OnInitializedAsync()
     {
          hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
-        _elements = await AgreementService.GetEmployeeAgreements(EmployeeEmail);
+        _elements = await AgreementService.GetEmployeeAgreements(employeeEmail);
         if (_elements.Length() == 0)
         {
             _empty = true;
@@ -129,8 +127,8 @@
         }
         _loading = false;
         hoursReport.ReportDate = DateTime.Now;
-        hoursReport.EmployerEmail = EmployerEmail;
-        hoursReport.EmployeeEmail = EmployeeEmail;
+        hoursReport.EmployerEmail = employerEmail;
+        hoursReport.EmployeeEmail = employeeEmail;
         hoursReport.ProjectName = ContextMenuService.GetProjectsContext();
     }
 
@@ -138,7 +136,7 @@
     {
         snackHandler._saving = true;
         await form.Validate();
-        bool hasKey = await validateKey();
+        bool hasKey = await ValidateKey();
         bool validDate = await ValidateDate();
         if (form.IsValid && ValidateHours() && !hasKey && validDate)
         {
@@ -182,7 +180,7 @@
         return valid;
     }
 
-    async Task<bool> validateKey()
+    async Task<bool> ValidateKey()
     {
         bool hasKey = await HoursReportService.HasReportAsync(hoursReport);
         if (hasKey)
@@ -194,7 +192,7 @@
 
     async Task<bool> ValidateDate()
     {
-        Payment lastPay = await PaymentService.GetEmployeeLastPayment(EmployeeEmail, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetProjectsContext());
+        Payment lastPay = await PaymentService.GetEmployeeLastPayment(employeeEmail, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetProjectsContext());
         bool valid = true; 
         if (hoursReport.ReportDate > DateTime.Now)
         {
@@ -210,7 +208,7 @@
             }
         }
         
-        Agreement searchAgreement = new Agreement(EmployeeEmail, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetProjectsContext(), null, "",1,null,1,""); 
+        Agreement searchAgreement = new Agreement(employeeEmail, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetProjectsContext(), null, "",1,null,1,""); 
         searchAgreement = await AgreementService.GetContractee(searchAgreement);
         if (searchAgreement.ContractStartDate > hoursReport.ReportDate)
         {

@@ -25,7 +25,7 @@
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
-        new BreadcrumbItem(@projectName, href: $"/Projects/Details/{email}/{projectName}"),
+        new BreadcrumbItem(@projectName, href:  $"/Projects/{email}/{projectName}"),
         new BreadcrumbItem("Empleados", href: $"/View_Project_Employees/{email}/{projectName}"),
         new BreadcrumbItem("Nuevo empleado",  href: null, disabled: true)
     };
