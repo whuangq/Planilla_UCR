@@ -59,7 +59,7 @@
                     <ToolBarContent>
                             <MudText> Empleados contratados </MudText>
                             <MudSpacer />
-                            <MudTextField @bind-Value="mySearchString" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudTextField @bind-Value="mySearchString" Immediate="true" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent> 
                 
                         <ColGroup>
@@ -72,8 +72,8 @@
                             <col />
                         </ColGroup>
                         <HeaderContent>
-                            <MudTh Style="text-align:justify-all">Nombre empleado</MudTh>
-                            <MudTh Style="text-align:justify-all">Email empleado</MudTh>
+                            <MudTh Style="text-align:justify-all">Nombre completo</MudTh>
+                            <MudTh Style="text-align:justify-all">Email </MudTh>
                             <MudTh Style="text-align:justify-all">Tipo contrato </MudTh>
                             <MudTh Style="text-align:justify-all">Intervalo pago</MudTh>
                             <MudTh Style="text-align:justify-all">Inicio contrato</MudTh>
@@ -84,8 +84,8 @@
                         </HeaderContent>
 
                         <RowTemplate>
-                            <MudTd DataLabel="Nombre empleado" Style="text-align:justify-all">@context.Name @context.LastName1 @context.LastName2</MudTd>
-                            <MudTd DataLabel="Email empleado" Style="text-align:justify-all">@context.EmployeeEmail</MudTd>
+                            <MudTd DataLabel="Nombre completo" Style="text-align:justify-all">@context.Name @context.LastName1 @context.LastName2</MudTd>
+                            <MudTd DataLabel="Email" Style="text-align:justify-all">@context.EmployeeEmail</MudTd>
                             <MudTd DataLabel="Tipo contrato" Style="text-align:justify-all">@context.ContractType</MudTd>
                             <MudTd DataLabel="Intervalo pago" Style="text-align:justify-all">@context.PaymentInterval</MudTd>
                             <MudTd DataLabel="Inicio contrato" Style="text-align:justify-all">@context.ContractStartDate.ToShortDateString()</MudTd>

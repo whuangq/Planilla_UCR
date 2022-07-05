@@ -29,22 +29,22 @@
 
         if (!_empty)
         {
-                <MudTable @ref="@_table" Items="@_elements" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(FilterFunc1)">
+                <MudTable @ref="@_table" Items="@_elements"  RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(Filter)">
                     <ToolBarContent>
                             <MudText> Contratar empleados </MudText>
                             <MudSpacer />
-                            <MudTextField @bind-Value="_mySearchString" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                            <MudTextField @bind-Value="_mySearchString" Immediate="true" Placeholder="Buscar email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent> 
                     <HeaderContent>
-                        <MudTh>Email</MudTh>
                         <MudTh>Nombre completo</MudTh>
+                        <MudTh>Email</MudTh>                
                         <MudTh>Cedula</MudTh>
                         <MudTh>Acciones</MudTh>
                     </HeaderContent>
 
                     <RowTemplate>
-                        <MudTd DataLabel="Email">@context.Email</MudTd>
                         <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
+                        <MudTd DataLabel="Email">@context.Email</MudTd>
                         <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
                          <MudTd DataLabel="Acciones">
                         <MudSpacer></MudSpacer>
@@ -130,7 +130,7 @@
         _table.NavigateTo(i - 1);
     }
 
-    private bool FilterFunc1(Person element) => FilterFunc(element, _mySearchString);
+    private bool Filter(Person element) => FilterFunc(element, _mySearchString);
 
     private bool FilterFunc(Person element, string searchString)
     {
