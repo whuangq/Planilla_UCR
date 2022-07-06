@@ -772,6 +772,16 @@ VALUES('wendy@ucr.ac.cr',
 '2022-06-01'
 )
 
+INSERT INTO Subscription
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Deducción Ejemplo',
+'Ejemplo',
+'Ejemplo',
+200000,
+0,
+1
+)
 
 INSERT INTO Subscription
 VALUES('leonel@ucr.ac.cr',
@@ -887,6 +897,15 @@ VALUES('leonel@ucr.ac.cr',
 'Ayudemos a los niños',
 'jeremy@ucr.ac.cr',
 25000,
+'2022-06-1'
+)
+
+INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
+VALUES('leonel@ucr.ac.cr',
+'Proyecto 1',
+'Deducción Ejemplo',
+'jeremy@ucr.ac.cr',
+200000,
 '2022-06-1'
 )
 

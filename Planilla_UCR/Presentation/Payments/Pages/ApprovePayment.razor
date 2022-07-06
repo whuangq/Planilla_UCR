@@ -16,6 +16,7 @@
 @using Application.Subscribes
 @using Presentation.Payments.Models
 @using System.Globalization
+@using Application.PaymentCalculator;
 
 @inject IAgreementService AgreementService
 @inject IContextMenuService ContextService
@@ -24,6 +25,7 @@
 @inject IPersonService PersonService
 @inject IReportOfHoursService ReportHoursService
 @inject ISubscribeService SubscribeService
+@inject IPaymentCalculatorService PaymentCalculatorService
 @inject ISnackbar Snackbar
 @inject NavigationManager nav
 
@@ -102,7 +104,6 @@
     private DateTime _nextPay = DateTime.Now;
     private IList<Agreement> _employees = new List<Agreement>();
     private IEnumerable<EmployeeAgreement> _employeesPayment = new List<EmployeeAgreement>();
-    private PaymentCalculator _calculator = new PaymentCalculator();
     private MudTable<EmployeeAgreement> _mudTable;
     private HashSet<EmployeeAgreement> _selectedItems1 = new HashSet<EmployeeAgreement>();
     private HoursReport _report = new HoursReport();
@@ -194,36 +195,37 @@
 
     private async Task<double> GetSalaryByType(int mountPerHour, string employeeEmail, string contractType, DateTime startDate)
     {
-        int workedDays = GetWorkedDays(employeeEmail, startDate);
+        int workedDays = await GetWorkedDays(employeeEmail, startDate);
         double grossSalary = 0;
         if (contractType == "Tiempo completo")
         {
-            grossSalary = _calculator.GetFullTimeSalary(mountPerHour, workedDays);
+            grossSalary = PaymentCalculatorService.GetFullTimeSalary(mountPerHour, workedDays);
         }
         if (contractType == "Medio tiempo")
         {
-            grossSalary = _calculator.GetPartTimeSalary(mountPerHour, workedDays);
+            grossSalary = PaymentCalculatorService.GetPartTimeSalary(mountPerHour, workedDays);
         }
         if (contractType == "Servicios profesionales")
         {
             double workedHours = await GetWorkedHours(employeeEmail);
-            grossSalary = _calculator.GetSalaryPerHours(mountPerHour, workedHours);
+            grossSalary = PaymentCalculatorService.GetSalaryPerHours(mountPerHour, workedHours);
         }
         return grossSalary;
     }
 
-    private int GetWorkedDays(string employeeEmail, DateTime startDate)
+    private async Task<int> GetWorkedDays(string employeeEmail, DateTime startDate)
     {
         int _workedDays = Convert.ToInt32(_daysInterval);
-        if (startDate.Month == _nextPay.Month)
+        Payment _lastPay = await PaymentService.GetEmployeeLastPayment(employeeEmail, email, projectName);
+        if (_lastPay == null)
         {
             _workedDays = _nextPay.Day - startDate.Day;
-            int _workedWeeks = _workedDays / 7;
-            _workedDays -= _workedWeeks;
-            if (startDate.Date > _nextPay.Date)
-            {
-                _workedDays = 0;
-            }
+        }
+        int _workedWeeks = _workedDays / 7;
+        _workedDays -= _workedWeeks;
+        if (startDate.Date > _nextPay.Date)
+        {
+            _workedDays = 0;
         }
         return _workedDays;
     }

@@ -33,6 +33,8 @@ using Application.LegalDeductions.Implementations;
 using Application.LegalDeductions;
 using Application.TaxCalculator.Implementations;
 using Application.TaxCalculator;
+using Application.PaymentCalculator.Implementations;
+using Application.PaymentCalculator;
 
 namespace Application
 {
@@ -57,6 +59,7 @@ namespace Application
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<ILegalDeductionService, LegalDeductionService>();
             services.AddTransient<ITaxCalculatorService, TaxCalculatorService>();
+            services.AddTransient<IPaymentCalculatorService, PaymentCalculatorService>();
             return services;
         }
     }

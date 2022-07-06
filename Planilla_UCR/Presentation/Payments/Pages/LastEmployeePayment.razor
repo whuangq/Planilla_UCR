@@ -14,6 +14,7 @@
 @using Presentation.Payments.Models
 @using Application.People
 @using Application.TaxCalculator
+@using Application.PaymentCalculator;
 
 @inject IPaymentService PaymentService
 @inject IContextMenuService ContextMenuService
@@ -24,6 +25,7 @@
 @inject NavigationManager nav
 @inject ISubscriptionService SuscriptionService
 @inject ITaxCalculatorService TaxCalculatorService
+@inject IPaymentCalculatorService PaymentCalculatorService
 @page "/Last_Pay/{email}/{projectName}"
 
 @if(_loading) 
@@ -132,7 +134,7 @@
     private IList<Subscription> _deductions = new List<Subscription>();
     private MudTable<LegalDeduction> _tableLegalDeductions;
     private IEnumerable<LegalDeduction> _legalDeductions = new List<LegalDeduction>();
-  
+
     // Page control
     private CultureInfo _cultureCR = CultureInfo.GetCultureInfo("es-CR");
     private bool _loading = true;
@@ -163,23 +165,30 @@
     {
         double netSalary = _lastPay.GrossSalary;
         Subscribe searchSubscribe= new Subscribe(email, _lastPay.EmployerEmail, projectName, "", 0.0, _lastPay.StartDate, _lastPay.EndDate);
-        IEnumerable<Subscription> subscriptions = await SubscribeService.GetSubscriptionCostsByDate(searchSubscribe);
-        _legalDeductions = await LegalDeductionService.GetAllAsync();
-        foreach (var item in subscriptions)
+        IList<Subscription> subscriptions = (await SubscribeService.GetSubscriptionCostsByDate(searchSubscribe)).ToList();
+        if (_payTaxes)
         {
-            if(item.TypeSubscription == 0)
+            _legalDeductions = await LegalDeductionService.GetAllAsync();
+            foreach (var item in _legalDeductions)
             {
-                netSalary -= item.Cost;
-                _deductions.Add(item);
-
+                netSalary -= TaxCalculatorService.GetTaxAmount(item.DeductionName, _lastPay.GrossSalary);
             }
         }
-
-        foreach (var item in _legalDeductions)
+        IList<Subscription> _deductionsNotPaid = new List<Subscription>();
+        subscriptions = subscriptions.Where(e => e.TypeSubscription == 0).ToList();
+        _deductionsNotPaid = PaymentCalculatorService.ApplyDeductions(netSalary, subscriptions);
+        subscriptions = subscriptions.Except(_deductionsNotPaid).ToList();
+        _deductions = subscriptions;
+        double deductionsMountToPay = PaymentCalculatorService.DeductionsCost(subscriptions);
+        if (netSalary < deductionsMountToPay)
         {
-            netSalary -= TaxCalculatorService.GetTaxAmount(item.DeductionName, _lastPay.GrossSalary);
+            _deductions.Last().Cost = netSalary - (deductionsMountToPay - _deductions.Last().Cost);
+            netSalary = 0;
         }
-
+        else
+        {
+            netSalary -= deductionsMountToPay; 
+        }
         return netSalary;
     }
 

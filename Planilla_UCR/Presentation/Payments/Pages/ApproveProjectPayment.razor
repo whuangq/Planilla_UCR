@@ -17,6 +17,7 @@
 @using Application.Subscribes
 @using Presentation.Payments.Models
 @using System.Globalization
+@using Application.PaymentCalculator;
 
 @inject IAgreementService AgreementService
 @inject IProjectService ProjectService
@@ -24,8 +25,10 @@
 @inject IPersonService PersonService
 @inject IReportOfHoursService ReportHoursService
 @inject ISubscribeService SubscribeService
+@inject IPaymentCalculatorService PaymentCalculatorService
 @inject ISnackbar Snackbar
 @inject NavigationManager nav
+
 
 @{
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -103,7 +106,6 @@
     private IList<Project> _projects = new List<Project>();
     private IList<ProjectModel> _projectsList = new List<ProjectModel>();
     private IList<ProjectModel> _projectsToDelete = new List<ProjectModel>();
-    private PaymentCalculator _calculator = new PaymentCalculator();
     private MudTable<ProjectModel> _mudTable;
     private HashSet<ProjectModel> _selectedItems1 = new HashSet<ProjectModel>();
     private HoursReport _report = new HoursReport();
@@ -184,16 +186,16 @@
         double grossSalary = 0;
         if (agreement.ContractType == "Tiempo completo")
         {
-            grossSalary = _calculator.GetFullTimeSalary(agreement.MountPerHour, workedDays);
+            grossSalary = PaymentCalculatorService.GetFullTimeSalary(agreement.MountPerHour, workedDays);
         }
         if (agreement.ContractType == "Medio tiempo")
         {
-            grossSalary = _calculator.GetPartTimeSalary(agreement.MountPerHour, workedDays);
+            grossSalary = PaymentCalculatorService.GetPartTimeSalary(agreement.MountPerHour, workedDays);
         }
         if (agreement.ContractType == "Servicios profesionales")
         {
             double workedHours = await GetWorkedHours(agreement, daysInterval, lastPaymentDate);
-            grossSalary = _calculator.GetSalaryPerHours(agreement.MountPerHour, workedHours);
+            grossSalary = PaymentCalculatorService.GetSalaryPerHours(agreement.MountPerHour, workedHours);
         }
         return grossSalary;
     }
@@ -316,7 +318,7 @@
                         mountToPay, _pModel.LastPaymentDate, _pModel.LastPaymentDate.AddDays(_pModel.DayInterval));
                     await PaymentService.AddPayment(_payment);
                 }
-                Project _projectInfo = new Project(_pModel.EmployerEmail, _pModel.ProjectName, "", 0, 0, "", 1);
+                Project _projectInfo = new Project(_pModel.EmployerEmail, _pModel.ProjectName, "", 0, 0, "", 1, _pModel.LastPaymentDate.AddDays(_pModel.DayInterval));
                 ProjectService.UpdatePaymentDate(_projectInfo);
             }
             Snackbar.Add("Pagos aprobados", Severity.Success);
