@@ -40,10 +40,13 @@ namespace Infrastructure.Employees.Repositories
             return employeeList;
         }
 
-        public async Task<IEnumerable<Person?>> GetProjectEmployees(string projectName)
+        public async Task<IEnumerable<Person?>> GetProjectEmployees(string projectName, string employerEmail)
         {
-            var employeeList = await _dbContext.People.FromSqlRaw("EXEC GetProjectEmployees @projectName",
-                new SqlParameter("projectName", projectName)).ToListAsync();
+            SqlParameter myProjectName = new SqlParameter("@project", projectName);
+            SqlParameter myEmployerEmail = new SqlParameter("@employerEmail", employerEmail);
+
+            var employeeList = await _dbContext.People.FromSqlRaw("EXEC GetProjectEmployees {0}, {1}",
+                myProjectName, myEmployerEmail).ToListAsync();
             return employeeList;
         }
 

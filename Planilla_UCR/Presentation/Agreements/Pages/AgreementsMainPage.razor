@@ -1,13 +1,18 @@
 ﻿@page "/Agreements/{employerEmail}/{projectName}/"
 
+@using Application.Agreements
 @using Application.People
+@using Domain.Agreements.Entities
 @using Domain.People.Entities
 @using Application.Employees
 @using Application.ContextMenu
+@using Presentation.Agreements.Models
 
 @inject NavigationManager nav
 @inject IEmployeeService PersonService
 @inject IContextMenuService ContextMenuService
+@inject IAgreementService AgreementService
+
 
 @if(_loading) {
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
@@ -21,15 +26,14 @@
         {
             new BreadcrumbItem("Proyectos", href: $"/Projects/{employerEmail}"),
             new BreadcrumbItem(@projectName, href: $"/Projects/{employerEmail}/{projectName}"),
-            new BreadcrumbItem("Contratar empleados", href: null, disabled: true)
+            new BreadcrumbItem("Contrataciones", href: null, disabled: true)
         }; 
         <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
         <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
         </MudPaper>
-
         if (!_empty)
         {
-                <MudTable @ref="@_table" Items="@_elements"  RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(Filter)">
+                <MudTable @ref="@_table" Items="@_hiredableEmployees"  RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" Filter="new Func<Person,bool>(Filter)">
                     <ToolBarContent>
                             <MudText> Contratar empleados </MudText>
                             <MudSpacer />
@@ -41,9 +45,8 @@
                         <MudTh>Cedula</MudTh>
                         <MudTh>Acciones</MudTh>
                     </HeaderContent>
-
                     <RowTemplate>
-                        <MudTd DataLabel="Nombre">@context.Name @context.LastName1 @context.LastName2</MudTd>
+                        <MudTd DataLabel="Nombre completo">@context.Name @context.LastName1 @context.LastName2</MudTd>
                         <MudTd DataLabel="Email">@context.Email</MudTd>
                         <MudTd DataLabel="Cedula">@context.Ssn</MudTd>
                          <MudTd DataLabel="Acciones">
@@ -58,8 +61,7 @@
                 <PagerContent>
                     <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Color="Color.Primary" Class="pa-4"/>
                 </PagerContent>
-                </MudTable>
-                
+                </MudTable>    
         } 
         else
         {
@@ -83,35 +85,41 @@
             </MudText> 
         </MudButton>
 }
-
 @code {
     [Parameter]
     public string employerEmail { get; set; }
     [Parameter]
     public string projectName { get; set; }
-    private IEnumerable<Person> _elements = new List<Person>();
+    private IEnumerable<Person> _hiredableEmployees = new List<Person>();
+    private IEnumerable<Person> _hiredEmployees = new List<Person>();
     private MudTable<Person> _table;
-    private bool _hidePosition;
     private bool _loading = true;
     private bool _empty = false;
     private string _mySearchString = "";
-   
 
     protected override async Task OnInitializedAsync()
     {
         ContextMenuService.SetProjectsContext(true, true, projectName, employerEmail, false);
-        _elements = await PersonService.GetAllEmployees(projectName);
-        IEnumerable<Person> hiredEmployees = await PersonService.GetProjectEmployees(projectName);
-        foreach (var item in hiredEmployees)
-        {
-            _elements = _elements.Where(e => e.Email != item.Email);
-        }
+        _hiredableEmployees = await PersonService.GetAllEmployees(projectName);
+        _hiredEmployees =  await PersonService.GetProjectEmployees(projectName, employerEmail);
+        RemoveHiredEmployees();
+        CheckElementLength();
+        _loading = false;
+    }
 
-        if (_elements.Length() == 0)
+    private void RemoveHiredEmployees() 
+    {
+        _hiredableEmployees = (from myElement in _hiredableEmployees
+                        select myElement)
+                       .Except(_hiredEmployees).ToList();
+    }
+
+    private void CheckElementLength()
+    {
+        if (_hiredableEmployees.Length() == 0)
         {
             _empty = true;
         }
-        _loading = false;
     }
 
     private void GoToCreateEmployee()
@@ -125,14 +133,14 @@
         nav.NavigateTo($"/Agreements/{employerEmail}/{projectName}/{employeeEmail}/{employeeName}/New");
     }
 
-    private void PageChanged(int i)
+    private void PageChanged(int index)
     {
-        _table.NavigateTo(i - 1);
+        _table.NavigateTo(index - 1);
     }
 
-    private bool Filter(Person element) => FilterFunc(element, _mySearchString);
+    private bool Filter(Person element) => FilterFunction(element, _mySearchString);
 
-    private bool FilterFunc(Person element, string searchString)
+    private bool FilterFunction(Person element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -140,5 +148,4 @@
             return true;
         return false;
     }
-
 }

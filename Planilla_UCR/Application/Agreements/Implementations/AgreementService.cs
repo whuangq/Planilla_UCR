@@ -58,5 +58,13 @@ namespace Application.Agreements.Implementations
             return await _agreementRepository.CheckAgreementTypeOfContractee(agreement);
         }
 
+        public async Task<IEnumerable<Agreement>>? CheckIfAgreementIsDesactivated(Agreement agreement)
+        {
+            return await _agreementRepository.CheckIfAgreementIsDesactivated(agreement);
+        }
+        public void UpdateAgreementStatus(Agreement agreement)
+        {
+            _agreementRepository.UpdateAgreementStatus(agreement);
+        }
     }
 }

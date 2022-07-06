@@ -99,5 +99,29 @@ namespace Infrastructure.Agreements.Repositories
                 myEmployeeEmail, myEmployerEmail, myProjectName, myContractType).ToListAsync();
             return agreementsSalary;
         }
+
+        public async Task<IEnumerable<Agreement?>> CheckIfAgreementIsDesactivated(Agreement agreement)
+        {
+            SqlParameter myEmployeeEmail = new SqlParameter("@EmployeeEmail", agreement.EmployeeEmail);
+            SqlParameter myEmployerEmail = new SqlParameter("@EmployerEmail", agreement.EmployerEmail);
+            SqlParameter myProjectName = new SqlParameter("@ProjectName", agreement.ProjectName);
+            var agreementList = await _dbContext.Agreements.FromSqlRaw("EXEC CheckIfAgreementIsDesactivated {0},{1},{2}",
+                myEmployeeEmail, myEmployerEmail, myProjectName).ToListAsync();
+            return agreementList;
+        }
+
+        public void UpdateAgreementStatus(Agreement agreement)
+        {
+            SqlParameter myEmployeeEmail = new SqlParameter("@EmployeeEmail", agreement.EmployeeEmail);
+            SqlParameter myEmployerEmail = new SqlParameter("@EmployerEmail", agreement.EmployerEmail);
+            SqlParameter myProjectName = new SqlParameter("@ProjectName", agreement.ProjectName);
+            SqlParameter myContractStartDate = new SqlParameter("@ContractStartDate", agreement.ContractStartDate);
+            SqlParameter myContractFinishDate = new SqlParameter("@ContractFinishDate", agreement.ContractFinishDate);
+            SqlParameter myContractType = new SqlParameter("@ContractType", agreement.ContractType);
+            SqlParameter myMountPerHour = new SqlParameter("@MountPerHour", agreement.MountPerHour);
+
+            _dbContext.Agreements.FromSqlRaw("EXEC UpdateAgreementStatus {0},{1},{2},{3},{4},{5},{6}",
+                myEmployeeEmail, myEmployerEmail, myProjectName, myContractStartDate, myContractFinishDate, myContractType, myMountPerHour).ToListAsync();
+        }
     }
 }

@@ -11,6 +11,6 @@ namespace Application.Employees
         Task CreateEmployeeAsync(String email);
         Task<IEnumerable<Employee>> GetEmployeeByEmail(string email);
         Task<IEnumerable<Person>> GetAllEmployees(string projectName);
-        Task<IEnumerable<Person>> GetProjectEmployees(string projectName);
+        Task<IEnumerable<Person>> GetProjectEmployees(string projectName, string employerEmail);
     }
 }
