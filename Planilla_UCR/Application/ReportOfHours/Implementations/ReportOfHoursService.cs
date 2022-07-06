@@ -6,7 +6,7 @@ using Domain.ReportOfHours.Repositories;
 
 namespace Application.ReportOfHours.Implementations
 {
-    internal class ReportOfHoursService : IReportOfHoursService
+    public class ReportOfHoursService : IReportOfHoursService
     {
         private readonly IHoursReportRepository _reportRepository;
 
@@ -25,14 +25,24 @@ namespace Application.ReportOfHours.Implementations
             return await _reportRepository.GetAllReportsAsync(email);
         }
 
-        public Task<bool> HasReportAsync(HoursReport report)
+        public async Task<bool> HasReportAsync(HoursReport report)
         {
-            return _reportRepository.HasReportAsync(report);
+            return await _reportRepository.HasReportAsync(report);
         }
 
-        public Task<IList<HoursReport>> GetEmployeeReports(HoursReport hoursReport, DateTime endDate) 
+        public async Task<IList<HoursReport>> GetEmployeeReports(HoursReport hoursReport, DateTime endDate) 
         { 
-            return _reportRepository.GetEmployeeReports(hoursReport, endDate);
+            return await _reportRepository.GetEmployeeReports(hoursReport, endDate);
+        }
+
+        public Task UpdateReport(HoursReport report)
+        {
+            return _reportRepository.UpdateReport(report);
+        }
+
+        public async Task<IEnumerable<HoursReport>> GetProjectHoursReport(string projectName, string employeeEmail, string employerEmail)
+        {
+            return await _reportRepository.GetProjectHoursReport(projectName, employeeEmail, employerEmail);
         }
     }
 }

@@ -9,11 +9,11 @@ namespace Infrastructure.ReportOfHours.EntityMappings
         public void Configure(EntityTypeBuilder<HoursReport> builder)
         {
             builder.ToTable("ReportOfHours");
-
             builder.HasKey(p => new { p.EmployerEmail, p.ProjectName, p.EmployeeEmail, p.ReportDate});
-
             builder.Property(p => p.ReportHours)
-                   .IsRequired();
+                .IsRequired();
+            builder.Property(p => p.Approved);
+                   
         }
     }
 }

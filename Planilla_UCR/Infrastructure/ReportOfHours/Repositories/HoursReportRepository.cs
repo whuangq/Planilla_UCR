@@ -50,7 +50,23 @@ namespace Infrastructure.ReportOfHours.Repositories
         {
             IList<HoursReport> reports = await _dbContext.HoursReport.Where
                 (e=> e.EmployeeEmail == hoursReport.EmployeeEmail &&
-                 (endDate >= e.ReportDate && e.ReportDate >= hoursReport.ReportDate)).ToListAsync();
+                 (endDate >= e.ReportDate && e.ReportDate >= hoursReport.ReportDate) && e.Approved == 1).ToListAsync();
+            return reports;
+        }
+
+        public async Task UpdateReport(HoursReport updateReport)
+        {
+            System.FormattableString query = ($@"EXECUTE ApproveHoursReport 
+            @EmployerEmail = {updateReport.EmployerEmail}, @ProjectName = {updateReport.ProjectName},
+            @ReportDate = {updateReport.ReportDate}, @EmployeeEmail = {updateReport.EmployeeEmail}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
+
+        public async Task<IEnumerable<HoursReport>> GetProjectHoursReport(string projectName, string employeeEmail, string employerEmail)
+        {
+            IEnumerable<HoursReport> reports = await _dbContext.HoursReport.Where(e => e.EmployeeEmail == employeeEmail).ToListAsync();
+            reports = reports.Where(e => e.Approved == 0 && e.ProjectName == projectName && e.EmployerEmail == employerEmail);
+            reports = reports.OrderByDescending(report => report.ReportDate);
             return reports;
         }
     }

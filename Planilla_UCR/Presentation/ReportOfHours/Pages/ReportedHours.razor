@@ -45,7 +45,7 @@
 
                     <RowTemplate>
                          <MudTd DataLabel="Nombre proyecto">@context.ProjectName</MudTd>
-                         <MudTd DataLabel="Fecha">@context.ReportDate.Value.Date.Day/@context.ReportDate.Value.Date.Month/@context.ReportDate.Value.Date.Year</MudTd>
+                         <MudTd DataLabel="Fecha">@context.ReportDate.Value.ToShortDateString()</MudTd>
                          <MudTd DataLabel="Horas">@context.ReportHours</MudTd>
                     </RowTemplate>
                 <PagerContent>
@@ -97,8 +97,10 @@
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if (element.ReportDate.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-        return true;
+            
+        string dateString = element.ReportDate.Value.ToShortDateString();
+        if (dateString.Contains(searchString))
+            return true;
         return false;
     }
 

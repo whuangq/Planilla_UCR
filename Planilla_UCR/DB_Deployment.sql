@@ -83,6 +83,7 @@ CREATE TABLE ReportOfHours(
 	EmployeeEmail varchar(255) NOT NULL,
 	ReportDate date NOT NULL,
 	ReportHours float NOT NULL,
+	Approved int NOT NULL,
 	PRIMARY KEY(EmployerEmail, ProjectName, EmployeeEmail, ReportDate),
 	FOREIGN KEY(EmployerEmail, ProjectName) REFERENCES Project(EmployerEmail, ProjectName) ON UPDATE CASCADE,
 	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
@@ -593,6 +594,21 @@ BEGIN
 	WHERE Agreement.EmployeeEmail = @EmployeeEmail AND Agreement.EmployerEmail = @EmployerEmail AND Agreement.ProjectName = @ProjectName and Agreement.IsEnabled <= 0;
 END
 
+--- Report Hours Stored Procedures
+GO
+CREATE OR ALTER PROCEDURE ApproveHoursReport(
+@EmployeeEmail varchar(255), 
+@EmployerEmail varchar(255),
+@ProjectName varchar(255),
+@ReportDate varchar(255) 
+)
+AS
+BEGIN
+	UPDATE ReportOfHours
+	SET ReportOfHours.Approved = 1
+	WHERE ReportOfHours.EmployeeEmail = @EmployeeEmail AND ReportOfHours.EmployerEmail = @EmployerEmail AND ReportOfHours.ProjectName = @ProjectName AND ReportOfHours.ReportDate = @ReportDate;
+END
+
 -- Data Insert
 GO
 INSERT INTO Person
@@ -856,13 +872,13 @@ INSERT INTO Agreement
 VALUES('naye@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Proyecto 3','2022-06-1','Medio tiempo', 1600, '2026-06-1', 1, '')
 
 INSERT INTO ReportOfHours
-VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-2',4)
+VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-2',4, 0)
 
 INSERT INTO ReportOfHours
-VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-5',5)
+VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-5',5, 0)
 
 INSERT INTO ReportOfHours
-VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-12',8)
+VALUES('leonel@ucr.ac.cr', 'Proyecto 1','mau@ucr.ac.cr', '2022-6-12',8, 0)
 
 
 INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)

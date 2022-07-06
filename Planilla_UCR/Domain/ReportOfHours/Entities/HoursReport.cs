@@ -11,15 +11,17 @@ namespace Domain.ReportOfHours.Entities
         public String EmployeeEmail { get; set; }
         public DateTime? ReportDate { get; set; }
         public double ReportHours { get; set; }
+        public int Approved { get; set; }
 
         public HoursReport(String employerEmail, String projectName, String employeeEmail,
-            DateTime? reportDate, float reportedHours)
+            DateTime? reportDate, float reportedHours, int approved)
         {
             EmployerEmail = employerEmail;
             ProjectName = projectName;
             EmployeeEmail = employeeEmail;
             ReportDate = reportDate;
             ReportHours = reportedHours;
+            Approved = approved;    
         }
 
         public HoursReport()

@@ -30,11 +30,12 @@
     else
     {
         <ProjectsDropDown icon="@Icons.Material.Filled.ArrowDropDown"></ProjectsDropDown>
-        <TabNavLink  Icon="@Icons.Material.Filled.CardGiftcard" href="@($"/Projects/{email}/{_projectName}/Benefits")" text="Beneficios"></TabNavLink>
-        <TabNavLink  Icon="@Icons.Material.Filled.HistoryEdu" href="@($"/Agreements/{email}/{_projectName}/")" text="Contrataciones"></TabNavLink>
-        <TabNavLink  Icon="@Icons.Material.Filled.CardMembership" href="@($"/Projects/{email}/{_projectName}/Deductions")" text="Deducciones voluntarias"></TabNavLink>
-        <TabNavLink Icon="@Icons.Material.Filled.Assignment" href="@($"/Projects/{email}/{_projectName}")" text="Detalles"></TabNavLink>
-        <TabNavLink Icon="@Icons.Material.Filled.People" href="@($"/View_Project_Employees/{email}/{_projectName}")" text="Empleados contratados"></TabNavLink>
+        <TabNavLink Icon="@Icons.Material.Filled.Assignment" href="@($"/Projects/{email}/{_projectName}")" text="Detalles"/>
+        <TabNavLink  Icon="@Icons.Filled.Approval" href="@($"/Approve_Hours/{email}/{_projectName}/false/")" text="Aprobar horas"></TabNavLink>
+        <TabNavLink  Icon="@Icons.Material.Filled.HistoryEdu" href="@($"/Agreements/{email}/{_projectName}/")" text="Contratar empleados"/>
+        <TabNavLink Icon="@Icons.Material.Filled.People" href="@($"/View_Project_Employees/{email}/{_projectName}")" text="Empleados contratados"/>
+        <TabNavLink  Icon="@Icons.Material.Filled.CardGiftcard" href="@($"/Projects/{email}/{_projectName}/Benefits")" text="Beneficios"/>
+        <TabNavLink  Icon="@Icons.Material.Filled.CardMembership" href="@($"/Projects/{email}/{_projectName}/Deductions")" text="Deducciones voluntarias"/>
     }
 }
 
