@@ -28,5 +28,10 @@ namespace Application.Payments.Implementations
         { 
             return await _paymentRepository.GetProjectPayments(payment);
         }
+
+        public async Task<IEnumerable<Payment>> GetEmployeePayments(string email)
+        {
+            return await _paymentRepository.GetEmployeePayments(email);
+        }
     }
 }
