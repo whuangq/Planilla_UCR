@@ -41,8 +41,6 @@ using Infrastructure.LegalDeductions.Repositories;
 using Domain.LegalDeductions.Repositories;
 using Infrastructure.TaxCalculator.Repositories;
 using Domain.TaxCalculator.Repositories;
-using Infrastructure.PaymentCalculator.Repositories;
-using Domain.PaymentCalculator.Repositories;
 
 namespace Infrastructure
 {
@@ -92,7 +90,6 @@ namespace Infrastructure
             services.AddScoped<ILegalDeductionRepository, LegalDeductionRepository>();
 
             services.AddScoped<ITaxCalculatorRepository, TaxCalculatorRepository>();
-            services.AddScoped<IPaymentCalculatorRepository, PaymentCalculatorRepository>();
             return services;
         }
     }

@@ -1,4 +1,4 @@
-﻿using Domain.PaymentCalculator.Repositories;
+﻿using System;
 using System.Collections.Generic;
 using Domain.Subscriptions.Entities;
 
@@ -6,31 +6,57 @@ namespace Application.PaymentCalculator.Implementations
 {
     public class PaymentCalculatorService : IPaymentCalculatorService
     {
-        private readonly IPaymentCalculatorRepository _paymentCalculatorRepository;
+        double FullTimeHours = 8.0;
+        double PartTimeHours = 4.0;
 
-        public PaymentCalculatorService(IPaymentCalculatorRepository paymentCalculatorRepository)
+        public double GetFullTimeSalary(double mountPerHour, int workedDay)
         {
-            _paymentCalculatorRepository = paymentCalculatorRepository;
+            return (FullTimeHours * Convert.ToDouble(workedDay)) * mountPerHour;
         }
-        public double GetFullTimeSalary(double mountPerHour, int workedDay) 
-        { 
-            return _paymentCalculatorRepository.GetFullTimeSalary(mountPerHour, workedDay);
-        }
-        public double GetPartTimeSalary(double mountPerHour, int workedDay) 
+
+        public double GetPartTimeSalary(double mountPerHour, int workedDay)
         {
-            return _paymentCalculatorRepository.GetPartTimeSalary(mountPerHour, workedDay);
+            return (PartTimeHours * Convert.ToDouble(workedDay)) * mountPerHour;
         }
-        public double GetSalaryPerHours(double mountPerHour, double workedHours) 
+
+        public double GetSalaryPerHours(double mountPerHour, double workedHours)
         {
-            return _paymentCalculatorRepository.GetSalaryPerHours(mountPerHour, workedHours);
+            return mountPerHour * workedHours;
         }
-        public IList<Subscription> ApplyDeductions(double netSalary, IList<Subscription> deductions) 
-        { 
-            return _paymentCalculatorRepository.ApplyDeductions(netSalary, deductions);
+
+        public IList<Subscription> ApplyDeductions(double netSalary, IList<Subscription> deductions)
+        {
+            IList<Subscription> _deductionsNotPaid = new List<Subscription>();
+            bool firstNotPaid = false;
+            foreach (var item in deductions)
+            {
+                if (netSalary - item.Cost <= 0)
+                {
+                    if (!firstNotPaid)
+                    {
+                        firstNotPaid = true;
+                    }
+                    else
+                    {
+                        _deductionsNotPaid.Add(item);
+                    }
+                }
+                else
+                {
+                    netSalary -= item.Cost;
+                }
+            }
+            return _deductionsNotPaid;
         }
-        public double DeductionsCost(IList<Subscription> deductions) 
-        { 
-            return _paymentCalculatorRepository.DeductionsCost(deductions);
+
+        public double DeductionsCost(IList<Subscription> deductions)
+        {
+            double cost = 0;
+            foreach (var item in deductions)
+            {
+                cost += item.Cost;
+            }
+            return cost;
         }
     }
 }
