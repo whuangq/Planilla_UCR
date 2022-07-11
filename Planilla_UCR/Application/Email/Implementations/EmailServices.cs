@@ -1,4 +1,11 @@
-﻿namespace Application.Email.Implementations
+﻿using Domain.Subscriptions.Entities;
+using Domain.LegalDeductions.Entities;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+namespace Application.Email.Implementations
 {
     public class EmailServices : IEmailServices
     {
@@ -37,6 +44,48 @@
                 "Cordialmente, " + "<br>" + "</br>" + "</div>" + "</section>" + "<section>" + "<div>" + employerName + "<br>" + "</br>" + "</div>" + "</section>";
             string subject = "Carta de despido";
             _emailSender.SendMail(destiny, subject, htmlContent);
+        }
+
+        public void SendLastPayEmail(EmailObject emailData, IList<string> rows, IList<Subscription> deductions, IList<LegalDeduction> legalDeductions)
+        {
+            
+
+            string employeeName = rows[0].Split("#")[0];
+            string contractType = rows[0].Split("#")[1];
+            string date = rows[0].Split("#")[2];
+            string projectName = rows[1].Split("#")[0];
+            string salary = rows[1].Split("#")[2];
+            string netSalary = rows[2].Split("#")[2];
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/LastPayEmail.html");
+            htmlContent = htmlContent.Replace("[employeeName]", employeeName);
+            htmlContent = htmlContent.Replace("[contractType]", contractType);
+            htmlContent = htmlContent.Replace("[Date]", date);
+            htmlContent = htmlContent.Replace("[projectName]", projectName);
+            htmlContent = htmlContent.Replace("[salary]", salary);
+            htmlContent = htmlContent.Replace("[netSalary]", netSalary);
+
+            htmlContent = htmlContent.Replace("[Heading]", "Reporte de último pago en " + projectName.Replace("Proyecto: ", "") + " el " + date.Replace("Fecha: ", ""));
+            string legal = string.Empty;
+            foreach (LegalDeduction tax in legalDeductions)
+            {
+                legal += "<tr>";
+                legal += "<td>" + tax.DeductionName + "</td>";
+                legal += "<td>" + "₡" + string.Format("{0:N}", tax.Cost) + " </td>";
+                legal += "</tr>";
+            }
+            htmlContent = htmlContent.Replace("[Legal]", legal);
+
+            string voluntary = string.Empty;
+            foreach (Subscription subscription in deductions)
+            {
+                voluntary += "<tr>";
+                voluntary += "<td>" + subscription.SubscriptionName + "</td>";
+                voluntary += "<td>" + "₡" + string.Format("{0:N}", subscription.Cost) + " </td>";
+                voluntary += "</tr>";
+            }
+            htmlContent = htmlContent.Replace("[Voluntary]", voluntary);
+
+            _emailSender.SendMail(emailData.Destiny, "Último pago", htmlContent);
         }
     }
 }

@@ -31,16 +31,13 @@
 @code{
     public string email { get; set; }
     public bool authorized { get; set; } = false;
-    //AccountDTO accountData = new AccountDTO("leonel@ucr.ac.cr","Prueba01!");
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //await AuthenticationService.RegisterRequestAsync(accountData);
-        //await AuthorizationService.AssignRole(accountData.Email, "Employer");
         if (firstRender)
         {
             if (authorized)
             {
-                ContextMenuService.SetProjectsContext(false, false, "", "", false);
+                ContextMenuService.SetProjectsContext(false, false, "", "", false, false);
                 nav.NavigateTo($"Projects/{email}/", true);
             }
             else{

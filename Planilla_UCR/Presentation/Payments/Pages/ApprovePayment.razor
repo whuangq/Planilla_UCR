@@ -114,7 +114,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        ContextService.SetProjectsContext(true,true, projectName, email, ContextService.GetHoursEmployeeContext());
+        ContextService.SetProjectsContext(true,true, projectName, email, ContextService.GetHoursEmployeeContext(), ContextService.GetReportsContext());
         _employees = await AgreementService.GetProjectAgreements(ContextService.GetProjectsContext(), email);
         await GetProjectInfo();
         GetNextPay();

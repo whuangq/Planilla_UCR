@@ -99,7 +99,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(true, true, projectName, employerEmail, false);
+        ContextMenuService.SetProjectsContext(true, true, projectName, employerEmail, false, false);
         _hiredableEmployees = await PersonService.GetAllEmployees(projectName);
         _hiredEmployees =  await PersonService.GetProjectEmployees(projectName, employerEmail);
         RemoveHiredEmployees();

@@ -132,11 +132,11 @@
                 projectInfo = await ProjectService.GetProject(element.EmployerEmail, element.ProjectName);
                 if (element.ContractType.Equals("Servicios profesionales"))
                 {
-                    ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, true);
+                    ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, true, false);
                 }
                 else
                 {
-                    ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, false);
+                    ContextMenuService.SetProjectsContext(true, true, projectName, projectInfo.EmployerEmail, false, false);
                 }
                 break;
             }  

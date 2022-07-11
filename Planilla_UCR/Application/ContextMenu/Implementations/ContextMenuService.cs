@@ -10,6 +10,7 @@ namespace Application.ContextMenu.Implementations
         private string _employerEmailContext { get; set; }
         private bool _showProjectsSubMenu { get; set; } = false;
         private bool _hoursEmployee { get; set; } = false;
+        private bool _showReports { get; set; } = false;
 
         public string GetProjectsContext()
         {
@@ -21,13 +22,14 @@ namespace Application.ContextMenu.Implementations
             OnChange?.Invoke();
         }  
 
-        public void SetProjectsContext(bool showProjectsMenu, bool showProjectsSubMenu, string projectName, string employerEmail, bool hoursEmployee)
+        public void SetProjectsContext(bool showProjectsMenu, bool showProjectsSubMenu, string projectName, string employerEmail, bool hoursEmployee, bool showReports)
         {
             _showProjectsMenu = showProjectsMenu;
             _showProjectsSubMenu = showProjectsSubMenu;
             _projectContext = projectName;
             _employerEmailContext = employerEmail;
             _hoursEmployee = hoursEmployee;
+            _showReports = showReports;
             NotifyStateChanged();
         }
 
@@ -54,6 +56,11 @@ namespace Application.ContextMenu.Implementations
         public bool GetHoursEmployeeContext()
         {
             return _hoursEmployee;
+        }
+
+        public bool GetReportsContext()
+        {
+            return _showReports;
         }
     }
 }

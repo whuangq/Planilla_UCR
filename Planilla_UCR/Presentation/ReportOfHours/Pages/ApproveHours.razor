@@ -94,7 +94,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        ContextMenuService.SetProjectsContext(true,true, projectName, email, ContextMenuService.GetHoursEmployeeContext());
+        ContextMenuService.SetProjectsContext(true,true, projectName, email, ContextMenuService.GetHoursEmployeeContext(), ContextMenuService.GetReportsContext());
         await GetProjectHoursReport();
         if (_elements.Length() != 0)
         {

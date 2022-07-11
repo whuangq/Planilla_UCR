@@ -15,6 +15,7 @@
 @using Application.People
 @using Application.TaxCalculator
 @using Application.PaymentCalculator;
+@using Application.Email;
 
 @inject IPaymentService PaymentService
 @inject IContextMenuService ContextMenuService
@@ -26,7 +27,9 @@
 @inject ISubscriptionService SuscriptionService
 @inject ITaxCalculatorService TaxCalculatorService
 @inject IPaymentCalculatorService PaymentCalculatorService
-@page "/Last_Pay/{email}/{projectName}"
+@inject IEmailServices EmailService
+@inject ISnackbar Snackbar
+@page "/Last_Pay/{email}"
 
 @if(_loading) 
 {
@@ -34,23 +37,42 @@
          <MudText Align="Align.Center" Typo="Typo.h6">
               <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
         </MudText>
-       
     </MudPaper>
 } else 
 {
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Proyectos", href: $"/Projects/{email}"),
-            new BreadcrumbItem(@projectName, href: $"/Projects/{email}/{ContextMenuService.GetEmployerEmailContext()}/{projectName}"),
+        new BreadcrumbItem("Inicio", href: $"/"),
         new BreadcrumbItem("Último pago", href: null, disabled: true)
     }; 
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
     </MudPaper>
     if (!_empty)
-    {
+    {   
+        <MudText Align="Align.Center" Typo="Typo.h6">
+            Reporte de último pago en @projectName el @date
+        </MudText>
+        <br />
         <MudSimpleTable Style="overflow-x: auto;">
+            
         <thead>
+            <MudToolBar>
+            <MudItem xs="6">
+                    <MudSelect Dense="true" T="string" Label="Pago seleccionado" Variant="Variant.Outlined" TextChanged="OnPaymentSelect">
+                        <MudSelectItem Value="@(" ")"/>
+                        @foreach (var state in _paymentIDS) {
+                            <MudSelectItem T="string" Value="@state">
+                                @state
+                            </MudSelectItem>
+                        }   
+                    </MudSelect>
+            </MudItem>
+            &nbsp;&nbsp;
+            <MudButton OnClick= "SendEmail" Variant="Variant.Filled" Color="Color.Primary">
+                    <MudText Class="ms-2">Enviar por correo</MudText>
+            </MudButton>
+            </MudToolBar>
             <tr>
                 @foreach (var h in headings)
                 {
@@ -82,40 +104,47 @@
                     </ToolBarContent> 
                     <HeaderContent>
                         <MudTh>Nombre</MudTh>
-                        <MudTh>Porcentaje</MudTh>
                         <MudTh>Monto</MudTh>
+
                     </HeaderContent>
-                     
 
                     <RowTemplate>
                             <MudTd DataLabel="Nombre">@context.DeductionName</MudTd>
-                            <MudTd DataLabel="Pocentaje"> @TaxCalculatorService.GetTaxPercentage(context.DeductionName, _lastPay.GrossSalary) % </MudTd>
-                            <MudTd DataLabel="Monto"> @_cultureCR.NumberFormat.CurrencySymbol @CostFormat(TaxCalculatorService.GetTaxAmount(context.DeductionName, _lastPay.GrossSalary))</MudTd>
+                            @if(!@context.DeductionName.Equals("Total"))
+                            {
+                                <MudTd DataLabel="Monto">@_cultureCR.NumberFormat.CurrencySymbol @CostFormat(TaxCalculatorService.GetTaxAmount(context.DeductionName, _lastPay.GrossSalary))</MudTd>
+                            }
+                            else
+                            {
+                                <MudTd DataLabel="Monto">@_cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost)</MudTd>
+                            }
+                            
                     </RowTemplate>
             </MudTable>
-            <br />
-            <br />
-
-            <MudTable @ref="@_tableDeductions" Items="@_deductions" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading">
-                <ToolBarContent>
-                        <MudText Align="Align.Center" Typo="Typo.h6">Deducciones voluntarias:</MudText>
-                        <MudSpacer /> 
-                </ToolBarContent> 
-                <HeaderContent>
-                    <MudTh>Nombre</MudTh>
-                    <MudTh>Costo</MudTh>
-                </HeaderContent>
-
-                <RowTemplate>
-                        <MudTd DataLabel="Nombre">@context.SubscriptionName</MudTd>
-                        <MudTd DataLabel="Costo">@_cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost)</MudTd>
-                </RowTemplate>
-            </MudTable>
         }
+        <br />
+        <br />
+
+        <MudTable @ref="@_tableDeductions" Items="@_deductions" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading">
+            <ToolBarContent>
+                    <MudText Align="Align.Center" Typo="Typo.h6">Deducciones voluntarias:</MudText>
+                    <MudSpacer /> 
+            </ToolBarContent> 
+            <HeaderContent>
+                <MudTh>Nombre</MudTh>
+                <MudTh>Monto</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                    <MudTd DataLabel="Nombre">@context.SubscriptionName</MudTd>
+                    <MudTd DataLabel="Costo">@_cultureCR.NumberFormat.CurrencySymbol @CostFormat(context.Cost)</MudTd>
+            </RowTemplate>
+        </MudTable>
+       
     }else
     {
         <MudText Align="Align.Center" Typo="Typo.h6">
-            No existen pagos para este proyecto
+            No existen pagos reportados hasta la fecha
         </MudText>
     }
 }
@@ -124,7 +153,6 @@
 @code {
     [Parameter]
     public string email { get; set; }
-    [Parameter]
     public string projectName { get; set; }
 
     // Tables
@@ -133,28 +161,49 @@
     private MudTable<Subscription> _tableDeductions;
     private IList<Subscription> _deductions = new List<Subscription>();
     private MudTable<LegalDeduction> _tableLegalDeductions;
-    private IEnumerable<LegalDeduction> _legalDeductions = new List<LegalDeduction>();
+    private IList<LegalDeduction> _legalDeductions = new List<LegalDeduction>();
 
     // Page control
     private CultureInfo _cultureCR = CultureInfo.GetCultureInfo("es-CR");
     private bool _loading = true;
     private bool _empty = true;
     private bool _payTaxes = false;
+    private string _selectedPayment = string.Empty;
+    private IList<string> _paymentIDS = new List<string>();
+    private string date =string.Empty;
 
     // Payment data 
     private Payment _lastPay;
     private Agreement _agreement;
+    private IList<Payment> _lastEmployeePayments;
+
 
     protected override async Task OnParametersSetAsync()
     {
-        _lastPay = await PaymentService.GetEmployeeLastPayment(email, ContextMenuService.GetEmployerEmailContext(), projectName);
+        _lastEmployeePayments = (IList<Payment>) await PaymentService.GetLastEmployeePayments(email);
+        foreach (var payment in _lastEmployeePayments)
+        {
+            _paymentIDS.Add(payment.ProjectName +": "+ payment.EndDate.ToShortDateString());
+        }
+
+        _lastPay = _lastEmployeePayments.FirstOrDefault();
+        await LoadPage();
+    }
+
+    private async Task  LoadPage()
+    {
         if (_lastPay != null)
         {
+            projectName = _lastPay.ProjectName;
+            date = _lastPay.EndDate.ToShortDateString();
             await UpdatePayTaxes();
             double netSalary = await GetNetSalary();
-            Person employer = await PersonService.GetPerson(_lastPay.EmployerEmail);
-            rows.Add(@"Empleador: "+employer.Name +" "+employer.LastName1 +" "+employer.LastName2  +"#"+"Tipo de contrato: "+_agreement.ContractType+"#"+"Desde: "+_lastPay.StartDate.ToShortDateString() +" Hasta: "+ _lastPay.EndDate.ToShortDateString());
-            rows.Add( @"Proyecto: "+_lastPay.ProjectName +"#"+" "+"#"+"Salario bruto: "+ _cultureCR.NumberFormat.CurrencySymbol+ CostFormat(_lastPay.GrossSalary));
+            Person employer = await PersonService.GetPerson(_lastPay.EmployeeEmail);
+            CalculateTotalAmountDeductions();
+            CalculateTotalAmountTaxes();
+            rows = new List<string>();
+            rows.Add(@"Nombre: "+employer.Name +" "+employer.LastName1 +" "+employer.LastName2  +"#"+"Tipo de contrato: "+_agreement.ContractType+"#"+"Fecha: "+ _lastPay.EndDate.ToShortDateString());
+            rows.Add( @"Proyecto: "+_lastPay.ProjectName +"#"+" "+"#"+"Salario: "+ _cultureCR.NumberFormat.CurrencySymbol+ CostFormat(_lastPay.GrossSalary));
             rows.Add( @" "+"#"+" "+"#"+"Salario neto: "+_cultureCR.NumberFormat.CurrencySymbol+ CostFormat(netSalary));
             _empty = false;
         }
@@ -168,7 +217,8 @@
         IList<Subscription> subscriptions = (await SubscribeService.GetSubscriptionCostsByDate(searchSubscribe)).ToList();
         if (_payTaxes)
         {
-            _legalDeductions = await LegalDeductionService.GetAllAsync();
+            var _legalDeductions2 = await LegalDeductionService.GetAllAsync();
+            _legalDeductions = _legalDeductions2.ToList();
             foreach (var item in _legalDeductions)
             {
                 netSalary -= TaxCalculatorService.GetTaxAmount(item.DeductionName, _lastPay.GrossSalary);
@@ -192,6 +242,32 @@
         return netSalary;
     }
 
+    private void CalculateTotalAmountDeductions()
+    {
+        double totalDeductions = 0;
+        foreach (var item in _deductions)
+        {
+            totalDeductions += item.Cost;
+        }
+
+        Subscription total = new Subscription("","","","","Total: ",0,1,1);
+        total.SubscriptionName = "Total";
+        total.Cost = totalDeductions;
+        _deductions.Add(total);
+    }
+
+    private void CalculateTotalAmountTaxes()
+    {
+        double totalTaxes = 0;
+        foreach (var item in _legalDeductions)
+        {
+            totalTaxes += TaxCalculatorService.GetTaxAmount(item.DeductionName, _lastPay.GrossSalary);
+        }
+
+        LegalDeduction total = new LegalDeduction("Total",totalTaxes);
+        _legalDeductions.Add(total);
+    }
+
     private async Task UpdatePayTaxes()
     {
         Agreement toSearchagreement = new Agreement(email, _lastPay.EmployerEmail, projectName, null, "", 0, null, 1, "");
@@ -210,5 +286,45 @@
     {
         string formatedCost = string.Format("{0:N}", cost);
         return formatedCost;
+    }
+
+    private  async Task OnPaymentSelect(string selected) {
+        _selectedPayment = selected;
+        string project = selected.Split(": ")[0];
+        projectName = project;
+        string selectedDate = selected.Split(": ")[1];
+        _lastPay = _lastEmployeePayments.Where(e => e.ProjectName == project && e.EndDate.ToShortDateString().Equals(selectedDate)).FirstOrDefault();
+        projectName = _lastPay.ProjectName;
+        date = _lastPay.EndDate.ToShortDateString();
+        await LoadPage();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void  SendEmail()
+    {
+        EmailObject emailObject = new EmailObject("","","","",email);
+        IList<LegalDeduction> emailLegalDeductions = _legalDeductions.Where(e=> e.DeductionName == e.DeductionName).ToList();
+        foreach (LegalDeduction deduction in emailLegalDeductions)
+        {
+            if(!deduction.DeductionName.Equals("Total"))
+            {
+                deduction.Cost = TaxCalculatorService.GetTaxAmount(deduction.DeductionName, _lastPay.GrossSalary);
+            }
+            else
+            {
+                deduction.Cost = deduction.Cost;
+            }               
+        }
+        if (_agreement.ContractType == "Servicios profesionales")
+        {
+            emailLegalDeductions.Clear();
+            emailLegalDeductions.Add(new LegalDeduction("No aplica ",0.0));
+            EmailService.SendLastPayEmail(emailObject, rows, _deductions, emailLegalDeductions);
+        }
+        else
+        {
+            EmailService.SendLastPayEmail(emailObject, rows, _deductions, emailLegalDeductions);
+        }
+        Snackbar.Add("Reporte enviado a "+email, Severity.Success);   
     }
 }

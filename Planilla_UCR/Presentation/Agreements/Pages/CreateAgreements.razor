@@ -149,7 +149,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(true, true, projectName, employerEmail, false);
+        ContextMenuService.SetProjectsContext(true, true, projectName, employerEmail, false, false);
         _myAgreement.EmployerEmail = employerEmail;
         _myAgreement.ProjectName = projectName;
         _myAgreement.EmployeeEmail = employeeEmail;

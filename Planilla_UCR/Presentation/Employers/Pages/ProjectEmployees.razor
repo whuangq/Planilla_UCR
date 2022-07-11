@@ -156,7 +156,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(true, true, projectName, email, false);
+        ContextMenuService.SetProjectsContext(true, true, projectName, email, false, ContextMenuService.GetReportsContext());
         _empty = false;
         _projects = await ProjectService.GetEmployerProyects(email);
         _agreements = await AgreementService.GetAllAgreementsByProjectAndEmployer(projectName, email);

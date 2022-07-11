@@ -49,7 +49,7 @@
     {
         if (firstRender)
         {
-            ContextMenuService.SetProjectsContext(false, false, "", "", false);
+            ContextMenuService.SetProjectsContext(false, false, "", "", false, ContextMenuService.GetReportsContext());
         }
         await InvokeAsync(StateHasChanged);
     }

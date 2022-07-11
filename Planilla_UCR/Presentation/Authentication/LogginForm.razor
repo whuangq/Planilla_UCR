@@ -25,34 +25,37 @@
 <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
 <MudGrid>
     <MudItem xs="10" sm="12">
-    <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
+    <MudPaper Elevation="100" Class="mx-auto pa-6 rounded" Height="380px" Width="50%" Outlined="true"  >
         <MudSpacer></MudSpacer>
         <MudText Align="Align.Center" Typo="Typo.h6">Ingresar</MudText>
         <MudForm @ref="form">
         <MudGrid>
-            <MudItem xs="3"></MudItem>
-            <MudItem xs="6">
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="8">
                 <MudTextField @bind-Value="accountData.Email" Label="Correo electrónico" Required="true" RequiredError="Campo requerido" Variant="Variant.Outlined"></MudTextField>
             </MudItem>
-            <MudItem xs="3"></MudItem>
-            <MudItem xs="3"></MudItem>
-            <MudItem xs="6">
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="2"></MudItem>
+           <MudItem xs="8">
                 <MudTextField @bind-Value="accountData.Password" Label="Contraseña" Required="true" RequiredError="Campo requerido" InputType="InputType.Password" Variant="Variant.Outlined"></MudTextField>
             </MudItem>
-            <MudItem xs="3"></MudItem>
-             <MudItem xs="3"></MudItem>
+            <MudItem xs="2"></MudItem>
+             <MudItem xs="2"></MudItem>
             @*Create buton *@
-                <MudItem xs="6">
+                <MudItem xs="8">
                 <MudButton Disabled="@snackHandler._saving" OnClick="ValidateRegisterAccount" Variant="Variant.Filled" Color="Color.Primary">
-                        <MudText>Ingresar</MudText>
+                        <MudText> &emsp;&emsp;&emsp;&emsp;&emsp; Iniciar sesión &emsp;&emsp;&emsp;&emsp;&emsp;</MudText>
                 </MudButton> 
-                <MudButton Disabled ="true"></MudButton>
+
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="2"></MudItem>
+            <MudItem xs="8"></MudItem>
+               <br />
                 <MudButton OnClick="GoToCreateAccount" Variant="Variant.Filled" Color="Color.Transparent">
-                    <MudText>Registrar cuenta empleador</MudText>
+                <MudText>&emsp;&emsp;&emsp; Registrar empleador &emsp;&emsp;&emsp; </MudText>
                 </MudButton>
             </MudItem>
-           <MudItem xs="3"></MudItem>
-           <MudItem xs="3"></MudItem>
+           <MudItem xs="2"></MudItem>
         </MudGrid>
         </MudForm>
     </MudPaper>

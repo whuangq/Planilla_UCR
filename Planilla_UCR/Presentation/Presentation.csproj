@@ -5,13 +5,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Payments\Components\**" />
-	  <Content Remove="Payments\Components\**" />
-	  <EmbeddedResource Remove="Payments\Components\**" />
-	  <None Remove="Payments\Components\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Remove="Projects\Pages\EmployeeProjectList.razor" />
 	</ItemGroup>
 
