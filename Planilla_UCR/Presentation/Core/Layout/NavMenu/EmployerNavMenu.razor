@@ -10,14 +10,21 @@
 <li class="nav-item px-3">
     <NavLink class="nav-link" href=@($"Projects/{email}") Match="NavLinkMatch.All">
             <MudIconButton Icon="@Icons.Filled.BusinessCenter" Color="@Color.Secondary" Class="mr-2"/>
-        <span  aria-hidden="true"></span> Proyectos
+        <span  aria-hidden="true"></span> <MudText>Proyectos</MudText>
     </NavLink>
 </li>
 
 <li class="nav-item px-3">
     <NavLink class="nav-link" href=@($"Approve_Projects_Payment/{email}") Match="NavLinkMatch.All">
             <MudIconButton Icon="@Icons.Filled.CreditScore" Color="@Color.Secondary" Class="mr-2"/>
-        <span  aria-hidden="true"></span> Aprobar pagos
+        <span  aria-hidden="true"></span> <MudText>Aprobar pagos</MudText>
+    </NavLink>
+</li>
+
+<li class="nav-item px-3">
+    <NavLink class="nav-link" href=@($"Projects_Historical_Payments/{email}") Match="NavLinkMatch.All">
+            <MudIconButton Icon="@Icons.Filled.PlaylistAddCheckCircle" Color="@Color.Secondary" Class="mr-2"/>
+        <span  aria-hidden="true"></span> <MudText>Histórico pagos por proyecto</MudText>
     </NavLink>
 </li>
 

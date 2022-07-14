@@ -11,5 +11,6 @@ namespace Application.Payments
         Task<IList<Payment>> GetProjectPayments(Payment payment);
         Task<IEnumerable<Payment>> GetEmployeePayments(string email);
         Task<IEnumerable<Payment>> GetLastEmployeePayments(string email);
+        Task<IEnumerable<Payment>> GetEmployerPayments(string email);
     }
 }

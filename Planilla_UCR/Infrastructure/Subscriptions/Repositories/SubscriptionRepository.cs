@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Repositories;
 using Domain.Subscriptions.Entities;
 using Domain.Subscriptions.Repositories;
+using Infrastructure.Subscriptions.Model;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -93,10 +94,19 @@ namespace Infrastructure.Subscriptions.Repositories
         }
         public async Task<IList<Subscription>> GetDeductionsByEmployee(string employeeEmail, string projectName)
         {
-            return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetDeductionsByEmployee @EmployeeEmail," +
+            IList<SubscriptionModel> subscriptionModels = await _dbContext.SubscriptionsModel.FromSqlRaw("EXEC GetDeductionsByEmployee @EmployeeEmail," +
                 " @ProjectName",
                 new SqlParameter("EmployeeEmail", employeeEmail),
                 new SqlParameter("ProjectName", projectName)).ToListAsync();
+            IList<Subscription> deductions = new List<Subscription>();
+            foreach (SubscriptionModel subscriptionModel in subscriptionModels) 
+            {
+                Subscription subscription = new Subscription("",projectName,subscriptionModel.SubscriptionName,
+                    "", subscriptionModel.SubscriptionDescription, subscriptionModel.Cost, 
+                    subscriptionModel.TypeSubscription, 1);
+                deductions.Add(subscription);
+            }
+            return deductions;
         }
     }
 }

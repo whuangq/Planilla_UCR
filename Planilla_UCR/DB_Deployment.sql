@@ -182,10 +182,15 @@ GO
 CREATE OR ALTER PROCEDURE GetDeductionsByEmployee(@EmployeeEmail varchar(255), @ProjectName varchar(255))
 AS
 BEGIN
-	SELECT S.EmployerEmail, S.ProjectName, S.SubscriptionName, S.ProviderName, S.SubscriptionDescription, S.Cost, S.TypeSubscription, S.IsEnabled
+	SELECT S.SubscriptionName, S.SubscriptionDescription, S.Cost, S.TypeSubscription, S.IsEnabled
 	FROM Agreement A RIGHT JOIN Subscription S ON A.EmployerEmail = S.EmployerEmail AND A.ProjectName = S.ProjectName
 	WHERE S.TypeSubscription = 0 AND S.IsEnabled = 1 AND A.EmployeeEmail = @EmployeeEmail AND A.ProjectName = @ProjectName AND S.SubscriptionName NOT IN(SELECT SubscriptionName FROM Subscribes WHERE EmployeeEmail = @EmployeeEmail AND EndDate IS NULL)
 END
+
+GO
+CREATE NONCLUSTERED INDEX idx_subscriptionsIsEnabled
+ON Subscription (IsEnabled,TypeSubscription)
+INCLUDE (SubscriptionName, SubscriptionDescription, Cost)
 
 GO
 CREATE OR ALTER PROCEDURE GetBenefitsByEmployee(@EmployeeEmail varchar(255), @ProjectName varchar(255))

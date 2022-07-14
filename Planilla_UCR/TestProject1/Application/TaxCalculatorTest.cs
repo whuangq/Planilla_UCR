@@ -111,5 +111,32 @@ namespace Tests.Application
             CCSSAmount.Should().Be(expectedCCSSAmount);
             RentAmount.Should().Be(expectedRentAmount);
         }
+
+        [Fact]
+        public void GetEmployerSocialCharges()
+        {
+            //arrange
+            double _grossSalary = 328600.00;
+            double expectedEmployerSocialChargesAmount = 87079.00;
+            double expectedCCSSAmount = 47647.00;
+            double expectedOtherInstitutionsAmount = 23823.50;
+            double expectedWorkerWarrantiesAmount = 15608.50;
+
+            //act
+            double EmployerSocialChargesAmount = taxCalculatorService.GetEmployerSocialCharges(_grossSalary);
+            double CCSSAmount = taxCalculatorService.GetCSSSEmployerTaxes(_grossSalary);
+            double OtherInstitutionsAmount = taxCalculatorService.GetOtherInstitutionsEmployerTaxes(_grossSalary);
+            double WorkerWarrantiesAmount = taxCalculatorService.GetWorkerWarrantiesEmployerTaxes(_grossSalary);
+
+            //assert
+            EmployerSocialChargesAmount.Should().NotBe(null);
+            CCSSAmount.Should().NotBe(null);
+            OtherInstitutionsAmount.Should().NotBe(null);
+            WorkerWarrantiesAmount.Should().NotBe(null);
+            EmployerSocialChargesAmount.Should().Be(expectedEmployerSocialChargesAmount);
+            CCSSAmount.Should().Be(expectedCCSSAmount);
+            OtherInstitutionsAmount.Should().Be(expectedOtherInstitutionsAmount);
+            WorkerWarrantiesAmount.Should().Be(expectedWorkerWarrantiesAmount);
+        }
     }
 }

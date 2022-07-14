@@ -14,7 +14,7 @@ namespace Application.TaxCalculator.Implementations
 
         public TaxCalculatorService()
         {
-           
+
         }
 
         public double GetRentTax(double grossSalary)
@@ -28,7 +28,7 @@ namespace Application.TaxCalculator.Implementations
             {
                 if (endF1 <= grossSalary)
                 {
-                    if(endF2 > grossSalary)
+                    if (endF2 > grossSalary)
                     {
                         double excedent = grossSalary - endF1;
                         rentTax += excedent * 0.1;
@@ -71,7 +71,7 @@ namespace Application.TaxCalculator.Implementations
                     rentTax += excedent * 0.25;
                 }
             }
-            
+
             return rentTax;
         }
 
@@ -108,6 +108,29 @@ namespace Application.TaxCalculator.Implementations
                 taxAmount = amount;
             }
             return taxAmount;
+        }
+        public double GetEmployerSocialCharges(double grossSalary)
+        {
+            double employerSocialCharges = 0;
+            employerSocialCharges += GetCSSSEmployerTaxes(grossSalary);
+            employerSocialCharges += GetOtherInstitutionsEmployerTaxes(grossSalary);
+            employerSocialCharges += GetWorkerWarrantiesEmployerTaxes(grossSalary);
+            return employerSocialCharges;
+        }
+
+        public double GetCSSSEmployerTaxes(double grossSalary)
+        {
+            return grossSalary * 0.145;
+        }
+
+        public double GetOtherInstitutionsEmployerTaxes(double grossSalary)
+        {
+            return grossSalary * 0.0725;
+        }
+
+        public double GetWorkerWarrantiesEmployerTaxes(double grossSalary)
+        {
+            return grossSalary * 0.0475;
         }
     }
 }

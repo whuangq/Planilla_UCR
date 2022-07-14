@@ -12,5 +12,6 @@ namespace Domain.Payments.Repositories
 
         Task<IEnumerable<Payment>> GetEmployeePayments(string email);
         Task<IEnumerable<Payment>> GetLastEmployeePayments(string email);
+        Task<IEnumerable<Payment>> GetEmployerPayments(string email);
     }
 }
