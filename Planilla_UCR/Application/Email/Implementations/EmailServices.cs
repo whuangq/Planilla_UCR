@@ -48,8 +48,6 @@ namespace Application.Email.Implementations
 
         public void SendLastPayEmail(EmailObject emailData, IList<string> rows, IList<Subscription> deductions, IList<LegalDeduction> legalDeductions)
         {
-            
-
             string employeeName = rows[0].Split("#")[0];
             string contractType = rows[0].Split("#")[1];
             string date = rows[0].Split("#")[2];

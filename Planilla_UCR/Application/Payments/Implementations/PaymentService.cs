@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Application.Payments.Implementations
 {
-    internal class PaymentService : IPaymentService
+    public class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
 
@@ -14,8 +14,8 @@ namespace Application.Payments.Implementations
             _paymentRepository = paymentRepository;
         }
 
-        public async Task AddPayment(Payment newPayment) 
-        { 
+        public async Task AddPayment(Payment newPayment)
+        {
             await _paymentRepository.AddPayment(newPayment);
         }
 
@@ -24,8 +24,8 @@ namespace Application.Payments.Implementations
             return await _paymentRepository.GetEmployeeLastPayment(employeeEmail, employerEmail, projectName);
         }
 
-        public async Task<IList<Payment>> GetProjectPayments(Payment payment) 
-        { 
+        public async Task<IList<Payment>> GetProjectPayments(Payment payment)
+        {
             return await _paymentRepository.GetProjectPayments(payment);
         }
 
@@ -43,5 +43,16 @@ namespace Application.Payments.Implementations
         {
             return await _paymentRepository.GetEmployerPayments(email);
         }
+
+        public async Task<IEnumerable<Payment>> GetLastEmployerPayments(string email)
+        {
+            return await _paymentRepository.GetLastEmployerPayments(email);
+        }
+
+        public async Task<IEnumerable<Payment>>GetEmployeeLatestPayments(string employeeEmail)
+        {
+            return await _paymentRepository.GetEmployeeLatestPayments(employeeEmail);
+        }
+
     }
 }

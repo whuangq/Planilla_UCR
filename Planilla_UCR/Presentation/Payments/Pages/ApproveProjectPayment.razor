@@ -206,13 +206,13 @@
         int _workedDays = Convert.ToInt32(daysInterval);
         if (startDate.Month == _nextPayment.Month)
         {
-            _workedDays = _nextPayment.Day - startDate.Day;
-            int _workedWeeks = _workedDays / 7;
-            _workedDays -= _workedWeeks;
-            if (startDate.Date > _nextPayment.Date)
-            {
-                _workedDays = 0;
-            }
+            _workedDays = (_nextPayment - startDate).Days;
+        }
+        int _workedWeeks = _workedDays / 7;
+        _workedDays -= _workedWeeks;
+        if (startDate.Date > _nextPayment.Date)
+        {
+            _workedDays = 0;
         }
         return _workedDays;
     }

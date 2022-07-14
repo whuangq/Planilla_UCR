@@ -5,6 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="C:\Users\User\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" />
 	  <Content Remove="Projects\Pages\EmployeeProjectList.razor" />
 	</ItemGroup>
 
@@ -46,6 +47,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Include="Dashboard\Components\BarChart.razor" />
+	  <None Include="Dashboard\Components\PieChart.razor" />
 	  <None Include="Projects\Models\EmployeeProjectList.razor" />
 	</ItemGroup>
 

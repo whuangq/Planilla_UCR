@@ -3,6 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\..\..\..\.nuget\packages\chartjs.blazor.fork\2.0.2\contentFiles\any\netstandard2.1\wwwroot\ChartJsBlazorInterop.js" Link="wwwroot\js\ChartJsBlazorInterop.js">
+      <Private>False</Private>
+      <NuGetPackageVersion>2.0.2</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <NuGetPackageId>ChartJs.Blazor.Fork</NuGetPackageId>
+      <Pack>false</Pack>
+    </Content>
+  </ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
