@@ -46,23 +46,20 @@
     </MudPaper>
     if (!_empty)
     {
-        <MudGrid>
-            <MudItem xs="12" Class="d-flex justify-center align-center">
-                <MudItem xs="4">
-                     <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Salario</MudText>
-                </MudItem>
-             </MudItem>
-        </MudGrid>
-        <br>
          <MudGrid>
              <MudItem xs="6">
                 <MudPaper Class="pa-3" Height="380px" Elevation="3">
-                    <BarChart colorList="colorslist" title="Salario neto" data="@_dataNetSalary"></BarChart>
+                    <MudText Align="Align.Left" Typo="Typo.h6">Salario neto </MudText>
+                    <BarChart colorList="colorslist" title="" data="@_dataNetSalary"></BarChart>
                 </MudPaper>
              </MudItem>
           
             <MudItem xs="6">
-            <MudTable @ref="@_tablePaymentHistory" Items="@_payments" Hover="true" RowsPerPage="3" Breakpoint="Breakpoint.Sm" Loading="@_loading">
+            <MudTable @ref="@_tablePaymentHistory" Items="@_payments" Height="255px" Hover="true" RowsPerPage="3" Breakpoint="Breakpoint.Sm" Loading="@_loading">
+                 <ToolBarContent>
+                        <MudText Align="Align.Left" Typo="Typo.h6">Últimos pagos </MudText>
+                        <MudSpacer />
+                </ToolBarContent> 
                 <HeaderContent>
                     <MudTh>Proyecto</MudTh>
                     <MudTh>Fecha de pago</MudTh>
@@ -89,13 +86,15 @@
          <MudGrid>
              <MudItem xs="6">
                 <MudPaper Class="pa-3" Height="380px" Elevation="3">
-                    <BarChart colorList="colorslist" title="Deducciones voluntarias" data="@_dataVoluntaryDeductions"></BarChart>
+                     <MudText Align="Align.Left" Typo="Typo.h6">Deducciones voluntarias </MudText>
+                    <BarChart colorList="colorslist" title="" data="@_dataVoluntaryDeductions"></BarChart>
                 </MudPaper>
              </MudItem>
             
             <MudItem xs="6">
                 <MudPaper Class="pa-3" Height="380px" Elevation="3">
-                        <BarChart  colorList="colorslist" title="Deducciones legales" data="@_dataLegalDeductions"></BarChart>
+                        <MudText Align="Align.Left" Typo="Typo.h6">Deducciones legales </MudText>
+                        <BarChart  colorList="colorslist" title="" data="@_dataLegalDeductions"></BarChart>
                 </MudPaper>
             </MudItem>
          </MudGrid>
