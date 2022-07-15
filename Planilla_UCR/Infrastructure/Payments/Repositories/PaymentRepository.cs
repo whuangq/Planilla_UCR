@@ -76,5 +76,14 @@ namespace Infrastructure.Payments.Repositories
                  new SqlParameter("employeeEmail", email)).ToListAsync();
             return employeePaymentList;
         }
+        public async Task<IList<Payment>> GetAllPaymentsStartAndEndDates(string employerEmail, string projectName) {
+            SqlParameter myEmployerEmail = new SqlParameter("@employerEmail", employerEmail);
+            SqlParameter myProjectName = new SqlParameter("@projectName", projectName);
+
+            var paymentList = await _dbContext.Payments.FromSqlRaw("EXEC GetAllPaymentsStartAndEndDates {0},{1}",
+               myEmployerEmail, myProjectName).ToListAsync();
+            return paymentList;
+        }
+
     }
 }

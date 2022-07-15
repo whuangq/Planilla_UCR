@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Presentation.Agreements.Models
+namespace Presentation.Employers.Models
 {
-    internal class JoinedTables
+    internal class HiredEmployeesJoinedTables
     {
 
         public string PaymentInterval { get; set; }
@@ -14,7 +14,8 @@ namespace Presentation.Agreements.Models
         public string Name { get; set; }
         public string LastName1 { get; set; }
         public string LastName2 { get; set; }
-        public JoinedTables()
+
+        public HiredEmployeesJoinedTables()
         {
             this.PaymentInterval = "";
             this.EmployeeEmail = "";
@@ -27,7 +28,7 @@ namespace Presentation.Agreements.Models
             this.LastName2 = "";
         }
 
-        public JoinedTables(string PaymentInterval, string EmployeeEmail, string ContractType, DateTime ContractStartDate, DateTime ContractFinishDate, int MountPerHour, string Name, string LastName1, string LastName2)
+        public HiredEmployeesJoinedTables(string PaymentInterval, string EmployeeEmail, string ContractType, DateTime ContractStartDate, DateTime ContractFinishDate, int MountPerHour, string Name, string LastName1, string LastName2)
         {
             this.PaymentInterval = PaymentInterval;
             this.EmployeeEmail = EmployeeEmail;

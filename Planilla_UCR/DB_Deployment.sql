@@ -119,6 +119,14 @@ CREATE TABLE Payment(
 	FOREIGN KEY(EmployerEmail, ProjectName) REFERENCES Project(EmployerEmail, ProjectName) ON UPDATE CASCADE,
 	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
 );
+-- Triggers
+
+CREATE INDEX idx_AgreementEmployerEmail_ProjectName
+ON Agreement(EmployerEmail, ProjectName)
+
+CREATE INDEX idx_AgreementEmployeeEmail_IsEnabled
+ON Agreement(EmployeeEmail,IsEnabled)
+	
 
 -- Suscription Stored Procedures
 GO
@@ -572,6 +580,19 @@ BEGIN
 	Agreement.MountPerHour = @MountPerHour, Agreement.ContractFinishDate = @ContractFinishDate,
 	Agreement.IsEnabled = 1, Agreement.Justification = ''
 	WHERE Agreement.EmployeeEmail = @EmployeeEmail AND Agreement.EmployerEmail = @EmployerEmail AND Agreement.ProjectName = @ProjectName and Agreement.IsEnabled <= 0;
+END
+-- Payment stored procedures
+
+GO
+CREATE OR ALTER PROCEDURE GetAllPaymentsStartAndEndDates( 
+@employerEmail varchar(255),
+@projectName varchar(255))
+AS
+BEGIN
+	Select *
+	From Payment as P
+	Where P.EmployerEmail = @employerEmail AND P.ProjectName = @projectName
+	Group By P.EmployeeEmail, P.EmployerEmail, P.ProjectName, P.GrossSalary, P.StartDate, P.EndDate
 END
 
 --- Report Hours Stored Procedures

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace Application.Email.Implementations
 {
@@ -84,6 +85,61 @@ namespace Application.Email.Implementations
             htmlContent = htmlContent.Replace("[Voluntary]", voluntary);
 
             _emailSender.SendMail(emailData.Destiny, "Último pago", htmlContent);
+        }
+
+        public void SendPaymentBreakdownEmail(EmailObject emailData, IList<LegalDeduction> summaryTable, IList<LegalDeduction> salariesTable, IList<LegalDeduction> deductionTable, IList<LegalDeduction> benefitsTable)
+        {
+            string projectName = summaryTable.ElementAtOrDefault(0).DeductionName;
+            string date = summaryTable.ElementAtOrDefault(2).DeductionName;
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/PlanillaReportEmail.html");
+            htmlContent = htmlContent.Replace("[date]", date);
+            htmlContent = htmlContent.Replace("[projectName]", projectName);
+
+            htmlContent = htmlContent.Replace("[Heading]", "Reporte de pagos en " + projectName.Replace("Proyecto: ", "") + " el " + date.Replace("Fecha: ", ""));
+            string summary = string.Empty;
+            string salaries = string.Empty;
+            string benefits = string.Empty;
+            string deductions = string.Empty;
+
+
+            summary += "<tr>";
+            summary += "<td>" + summaryTable.ElementAtOrDefault(3).DeductionName + "</td>";
+            summary += "<td>" + "₡" + string.Format("{0:N}", summaryTable.ElementAtOrDefault(3).Cost) + " </td>";
+            summary += "</tr>";
+            
+            htmlContent = htmlContent.Replace("[summary]", summary);
+
+            foreach (LegalDeduction salary in salariesTable)
+            {
+                salaries += "<tr>";
+                salaries += "<td>" + salary.DeductionName + "</td>";
+                salaries += "<td>" + "₡" + string.Format("{0:N}", salary.Cost) + " </td>";
+                salaries += "</tr>";
+            }
+
+            htmlContent = htmlContent.Replace("[salaries]", salaries);
+
+
+            foreach (LegalDeduction benefit in benefitsTable)
+            {
+                benefits += "<tr>";
+                benefits += "<td>" + benefit.DeductionName + "</td>";
+                benefits += "<td>" + "₡" + string.Format("{0:N}", benefit.Cost) + " </td>";
+                benefits += "</tr>";
+            }
+            htmlContent = htmlContent.Replace("[benefits]", benefits);
+
+
+            foreach (LegalDeduction deduction in deductionTable)
+            {
+                deductions += "<tr>";
+                deductions += "<td>" + deduction.DeductionName + "</td>";
+                deductions += "<td>" + "₡" + string.Format("{0:N}", deduction.Cost) + " </td>";
+                deductions += "</tr>";
+            }
+            htmlContent = htmlContent.Replace("[deductions]", deductions);
+
+            _emailSender.SendMail(emailData.Destiny, "Reporte planilla", htmlContent);
         }
     }
 }

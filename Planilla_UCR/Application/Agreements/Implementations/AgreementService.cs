@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Application.Agreements.Implementations
 {
-    internal class AgreementService : IAgreementService
+    public class AgreementService : IAgreementService
     {
         private readonly IAgreementRepository _agreementRepository;
 
