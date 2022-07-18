@@ -165,7 +165,7 @@
     {
         personInfo.Email = userEmail;
         personInfo = await PersonService.GetInfoPerson(personInfo);
-        if (personInfo != null)
+        if (personInfo.IsEnabled==1 && personInfo != null)
         {
             _loading = false;
         }

@@ -233,7 +233,7 @@
     {
         foreach (Payment payment in _paymentsList)
         {
-            _paymentsProjectNames.Add(payment.ProjectName);
+            _paymentsProjectNames.Add(payment.ProjectName+" "+payment.EndDate.ToShortDateString());
         }
         projectNameLabels = _paymentsProjectNames.ToArray();
         costNetSalary =_paymentsNetSalaryCost.ToArray();

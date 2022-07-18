@@ -12,5 +12,6 @@ namespace Domain.Employers.Repositories
         Task CreateEmployerAsync(String email);
         Task<Employer>? GetEmployerAsync(String email);
         void DeleteEmployer(string email);
+        void UpdateEmployer(string email);
     }
 }

@@ -4,7 +4,6 @@ CREATE DATABASE DB_Planilla
 GO
 USE DB_Planilla
 
-
 -- Tables
 CREATE TABLE Person(
 	Email varchar(255) NOT NULL primary key,
@@ -20,12 +19,12 @@ CREATE TABLE Person(
 
 CREATE TABLE Employee(
 	Email varchar(255) NOT NULL PRIMARY KEY,
-	FOREIGN KEY(Email) REFERENCES Person(Email)
+	FOREIGN KEY(Email) REFERENCES Person(Email) 
 );
 
 CREATE TABLE Employer(
 	Email varchar(255) NOT NULL PRIMARY KEY,
-	FOREIGN KEY(Email) REFERENCES Person(Email)
+	FOREIGN KEY(Email) REFERENCES Person(Email) ON UPDATE CASCADE
 );
 
 CREATE TABLE Project(
@@ -38,7 +37,7 @@ CREATE TABLE Project(
 	IsEnabled int NOT NULL,
 	LastPaymentDate date
 	PRIMARY KEY(EmployerEmail, ProjectName),
-	FOREIGN KEY(EmployerEmail) REFERENCES Employer(Email)
+	FOREIGN KEY(EmployerEmail) REFERENCES Employer(Email) ON UPDATE CASCADE
 );
 
 CREATE TABLE AgreementType(
@@ -442,7 +441,7 @@ AS
 BEGIN
 	SELECT Person.Email, Person.Name, Person.LastName1, Person.LastName2, Person.SSN, Person.BankAccount, 
 	Person.Adress, Person.PhoneNumber, Person.IsEnabled
-	FROM  Person WHERE Person.Email = @EmailPerson AND Person.IsEnabled=1
+	FROM  Person WHERE Person.Email = @EmailPerson
 END
 
 --Employer Stored Procedures
@@ -457,6 +456,17 @@ BEGIN
 	WHERE Person.Email = @EmployerEmail;
 
 END
+GO
+
+CREATE OR ALTER PROCEDURE DisabledAccountEmployer(
+	@EmployerEmail varchar(255)
+) AS
+BEGIN
+	UPDATE Person
+	SET Email = 'BORRADO*'+ CAST(GETDATE() AS varchar(20)) +'*'+ @EmployerEmail
+	WHERE Email = @EmployerEmail
+END
+
 
 -- Employee Stored Procedures
 GO
@@ -686,6 +696,18 @@ VALUES('wendy@ucr.ac.cr',
 )
 
 INSERT INTO Person
+VALUES('nayeriazofeifa3003@gmail.com',
+'Nayeri',
+'Azofeifa',
+'Porras',
+118070615,
+'CR4024',
+'Alajuela, Costa Rica',
+'89433965',
+1
+)
+
+INSERT INTO Person
 VALUES('nyazofeifa3003@gmail.com',
 'Nayeri',
 'Azofeifa',
@@ -738,9 +760,10 @@ VALUES('leonel@ucr.ac.cr',
 '2022-06-14'
 )
 
+
 INSERT INTO Project
 VALUES('nyazofeifa3003@gmail.com',
-'Fábrica de chocolates',
+'Fabrica de chocolates',
 'Emprendimiento de chocolates',
 15000,
 10,
@@ -1174,7 +1197,7 @@ VALUES('jeremy@ucr.ac.cr', 'leonel@ucr.ac.cr', 'Trendy Purse','2022-06-1','Tiemp
 
 
 INSERT INTO Agreement
-VALUES('nayeri.azofeifa@ucr.ac.cr', 'nyazofeifa3003@gmail.com', 'Fábrica de chocolates','2022-06-1','Tiempo completo', 1600, '2026-06-1', 1, '')
+VALUES('nayeri.azofeifa@ucr.ac.cr', 'nyazofeifa3003@gmail.com', 'Fabrica de chocolates','2022-06-1','Tiempo completo', 1600, '2026-06-1', 1, '')
 
 
 INSERT INTO ReportOfHours
@@ -1186,6 +1209,34 @@ VALUES('leonel@ucr.ac.cr', 'Terra Dulce','mau@ucr.ac.cr', '2022-06-17',5.0 ,0)
 INSERT INTO ReportOfHours
 VALUES('leonel@ucr.ac.cr', 'Terra Dulce','mau@ucr.ac.cr', '2022-06-20',8.0 ,0)
 
+----
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-11',8.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-12',5.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-08',8.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-07',7.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-06',6.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-05',8.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-04',3.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-03',9.0 ,0)
+
+INSERT INTO ReportOfHours
+VALUES('leonel@ucr.ac.cr', 'Dulces artesanales','jeremy@ucr.ac.cr', '2022-07-01',8.0 ,0)
+----
 
 INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEmail, Cost, StartDate)
 VALUES('leonel@ucr.ac.cr',
@@ -1457,4 +1508,3 @@ INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEm
 ---- 4 * 14 * 1600 = 89,600
 --INSERT INTO Payment 
 --VALUES('naye@ucr.ac.cr','david@ucr.ac.cr','El camino', 89600, '2022/06/01', '2022/06/14')
-

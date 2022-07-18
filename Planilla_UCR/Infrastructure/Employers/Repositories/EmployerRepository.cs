@@ -38,10 +38,15 @@ namespace Infrastructure.Employers.Repositories
             }
             return employer;
         }
-
+        
         public void DeleteEmployer(String email)
         {
             System.FormattableString query = ($@"EXECUTE DeleteEmployer @EmployerEmail = {email}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
+        public void UpdateEmployer(String email)
+        {
+            System.FormattableString query = ($@"EXECUTE DisabledAccountEmployer @EmployerEmail = {email}");
             _dbContext.Database.ExecuteSqlInterpolated(query);
         }
     }

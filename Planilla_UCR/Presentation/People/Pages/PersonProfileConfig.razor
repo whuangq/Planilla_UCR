@@ -156,7 +156,7 @@
         oldBankAccount = personInfo.BankAccount;
         oldAdress = personInfo.Adress;
         oldPhoneNumber = personInfo.PhoneNumber;
-        if (personInfo != null)
+        if (personInfo.IsEnabled==1 && personInfo != null)
         {
             _loading = false;
         }

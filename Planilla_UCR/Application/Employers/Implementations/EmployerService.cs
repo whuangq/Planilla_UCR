@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Application.Employers.Implementations
 {
-    internal class EmployerService : IEmployerService
+    public class EmployerService : IEmployerService
     {
         private readonly IEmployerRepository _employerRepository;
 
@@ -27,6 +27,11 @@ namespace Application.Employers.Implementations
         public void DeleteEmployer(String email)
         {
             _employerRepository.DeleteEmployer(email);
+        }
+
+        public void UpdateEmployer(String email)
+        {
+            _employerRepository.UpdateEmployer(email);
         }
 
     }
