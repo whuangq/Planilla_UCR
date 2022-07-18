@@ -119,7 +119,7 @@ CREATE TABLE Payment(
 	FOREIGN KEY(EmployerEmail, ProjectName) REFERENCES Project(EmployerEmail, ProjectName) ON UPDATE CASCADE,
 	FOREIGN KEY(EmployeeEmail) REFERENCES Employee(Email)
 );
--- Triggers
+-- Index
 
 CREATE INDEX idx_AgreementEmployerEmail_ProjectName
 ON Agreement(EmployerEmail, ProjectName)
@@ -633,7 +633,6 @@ BEGIN
 	WHERE EmployeeEmail = @employeeEmail
 	ORDER BY EndDate DESC;
 END
-
 
 
 -- Data Insert
