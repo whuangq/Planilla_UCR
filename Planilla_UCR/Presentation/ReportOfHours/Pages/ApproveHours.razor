@@ -14,7 +14,7 @@
 @inject IPersonService PersonService
 @inject ISnackbar Snackbar
 
-@page "/Approve_Hours/{email}/{projectName}/{last}"
+@page "/Approve_Hours/{email}/{projectName}"
 @if(_loading) {
     <MudPaper  Height="220px" Width="100%" Outlined="false" Class="border-none pa-4" Elevation="0">
          <MudText Align="Align.Center" Typo="Typo.h6">
@@ -68,7 +68,7 @@
             <MudText Align="Align.Center" Typo="Typo.h6">
                 No existen horas por aprobar en este proyecto
             </MudText>
-            if(last.Equals("true"))
+            if(last == true)
             {
                 Snackbar.Add("Horas aprobadas", Severity.Success);   
             }
@@ -82,7 +82,7 @@
     [Parameter]
     public string projectName { get; set; }
     [Parameter]
-    public string last { get; set; }
+    public bool last { get; set; } = false;
     private bool _hidePosition;
     private bool _loading = true;
     private bool _empty = true;
@@ -136,11 +136,6 @@
         return false;
     }
 
-    private void GoToReportHours()
-    {
-        nav.NavigateTo($"/Projects/ReportHours/{"leonel@ucr.ac.cr"}/{email}");
-    }
-
     private async Task<string> GetEmployeeName(string email)
     {
         string fullName = "";
@@ -174,11 +169,16 @@
         {
             Snackbar.Add("Por favor seleccione las horas a aprobar", Severity.Error);
         }
-
+        _selectedItems.Clear();
         if (_elements.Length() == 0)
         {
-            last = "true";
-            nav.NavigateTo($"/Approve_Hours/{email}/{projectName}/{last}", true);
+            last = true;
+            _empty = true;
+            InvokeAsync(StateHasChanged);
+        }
+        else
+        {
+            nav.NavigateTo($"/Approve_Hours/{email}/{projectName}", true);
         }
     }
 }

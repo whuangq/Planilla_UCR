@@ -3,7 +3,7 @@
 @using ChartJs.Blazor.PieChart
 @using ChartJs.Blazor.Util
 
-<Chart Height="200" Config="_configPieChart"></Chart>
+<Chart Height="180" Config="_configPieChart"></Chart>
 
 @code {
     [Parameter]
@@ -22,13 +22,9 @@
     {
         _configPieChart = new PieConfig();
         _configPieChart.Options = new PieOptions
-        {
-            Responsive = true,
-            Title = new OptionsTitle
             {
-                Display = true,
-                Text = title
-            }
+                Responsive = true,
+               
         };
     }
 

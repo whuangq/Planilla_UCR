@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Application.Payments.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Presentation.Payments.Models
 {
-    internal class ProjectModel
+    public class ProjectModel
     {
         public string ProjectName { get; set; }
         public string EmployerEmail { get; set; }

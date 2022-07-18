@@ -1,91 +1,56 @@
-﻿using Application.PaymentCalculator.Implementations;
-using Application.Payments.Models;
+﻿using Application.Payments.Implementations;
 using Domain.Agreements.Entities;
 using Domain.Payments.Entities;
-using Domain.Payments.Repositories;
 using Domain.Projects.Entities;
 using Domain.ReportOfHours.Entities;
+using Domain.Subscribes.Entities;
 using Domain.Subscriptions.Entities;
 using Presentation.Payments.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Application.PaymentCalculator.Implementations;
+using Application.Payments.Models;
 
-namespace Application.Payments.Implementations
+namespace Presentation.Dashboard.Components
 {
-    public class PaymentService : IPaymentService
+    internal class ApprovePayment
     {
-        private readonly IPaymentRepository _paymentRepository;
-        PaymentCalculatorService paymentService = new PaymentCalculatorService();
+        public  IList<Project> _projects { get; set; }
+        public  DateTime _nextPay { get; set; }
+        public  IList<ProjectModel> _projectsList { get; set; }
+        public IList<ProjectModel> _projectsToDelete { get; set; }
+        public PaymentCalculatorService paymentService { get; set; }
 
-        public PaymentService(IPaymentRepository paymentRepository)
+
+        public ApprovePayment(IList<Project> projects,
+                                      IList<ProjectModel> projectsList,
+                                      IList<ProjectModel> projectsToDelete)
         {
-            _paymentRepository = paymentRepository;
+            _nextPay = DateTime.Now;
+            _projectsToDelete = projectsToDelete;
+            _projectsList = projectsList;
+            _projects = projects;
+            paymentService = new PaymentCalculatorService();
+
         }
 
-        public async Task AddPayment(Payment newPayment)
+        public void  GetProjectsToPay()
         {
-            await _paymentRepository.AddPayment(newPayment);
-        }
-
-        public async Task<Payment?> GetEmployeeLastPayment(string employeeEmail, string employerEmail, string projectName)
-        {
-            return await _paymentRepository.GetEmployeeLastPayment(employeeEmail, employerEmail, projectName);
-        }
-
-        public async Task<IList<Payment>> GetProjectPayments(Payment payment)
-        {
-            return await _paymentRepository.GetProjectPayments(payment);
-        }
-
-        public async Task<IEnumerable<Payment>> GetEmployeePayments(string email)
-        {
-            return await _paymentRepository.GetEmployeePayments(email);
-        }
-
-        public async Task<IEnumerable<Payment>> GetLastEmployeePayments(string email)
-        {
-            return await _paymentRepository.GetLastEmployeePayments(email);
-        }
-
-        public async Task<IEnumerable<Payment>> GetEmployerPayments(string email)
-        {
-            return await _paymentRepository.GetEmployerPayments(email);
-        }
-
-        public async Task<IEnumerable<Payment>> GetLastEmployerPayments(string email)
-        {
-            return await _paymentRepository.GetLastEmployerPayments(email);
-        }
-
-        public async Task<IEnumerable<Payment>> GetEmployeeLatestPayments(string employeeEmail)
-        {
-            return await _paymentRepository.GetEmployeeLatestPayments(employeeEmail);
-        }
-
-        public async Task<IList<Payment>> GetAllPaymentsStartAndEndDates(string employerEmail, string projectName)
-        {
-            return await _paymentRepository.GetAllPaymentsStartAndEndDates(employerEmail, projectName);
-        }
-
-        public IList<ProjectModel> GetProjectsToPay(IList<Project> employerProjects)
-        {
-            IList<ProjectModel> pendingProjects = new List<ProjectModel>();
-            foreach (Project project in employerProjects)
+            foreach (Project _project in _projects)
             {
-
-                var _daysInterval = GetDaysInterval(project.PaymentInterval, project.LastPaymentDate);
-                if (project.LastPaymentDate.AddDays(_daysInterval) <= DateTime.Now)
+                var _daysInterval = GetDaysInterval(_project.PaymentInterval, _project.LastPaymentDate);
+                if (_project.LastPaymentDate.AddDays(_daysInterval) <= _nextPay)
                 {
-                    ProjectModel _projectModel = new ProjectModel(project.ProjectName, project.EmployerEmail,
-                        project.PaymentInterval, project.LastPaymentDate,
-                        GetDaysInterval(project.PaymentInterval, project.LastPaymentDate), 0, new List<EmployeeAgreement>());
-                    pendingProjects.Add(_projectModel);
+
+                    ProjectModel _projectModel = new ProjectModel(_project.ProjectName, _project.EmployerEmail,
+                        _project.PaymentInterval, _project.LastPaymentDate,
+                        GetDaysInterval(_project.PaymentInterval, _project.LastPaymentDate), 0, new List<EmployeeAgreement>());
+                    _projectsList.Add(_projectModel);
                 }
             }
-
-            return pendingProjects;
         }
 
         public int GetDaysInterval(string paymentInterval, DateTime lastPaymentDate)
@@ -106,7 +71,7 @@ namespace Application.Payments.Implementations
                     break;
                 case "Quincenal":
                     {
-                        _days = FortnightDays(lastPaymentDate);
+                        _days = fortnightDays(lastPaymentDate);
                     }
                     break;
                 case "Mensual":
@@ -121,9 +86,10 @@ namespace Application.Payments.Implementations
             return _days;
         }
 
-        private int FortnightDays(DateTime lastPaymentDate)
+
+        private int fortnightDays(DateTime lastPaymentDate)
         {
-            int _days;
+            int _days = 0;
             if (lastPaymentDate.Day == 14)
             {
                 _days = 14;
@@ -152,9 +118,12 @@ namespace Application.Payments.Implementations
             return _days;
         }
 
-        public double GetWorkedHours(IList<HoursReport> reports)
+        private async Task<double> GetWorkedHours(Agreement agreement, int daysInterval, DateTime lastPaymentDate, IList<HoursReport> reports)
         {
+            HoursReport _report = new HoursReport();
             double _workedHours = 0;
+            _report.EmployeeEmail = agreement.EmployeeEmail;
+            _report.ReportDate = lastPaymentDate;
             foreach (HoursReport hours in reports)
             {
                 _workedHours += hours.ReportHours;
@@ -162,17 +131,17 @@ namespace Application.Payments.Implementations
             return _workedHours;
         }
 
-        public double GetSalary(Agreement agreement, int daysInterval, IEnumerable<Subscription> subscriptions, IList<HoursReport> reports)
+        public async Task<double> GetSalary(Agreement agreement, int daysInterval, DateTime lastPaymentDate, IEnumerable<Subscription> subscriptions, IList<HoursReport> reports)
         {
-            double salary = GetSalaryByType(agreement, daysInterval, reports);
-            double appliedBenefits = GetEmployeeBenefits(subscriptions);
+            double salary = await GetSalaryByType(agreement, daysInterval, lastPaymentDate, reports);
+            double appliedBenefits = await GetEmployeeBenefits(agreement, daysInterval, lastPaymentDate, subscriptions);
             salary += appliedBenefits;
             return salary;
         }
 
-        private double GetSalaryByType(Agreement agreement, int daysInterval, IList<HoursReport> reports)
+        private async Task<double> GetSalaryByType(Agreement agreement, int daysInterval, DateTime lastPaymentDate, IList<HoursReport> reports)
         {
-            int workedDays = GetWorkedDays((DateTime)agreement.ContractStartDate, daysInterval);
+            int workedDays = GetWorkedDays(agreement.EmployeeEmail, (DateTime)agreement.ContractStartDate, daysInterval);
             double grossSalary = 0;
             if (agreement.ContractType == "Tiempo completo")
             {
@@ -184,13 +153,13 @@ namespace Application.Payments.Implementations
             }
             if (agreement.ContractType == "Servicios profesionales")
             {
-                double workedHours = GetWorkedHours(reports);
+                double workedHours = await GetWorkedHours(agreement, daysInterval, lastPaymentDate, reports);
                 grossSalary = paymentService.GetSalaryPerHours(agreement.MountPerHour, workedHours);
             }
             return grossSalary;
         }
 
-        private double GetEmployeeBenefits(IEnumerable<Subscription> subscriptions)
+        private async Task<double> GetEmployeeBenefits(Agreement agreement, int daysInterval, DateTime lastPaymentDate, IEnumerable<Subscription> subscriptions)
         {
             double mountOfBenefits = 0;
             foreach (Subscription _subscription in subscriptions.Where(e => e.TypeSubscription == 1))
@@ -200,7 +169,7 @@ namespace Application.Payments.Implementations
             return mountOfBenefits;
         }
 
-        public int GetWorkedDays(DateTime startDate, int daysInterval)
+        private int GetWorkedDays(string employeeEmail, DateTime startDate, int daysInterval)
         {
             DateTime _nextPayment = startDate.AddDays(daysInterval);
             int _workedDays = Convert.ToInt32(daysInterval);

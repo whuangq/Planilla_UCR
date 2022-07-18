@@ -1,6 +1,7 @@
 ﻿@page "/Approve_Payment/{email}/{projectName}"
 
 @using Application.Agreements
+@using Application.Payments.Models
 @using Domain.Agreements.Entities
 @using Application.ContextMenu
 @using Application.Projects
@@ -33,7 +34,7 @@
     List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Inicio", href: ""),
-        new BreadcrumbItem("Aprobar Pagos",  href: $"/Approve_Projects_Payment/{email}"),
+        new BreadcrumbItem("Aprobar pagos",  href: $"/Approve_Projects_Payment/{email}"),
         new BreadcrumbItem($"{projectName}",  href: null, disabled: true)
     };
 }
@@ -327,7 +328,10 @@
                 double benefits = await GetEmployeeBenefits(element.EmployeeEmail);
                 double mountToPay = element.MountToPay - benefits;
                 Payment _payment = new Payment(element.EmployeeEmail, _projectInfo.EmployerEmail, _projectInfo.ProjectName, mountToPay, _projectInfo.LastPaymentDate, _nextPay);
-                await PaymentService.AddPayment(_payment);
+                if(mountToPay > 0)
+                {
+                    await PaymentService.AddPayment(_payment);
+                }
             }
             Snackbar.Add("Pagos aprobados", Severity.Success);
             if (_employeesList.Length() == 0)

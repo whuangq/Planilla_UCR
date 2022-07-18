@@ -53,16 +53,16 @@
                 if (authorizedEmployee)
                 {
                     ContextMenuService.SetProjectsContext(false, false, "", "", false, false);
-                    nav.NavigateTo($"/Dashboard/{email}/", true);
+                    nav.NavigateTo($"/Dashboard/{email}/");
                 }
                 else
                 {
                     ContextMenuService.SetProjectsContext(false, false, "", "", false, false);
-                    nav.NavigateTo($"Projects/{email}/", true);
+                    nav.NavigateTo($"DashboardEmployer/{email}/");
                 }
             }
             else{
-                nav.NavigateTo($"/Loggin", true);
+                nav.NavigateTo($"/Loggin");
             }
         }
     }

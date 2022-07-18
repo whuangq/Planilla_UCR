@@ -1,4 +1,5 @@
 ﻿using Domain.Payments.Entities;
+using Domain.Projects.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,6 +16,5 @@ namespace Domain.Payments.Repositories
         Task<IEnumerable<Payment>> GetLastEmployerPayments(string email);
         Task<IEnumerable<Payment>> GetEmployeeLatestPayments(string employeeEmail);
         Task<IList<Payment>> GetAllPaymentsStartAndEndDates(string employerEmail, string projectName);
-
     }
 }

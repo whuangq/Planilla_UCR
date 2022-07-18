@@ -1443,10 +1443,20 @@ VALUES('jeremy@ucr.ac.cr','leonel@ucr.ac.cr','Vanidosa',153600, '2022/06/15', '2
 -- Leonel Demo Insert
 INSERT INTO Person VALUES
 ('naye@ucr.ac.cr', 'Nayeri', 'Azofeifa','Porras', 83355349,'CR4024756765','Alajuela, Costa Rica','89433965',1),
-('david@ucr.ac.cr','David','Hidalgo','Castro',83355346,'CR4024242342','Alajuela, Costa Rica','89433965',1)
+('david@ucr.ac.cr','David','Hidalgo','Castro',83355346,'CR4024242342','Alajuela, Costa Rica','89433965',1),
+('jefferson@ucr.ac.cr','Jefferson',' ',' ',83355246,'CR434242342','Alajuela, Costa Rica','85633965',1),
+('mary@ucr.ac.cr','Mary',' ',' ',83355246,'CR434242342','Alajuela, Costa Rica','85633965',1),
+('julio@ucr.ac.cr','Julio',' ',' ',83355246,'CR434242342','Alajuela, Costa Rica','85633965',1),
+('alberto@ucr.ac.cr','Alberto',' ',' ',83355246,'CR434242342','Alajuela, Costa Rica','85633965',1),
+('fernando@ucr.ac.cr','Fernando',' ',' ',83355246,'CR434242342','Alajuela, Costa Rica','85633965',1)
 
-INSERT INTO Employee
-VALUES('naye@ucr.ac.cr')
+INSERT INTO Employee VALUES
+('naye@ucr.ac.cr'),
+('jefferson@ucr.ac.cr'),
+('mary@ucr.ac.cr'),
+('julio@ucr.ac.cr'),
+('alberto@ucr.ac.cr'),
+('fernando@ucr.ac.cr')
 
 INSERT INTO Employer
 VALUES('david@ucr.ac.cr')
@@ -1461,12 +1471,37 @@ INSERT INTO Project VALUES
 INSERT INTO AgreementType VALUES
 ('Tiempo completo', 4000),
 ('Tiempo completo', 8000),
-('Tiempo completo', 16000)
+('Tiempo completo', 16000),
+('Tiempo completo', 2000),
+
+('Servicios profesionales', 4000),
+('Servicios profesionales', 1600),
+
+('Medio tiempo', 4000),
+('Medio tiempo', 2000)
+
 
 INSERT INTO Agreement VALUES
 ('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'Dulces david','2022-06-1','Medio tiempo', 1600, '2026-06-1', 1, ''),
+('fernando@ucr.ac.cr', 'david@ucr.ac.cr', 'Dulces david','2022-06-1','Medio tiempo', 1600, '2026-06-1', 1, ''),
+('jefferson@ucr.ac.cr', 'david@ucr.ac.cr', 'Dulces david','2022-06-1','Tiempo completo', 1600, '2026-06-1', 1, ''),
+('mary@ucr.ac.cr', 'david@ucr.ac.cr', 'Dulces david','2022-06-1','Tiempo completo', 1600, '2026-06-1', 1, ''),
+('julio@ucr.ac.cr', 'david@ucr.ac.cr', 'Dulces david','2022-06-1','Tiempo completo', 1600, '2026-06-1', 1, ''),
+('alberto@ucr.ac.cr', 'david@ucr.ac.cr', 'Dulces david','2022-06-1','Servicios profesionales', 1600, '2026-06-1', 1, ''),
+
 ('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'La zapatera','2022-06-1','Tiempo completo', 4000, '2026-06-1', 1, ''),
+('jefferson@ucr.ac.cr', 'david@ucr.ac.cr', 'La zapatera','2022-06-1','Servicios profesionales', 4000, '2026-06-1', 1, ''),
+('mary@ucr.ac.cr', 'david@ucr.ac.cr', 'La zapatera','2022-06-1','Medio tiempo', 4000, '2026-06-1', 1, ''),
+('julio@ucr.ac.cr', 'david@ucr.ac.cr', 'La zapatera','2022-06-1','Medio tiempo', 4000, '2026-06-1', 1, ''),
+('alberto@ucr.ac.cr', 'david@ucr.ac.cr', 'La zapatera','2022-06-1','Medio tiempo', 4000, '2026-06-1', 1, ''),
+
 ('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'Taller Hidalgo','2022-06-1','Servicios profesionales', 2000, '2026-06-1', 1, ''),
+('jefferson@ucr.ac.cr', 'david@ucr.ac.cr', 'Taller Hidalgo','2022-06-1','Servicios profesionales', 2000, '2026-06-1', 1, ''),
+('mary@ucr.ac.cr', 'david@ucr.ac.cr', 'Taller Hidalgo','2022-06-1','Servicios profesionales', 2000, '2026-06-1', 1, ''),
+('alberto@ucr.ac.cr', 'david@ucr.ac.cr', 'Taller Hidalgo','2022-06-1','Medio tiempo', 2000, '2026-06-1', 1, ''),
+('julio@ucr.ac.cr', 'david@ucr.ac.cr', 'Taller Hidalgo','2022-06-1','Tiempo completo', 2000, '2026-06-1', 1, ''),
+('fernando@ucr.ac.cr', 'david@ucr.ac.cr', 'Taller Hidalgo','2022-06-1','Medio tiempo', 2000, '2026-06-1', 1, ''),
+
 ('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'El camino', '2022-06-1','Medio tiempo', 1600, '2026-06-1', 1, ''),
 ('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'Cryptomonedas','2022-06-1','Tiempo completo', 16000, '2026-06-1', 1, '')
 
@@ -1493,18 +1528,4 @@ INSERT INTO Subscribes (EmployerEmail, ProjectName, SubscriptionName, EmployeeEm
 ('david@ucr.ac.cr','Cryptomonedas','Ahorro pago luz','naye@ucr.ac.cr',25000,'2022-06-1'),
 ('david@ucr.ac.cr','La zapatera','Fondo de pensiones','naye@ucr.ac.cr',10000,'2022-06-1')
 
----- 8 * 30 * 4000 = 96,000
---INSERT INTO Payment
---VALUES('naye@ucr.ac.cr','david@ucr.ac.cr','La zapatera',960000, '2022/06/01', '2022/06/30')
 
----- 8 * 30 * 16000 = 3,840,000
---INSERT INTO Payment
---VALUES('naye@ucr.ac.cr','david@ucr.ac.cr','Cryptomonedas',3840000, '2022/06/01', '2022/06/30')
-
----- 4 * 15 * 1600 = 96,000
---INSERT INTO Payment 
---VALUES('naye@ucr.ac.cr','david@ucr.ac.cr','Dulces david', 96000, '2022/06/01', '2022/06/15')
-
----- 4 * 14 * 1600 = 89,600
---INSERT INTO Payment 
---VALUES('naye@ucr.ac.cr','david@ucr.ac.cr','El camino', 89600, '2022/06/01', '2022/06/14')

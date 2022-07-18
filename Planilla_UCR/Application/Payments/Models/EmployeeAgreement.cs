@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Presentation.Payments.Models
+namespace Application.Payments.Models
 {
-    internal class EmployeeAgreement
+    public class EmployeeAgreement
     {
         public string ProjectName { get; set; }
         public string EmployeeEmail { get; set; }

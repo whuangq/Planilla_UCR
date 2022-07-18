@@ -36,14 +36,6 @@
     </MudPaper>
 } else 
 {
-    List<BreadcrumbItem> _items = new List<BreadcrumbItem>
-    {
-       new BreadcrumbItem("Inicio", href: ""),
-       new BreadcrumbItem("Dashboard", href: null, disabled: true)
-    }; 
-    <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
-    <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
-    </MudPaper>
     if (!_empty)
     {
          <MudGrid>
