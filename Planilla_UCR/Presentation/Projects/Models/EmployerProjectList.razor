@@ -5,6 +5,7 @@
 @using Application.Projects
 @using Application.Agreements
 @using Application.People
+@using Application.Email
 @using Application.AgreementTypes
 @using Presentation.Core.Components
 @using Presentation.Projects.Models
@@ -15,6 +16,7 @@
 @inject ISnackbar Snackbar
 
 @inject IPersonService PersonService
+@inject IEmailServices EmailService
 @inject IProjectService ProjectService
 @inject IAgreementService AgreementService
 @inject IAgreementTypeService AgreementTypeService
@@ -102,9 +104,9 @@ else
         <MudButton Variant="Variant.Filled" OnClick="GoToCreate" Color="Color.Primary">Crear proyecto</MudButton>
 
                 
-        <MudDialog @bind-IsVisible="_visible" Options="dialogOptions">
+        <MudDialog @bind-IsVisible="_visible" Options="dialogOptions Style="text-align:justify-all">
             <TitleContent>
-                <MudText Typo="Typo.h6">
+                <MudText Typo="Typo.h6" Style="text-align:justify-all" >
                     <MudIcon Icon="@Icons.Material.Filled.Warning" Color="@Color.Primary" Class="mr-2"/> 
                         Este proyecto tiene empleados contratados, si confirma esta acción se procederá a terminar de forma 
                         temprana el contrato con todos sus empleados y la fecha de fin será el día de hoy. 
@@ -112,20 +114,33 @@ else
             </TitleContent>
             <DialogContent>
                 <MudItem xs="12" Class="d-flex justify-center align-center">
-                    <MudTextField @bind-Value="_agreementMessage" Label="Contratos activos con los siguientes empleados:" 
-                        Lines= "4" Variant="Variant.Outlined" ReadOnly ="true">
+                    <MudTextField @bind-Value="_showMessage" Label="Cantidad de contratos activos con los empleados:" 
+                        Lines= "1" Variant="Variant.Outlined" ReadOnly ="true">
                     </MudTextField>
                 </MudItem>
+
+                <div class="d-flex mud-width-full text-align:justify-all">
+                     <div class="d-flex flex-column">
+                        <MudItem xs="12" Class=" d-flex text-align:justify-all">
+                                <MudText Class=" d-flex text-align:justify-all"><b Class=" d-flex text-align:justify-all">
+                                    *Nota: Si confirma la desactivación de este proyecto se le enviará un correo a cada uno de los empleados 
+                                    que tiene actualmente contratados, indicando el motivo de la desactivación de este proyecto. 
+                                </b>
+                                </MudText>
+                        </MudItem>
+                    </div>
+                </div>
+
                 <MudItem xs="12" Class="d-flex justify-center align-center">
                     <MudTextField Required="true" RequiredError="Incluya una justificación" @bind-Value="_justification" 
-                    Label="Si desea terminar los contratos asociados debe introducir una justificación:" Lines= "6" 
-                    Variant="Variant.Outlined">
-                </MudTextField>
+                    Label="Si desea
+                    terminar los contratos asociados debe introducir una justificación:" Lines= "6" 
+                    Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
             </DialogContent>
             <DialogActions>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ConfirmDisableProject" Class="px-10">
-                    Confirmar borrado de proyecto
+                    Confirmar desactivado de proyecto
                 </MudButton>
 
                 <MudButton Variant="Variant.Filled" Color="Color.Transparent" OnClick="CancelAction" Class="px-10">Cancelar</MudButton>
@@ -139,7 +154,7 @@ else
     private bool _visible;
     private bool _emptyProject = true;
     private bool _loading = true;
-    private string _agreementMessage = "";
+    private string _showMessage = "";
     private string _justification = "";
     private string _searchString = "";
 
@@ -176,7 +191,7 @@ else
             _emptyProject = false;
         }
         await InvokeAsync(StateHasChanged);
-         _loading = false;
+        _loading = false;
     }
 
     private void SelectActiveProjects()
@@ -212,8 +227,6 @@ else
 
     public int CheckActiveAgreements(int amountOfAgreements)
     {
-        _agreementMessage = "";
-        int size = _agreements.Length();
         foreach (Agreement actualAgreement in _agreements)
         {
             if (actualAgreement.ProjectName == projectName && actualAgreement.ContractFinishDate > DateTime.Now)
@@ -224,14 +237,17 @@ else
                     {
                         amountOfAgreements++;
                         _activeEmployees.Add(actualPerson);
-                        _agreementMessage += "Nombre: " + actualPerson.Name + " " + actualPerson.LastName1 + " " + 
-                                    actualPerson.LastName2 + ". Email: " + actualAgreement.EmployeeEmail + " \n";
                     }
                 }
             }
         }
+
         if (amountOfAgreements > 0)
         {
+            if (amountOfAgreements == 1)
+                _showMessage = $"{amountOfAgreements} contrato activo";
+            else 
+                _showMessage = $"{amountOfAgreements} contratos activos"; 
             OpenDialog();
         }
         return amountOfAgreements;
@@ -239,16 +255,31 @@ else
 
     private async Task ConfirmDisableProject()
     {
+        EmailObject emailData = new EmailObject("", "", "", "", "");
+        Person employerInfo = await PersonService.GetPerson(personEmail);
         if (_justification != "")
         {
             foreach (Person activePerson in _activeEmployees)
             {
-                await AgreementService.DesactivateAgreement(activePerson.Email,personEmail, this.projectName, _justification);
+                foreach (Agreement actualAgreement in _agreements)
+                {
+                    if (actualAgreement.EmployeeEmail == activePerson.Email)
+                    {
+                        await AgreementService.DesactivateAgreement(activePerson.Email, personEmail, this.projectName, _justification);
+                        emailData.EmployeeName = activePerson.Name + " " + activePerson.LastName1 + " " + activePerson.LastName2;
+                        emailData.EmployerName = employerInfo.Name + " " + employerInfo.LastName1 + " " + employerInfo.LastName2;
+                        emailData.ProjectName = actualAgreement.ProjectName;
+                        emailData.Message = _justification;
+                        emailData.Destiny = actualAgreement.EmployeeEmail;
+                        EmailService.SendFiredEmployeeEmail(emailData);
+                    }
+                }
             }
             await DisableProject();
             CloseDialog();
         }
     }
+
 
     private bool FilterFuncEmployer(Project element) => FilterFuncR(element, _searchString);
 
