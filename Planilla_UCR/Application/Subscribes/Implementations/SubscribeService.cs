@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Subscribes.Implementations
 {
-    internal class SubscribeService : ISubscribeService
+    public class SubscribeService : ISubscribeService
     {
         private readonly ISubscribeRepository _subscribeRepository;
 
@@ -44,6 +44,12 @@ namespace Application.Subscribes.Implementations
         {
             return await _subscribeRepository.GetBenefitsByEmployee(employeeEmail, projectName);
         }
+
+        public void AddSubscribe(Subscribe subscription) 
+        { 
+            _subscribeRepository.AddSubscribe(subscription);
+        }
+
         public void DeleteSubscribe(Subscribe subscription) 
         { 
             _subscribeRepository.DeleteSubscribe(subscription);

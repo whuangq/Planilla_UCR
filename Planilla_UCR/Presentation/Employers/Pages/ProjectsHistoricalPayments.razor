@@ -80,7 +80,7 @@
         <MudTable @ref="_mudTable" Items="@_projectsPaymentsList" RowsPerPage="10" Hover="false" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Filter="new Func<ProjectHistorical,bool>(FiltersFunc)">
             <ToolBarContent>
                 <MudItem xs="2">
-                    <MudSelect Dense="true" T="string" Label="Proyecto" Variant="Variant.Outlined" TextChanged="OnProjectNameSelect">>
+                    <MudSelect Dense="true" T="string" Label="Proyecto" Variant="Variant.Outlined" TextChanged="OnProjectNameSelect">
                     <MudSelectItem Value="@(" ")"/>
                     @foreach (var state in _paymentsProjectNames) {
                         <MudSelectItem T="string" Value="@state">
@@ -91,7 +91,7 @@
                 </MudItem>
                 
                 <MudItem xs="2">
-                    <MudSelect Dense="true" T="string" Label="Fecha de Pago" Variant="Variant.Outlined" TextChanged="OnPaymentDateSelect">>
+                    <MudSelect Dense="true" T="string" Label="Fecha de Pago" Variant="Variant.Outlined" TextChanged="OnPaymentDateSelect">
                     <MudSelectItem Value="@(" ")"/>
                     @foreach (var state in _paymentsDates) {
                         <MudSelectItem T="string" Value="@state">
@@ -204,8 +204,8 @@
                 double obligatoryCost = Convert.ToDouble(await GetEmployeeObligatoryDeductions(projectHistorical));
                 netSalary -= obligatoryCost;
                 projectHistorical.ObligatoryDeductions = obligatoryCost;
+                projectHistorical.EmployerCharges = GetEmployerSocialCharges(projectHistorical);
             }
-            projectHistorical.EmployerCharges = GetEmployerSocialCharges(projectHistorical);
             projectHistorical.VoluntaryDeductions = Convert.ToDouble(await GetEmployeeVoluntaryDeductions(projectHistorical, netSalary));
             projectHistorical.EmployerCost = projectHistorical.GrossSalary + projectHistorical.Benefits +  projectHistorical.EmployerCharges;
         }
@@ -219,8 +219,8 @@
     private void GetFinalList()
     {
         var finalList = (from P in _projectsPayment orderby P.ProjectName
-                          group P by new { P.EmployerEmail, P.ProjectName, P.StartDate, P.EndDate, P.PaymentFrecuency } into grp
-                          select new ProjectHistorical
+                         group P by new { P.EmployerEmail, P.ProjectName, P.StartDate, P.EndDate, P.PaymentFrecuency } into grp
+                         select new ProjectHistorical
                               {
                                   EmployerEmail = grp.Key.EmployerEmail,
                                   ProjectName = grp.Key.ProjectName,
@@ -300,12 +300,13 @@
                 _paymentsProjectNames.Add(payment.ProjectName);
             }
         }
-        _paymentsProjectNames = _paymentsProjectNames.ToList();
+        _paymentsProjectNames = _paymentsProjectNames.OrderBy(e => e).ToList();
         return _paymentsProjectNames;
     }
 
     private IList<String> GetPaymentDate()
     {
+        _projectsPaymentsList = _projectsPaymentsList.OrderBy(e => e.EndDate).ToList();
         foreach (ProjectHistorical payment in _projectsPaymentsList)
         {
             if (!_paymentsDates.Contains(payment.EndDate.ToShortDateString()))

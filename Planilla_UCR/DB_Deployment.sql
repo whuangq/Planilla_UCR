@@ -167,23 +167,35 @@ CREATE OR ALTER PROCEDURE DeleteSubscription(
 	@SubscriptionName varchar(255)
 ) AS
 BEGIN
-	UPDATE Subscription
-	SET IsEnabled = 0
-	WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName;
+	set implicit_transactions off;
 
-	DECLARE @EmployeeEmail varchar(255)
-	DECLARE @StartDate datetime
-	DECLARE cursor_Subscribes CURSOR FOR
-	SELECT EmployeeEmail, StartDate
-	FROM Subscribes WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName
-	OPEN cursor_Subscribes
-		FETCH NEXT FROM cursor_Subscribes INTO @EmployeeEmail, @StartDate
-		WHILE @@FETCH_STATUS = 0 BEGIN
-			DELETE FROM Subscribes WHERE  EmployeeEmail = @EmployeeEmail AND EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName AND StartDate = @StartDate
-			FETCH NEXT FROM cursor_Subscribes INTO @EmployeeEmail, @StartDate
-		END
-	CLOSE cursor_Subscribes
-	DEALLOCATE cursor_Subscribes
+	set transaction isolation level
+	serializable;
+
+	BEGIN TRANSACTION DeleteTransaction
+		BEGIN TRY
+			UPDATE Subscription
+			SET IsEnabled = 0
+			WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName;
+
+			DECLARE @EmployeeEmail varchar(255)
+			DECLARE @StartDate datetime
+			DECLARE cursor_Subscribes CURSOR FOR
+			SELECT EmployeeEmail, StartDate
+			FROM Subscribes WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName
+			OPEN cursor_Subscribes
+				FETCH NEXT FROM cursor_Subscribes INTO @EmployeeEmail, @StartDate
+				WHILE @@FETCH_STATUS = 0 BEGIN
+					DELETE FROM Subscribes WHERE  EmployeeEmail = @EmployeeEmail AND EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName AND StartDate = @StartDate
+					FETCH NEXT FROM cursor_Subscribes INTO @EmployeeEmail, @StartDate
+				END
+			CLOSE cursor_Subscribes
+			DEALLOCATE cursor_Subscribes
+			COMMIT TRANSACTION DeleteTransaction;
+		END TRY
+       BEGIN CATCH
+			ROLLBACK TRANSACTION DeleteTransaction;
+       END CATCH
 END
 
 GO
@@ -244,6 +256,21 @@ BEGIN
 		S.ProjectName = C.ProjectName AND
 		S.SubscriptionName = C.SubscriptionName
 	WHERE S.EmployeeEmail = @EmployeeEmail AND C.IsEnabled = 1 AND C.TypeSubscription = 0 AND  S.ProjectName =  @ProjectName AND S.EndDate IS NULL
+END
+
+GO
+CREATE OR ALTER PROCEDURE AddSubscribes(
+	@EmployeeEmail varchar(255),
+	@EmployerEmail varchar(255),
+	@ProjectName varchar(255),
+	@SubscriptionName varchar(255),
+	@Cost float,
+	@StartDate datetime
+)
+AS
+BEGIN
+	INSERT INTO Subscribes (EmployeeEmail,EmployerEmail,ProjectName,SubscriptionName,Cost,StartDate)
+	VALUES (@EmployeeEmail, @EmployerEmail, @ProjectName, @SubscriptionName, @Cost, @StartDate)
 END
 
 GO

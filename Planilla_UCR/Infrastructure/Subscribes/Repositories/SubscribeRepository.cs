@@ -118,5 +118,14 @@ namespace Infrastructure.Subscribes.Repositories
 
             return query;
         }
+
+        public void AddSubscribe(Subscribe subscription)
+        {
+            System.FormattableString query = ($@"EXECUTE AddSubscribes
+               @EmployeeEmail = {subscription.EmployeeEmail}, @EmployerEmail = {subscription.EmployerEmail},
+                @ProjectName = {subscription.ProjectName}, @SubscriptionName = {subscription.SubscriptionName},
+                @Cost = {subscription.Cost}, @StartDate= {subscription.StartDate}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
+        }
     }
 } 

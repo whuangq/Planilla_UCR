@@ -170,7 +170,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        ContextMenuService.SetProjectsContext(true,true,projectName, personEmail,true, false);
+        ContextMenuService.SetProjectsContext(true,true,projectName, personEmail,true, ContextMenuService.GetReportsContext());
         _projectInfo = await ProjectService.GetProject(personEmail,projectName);
         _agreementElements = await AgreementService.GetEmployeeAgreements(personEmail);
 
