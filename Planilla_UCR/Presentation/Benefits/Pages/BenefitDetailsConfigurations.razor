@@ -202,10 +202,10 @@ else
             subscription.ProviderName = _providerName;
             subscription.SubscriptionDescription = _sDescription;
             SubscriptionService.ModifySubscription(subscription, _newName);
-            ShowSnackNotification("Beneficio " + subscription.SubscriptionName + " modificada", Severity.Success);
             subscription.SubscriptionName = _newName;
             subscriptionName = _newName;
             await GetAffectedEmployees(subscription);
+            ShowSnackNotification("Beneficio " + subscription.SubscriptionName + " modificadO", Severity.Success);
             if (_affectedEmployees.Length() > 0)
             {
                 OpenDialog();

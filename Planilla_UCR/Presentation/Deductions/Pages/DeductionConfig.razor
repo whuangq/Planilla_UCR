@@ -3,12 +3,17 @@
 @using Domain.Subscriptions.Entities
 @using Application.Subscribes
 @using Domain.Subscribes.Entities
+@using Domain.People.Entities
+@using Application.People
+@using Application.Email
 @using Presentation.Core.Components
 @using Presentation.Deductions.Components
 @using System.Globalization
 @inject ISnackbar Snackbar
 @inject ISubscriptionService SubscriptionService
 @inject ISubscribeService SubscribeService
+@inject IEmailServices EmailService
+@inject IPersonService PersonService
 @inject NavigationManager nav
 
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -180,7 +185,8 @@ else
     {
         foreach (Subscription toDelete in _selectedItems1)
         {
-            IEnumerable<Subscribe> tempList = await SubscribeService.GetEmployeesBySubscription(employerEmail, projectName, toDelete.SubscriptionName);
+            IList<Subscribe> tempList = (await SubscribeService.GetEmployeesBySubscription(employerEmail, projectName, toDelete.SubscriptionName)).ToList();
+            tempList = tempList.Where(e => e.EndDate == null).ToList();
             if (tempList.Length() > 0)
             {
                 foreach (Subscribe toAppend in tempList)
@@ -194,6 +200,7 @@ else
         CloseDialog();
         if (_employees.Length() > 0)
         {
+            await SendEmployeeEmails();
             OpenDialogEmployee();
         }
         else
@@ -232,5 +239,20 @@ else
     {
         string formatedCost = string.Format("{0:N}", cost);
         return formatedCost;
+    }
+
+    
+    private async Task SendEmployeeEmails()
+    {
+        Person employer = await PersonService.GetPerson(employerEmail);
+        string employerFullName = employer.Name + " " + employer.LastName1 + " " + employer.LastName2;
+        foreach (Subscribe endedSubcription in _employees)
+        {
+            Person employee = await PersonService.GetPerson(endedSubcription.EmployeeEmail);
+            string employeeFullName = employee.Name + " " + employee.LastName1 + " " + employee.LastName2;
+            EmailObject emailData = new EmailObject(employeeFullName, employerFullName, projectName, "", endedSubcription.EmployeeEmail);
+            EmailService.SendDeletedSubscriptionEmail(emailData, endedSubcription.SubscriptionName);
+        }
+
     }
 }

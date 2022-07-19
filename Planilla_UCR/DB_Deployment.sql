@@ -231,7 +231,7 @@ AS
 BEGIN
 	SELECT * 
 	FROM Subscribes 
-	WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName
+	WHERE EmployerEmail = @EmployerEmail AND ProjectName = @ProjectName AND SubscriptionName = @SubscriptionName AND EndDate IS NULL
 END
 
 GO

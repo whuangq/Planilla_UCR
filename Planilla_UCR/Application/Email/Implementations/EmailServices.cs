@@ -185,5 +185,15 @@ namespace Application.Email.Implementations
             htmlContent = htmlContent.Replace("[employees]", affectedEmployees);
             _emailSender.SendMail(emailData.Destiny, "Gestión de beneficios", htmlContent);
         }
+
+        public void SendDeletedSubscriptionEmail(EmailObject emailData, string subscriptionName)
+        {
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/DeletedSubscription.html");
+            htmlContent = htmlContent.Replace("[employeeName]", emailData.EmployeeName);
+            htmlContent = htmlContent.Replace("[employerName]", emailData.EmployerName);
+            htmlContent = htmlContent.Replace("[projectName]", emailData.ProjectName);
+            htmlContent = htmlContent.Replace("[subscriptionName]", subscriptionName);
+            _emailSender.SendMail(emailData.Destiny, "Gestión de beneficios", htmlContent);
+        }
     }
 }
