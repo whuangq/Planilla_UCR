@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Application.Subscriptions.Implementations
 {
-    internal class SubscriptionService : ISubscriptionService
+    public class SubscriptionService : ISubscriptionService
     {
         private readonly ISubscriptionRepository _subscriptionRepository;
 

@@ -1,5 +1,5 @@
 ﻿--DB
-
+select * from Agreement Where ProjectName = 'Dulces Artesanales'
 CREATE DATABASE DB_Planilla
 GO
 USE DB_Planilla
@@ -1288,7 +1288,7 @@ VALUES('leonel@ucr.ac.cr',
 'Dulces artesanales',
 'Gym',
 'jeremy@ucr.ac.cr',
-12000,
+25000,
 '2022-05-2'
 )
 
