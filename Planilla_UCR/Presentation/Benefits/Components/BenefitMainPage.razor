@@ -4,8 +4,10 @@
 @using Presentation.Benefits.Components
 @using Presentation.Authentication
 @using System.Globalization
+@using Application.ContextMenu
 @inject NavigationManager nav
 @inject ISubscriptionService SubscriptionService
+@inject IContextMenuService ContextMenuService
 
 
 @{List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -93,6 +95,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        ContextMenuService.SetProjectsContext(true,true, projectName, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetHoursEmployeeContext(), ContextMenuService.GetReportsContext());
         _elements = await SubscriptionService.GetBenefitsByProject(employerEmail, projectName);
         _loading = false;
         if (_elements.Length() > 0)

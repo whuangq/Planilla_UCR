@@ -125,26 +125,26 @@ else
     </MudGrid>
 
     <MudDialog @bind-IsVisible="_visible" Options="dialogOptions">
-            <TitleContent>
-                <MudText Typo="Typo.h6">
-                    Los empleados afectados son</MudText>
-            </TitleContent>
-            <DialogContent>
-                <MudTable @ref="_table" Items="@_affectedEmployees" FixedHeader="@fixed_header" FixedFooter="@fixed_footer" Height="@(fixed_header || fixed_footer ?"300px":"")">
-                    <HeaderContent>
-                        <MudTh>Beneficio</MudTh>
-                        <MudTh>Email</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                        <MudTd DataLabel="Beneficio"> @context.SubscriptionName</MudTd>
-                        <MudTd DataLabel="Email"> @context.EmployeeEmail</MudTd>
-                    </RowTemplate>
-                </MudTable>
-            </DialogContent>
-            <DialogActions>
-                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CloseDialog" Class="px-10">Aceptar</MudButton>
-            </DialogActions>
-        </MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Los empleados afectados son</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudTable @ref="_table" Items="@_affectedEmployees" FixedHeader="@fixed_header" FixedFooter="@fixed_footer" Height="@(fixed_header || fixed_footer ?"300px":"")">
+                <HeaderContent>
+                    <MudTh>Beneficio</MudTh>
+                    <MudTh>Email</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Beneficio"> @context.SubscriptionName</MudTd>
+                    <MudTd DataLabel="Email"> @context.EmployeeEmail</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </DialogContent>
+        <DialogActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CloseDialog" Class="px-10">Aceptar</MudButton>
+        </DialogActions>
+    </MudDialog>
 }
 
 

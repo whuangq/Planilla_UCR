@@ -19,6 +19,7 @@
 @using Presentation.Payments.Models
 @using System.Globalization
 @using Application.PaymentCalculator;
+@using Application.TaxCalculator;
 
 @inject IAgreementService AgreementService
 @inject IProjectService ProjectService
@@ -27,6 +28,7 @@
 @inject IReportOfHoursService ReportHoursService
 @inject ISubscribeService SubscribeService
 @inject IPaymentCalculatorService PaymentCalculatorService
+@inject ITaxCalculatorService TaxCalculatorService
 @inject ISnackbar Snackbar
 @inject NavigationManager nav
 
@@ -176,6 +178,7 @@
     private async Task<double> GetSalary(Agreement agreement, int daysInterval, DateTime lastPaymentDate)
     {
         double salary = await GetSalaryByType(agreement, daysInterval, lastPaymentDate);
+        salary += TaxCalculatorService.GetEmployerSocialCharges(salary);
         double appliedBenefits = await GetEmployeeBenefits(agreement, daysInterval, lastPaymentDate);
         salary += appliedBenefits;
         return salary;

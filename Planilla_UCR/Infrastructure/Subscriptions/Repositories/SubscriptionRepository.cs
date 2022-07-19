@@ -31,10 +31,14 @@ namespace Infrastructure.Subscriptions.Repositories
             return await _dbContext.Subscriptions.FromSqlRaw("EXEC GetAllBenefits").ToListAsync();
         }
 
-        public async Task CreateSubscriptionAsync(Subscription subscription)
+        public void CreateSubscriptionAsync(Subscription subscription)
         {
-            _dbContext.Subscriptions.Add(subscription);
-            await _dbContext.SaveEntitiesAsync();
+            System.FormattableString query = ($@"EXECUTE AddSuscription 
+                @EmployerEmail = {subscription.EmployerEmail}, @ProjectName = {subscription.ProjectName},
+                @SubscriptionName = {subscription.SubscriptionName}, @ProviderName = {subscription.ProviderName},
+                @SubscriptionDescription = {subscription.SubscriptionDescription}, @Cost = {subscription.Cost},
+                @TypeSubscription = {subscription.TypeSubscription}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
 
         public async Task<Subscription>? GetSubscription(string employerEmail, string projectName, string subscriptionName)
@@ -107,6 +111,14 @@ namespace Infrastructure.Subscriptions.Repositories
                 deductions.Add(subscription);
             }
             return deductions;
+        }
+
+        public void DisabledSubscription(Subscription subscription) 
+        {
+            System.FormattableString query = ($@"EXECUTE DisabledSubscription 
+                @EmployerEmail = {subscription.EmployerEmail}, @ProjectName = {subscription.ProjectName},
+                @SubscriptionName = {subscription.SubscriptionName}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
     }
 }

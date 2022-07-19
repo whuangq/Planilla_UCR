@@ -102,7 +102,17 @@ else
                 </MudTable>
             </DialogContent>
             <DialogActions>
-                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="DeleteBenefits" Class="px-10">Aceptar</MudButton>
+                 <MudButton Disabled="@snackHandler._saving" OnClick="DeleteBenefits" Variant="Variant.Filled" Color="Color.Primary">
+                        @if (snackHandler._saving)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                            <MudText Class="ms-2">Procesando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Aceptar</MudText>
+                        }
+                    </MudButton>
                   <MudButton Variant="Variant.Filled" Color="Color.Transparent" OnClick="CloseDialog" Class="px-10">Cancelar</MudButton>
             </DialogActions>
         </MudDialog>
@@ -140,6 +150,7 @@ else
     private MudTable<Subscription> _mudTable;
     private MudTable<Subscribe> _table;
     public string searchString1 = "";
+    SnackHandler snackHandler = new SnackHandler();
     public CultureInfo cultureCR = CultureInfo.GetCultureInfo("es-CR");
 
     [Parameter] public string employerEmail { get; set; }
@@ -183,6 +194,7 @@ else
 
     private async Task DeleteBenefits()
     {
+        snackHandler._saving = true;
         foreach (Subscription toDelete in _selectedItems1)
         {
             IList<Subscribe> tempList = (await SubscribeService.GetEmployeesBySubscription(employerEmail, projectName, toDelete.SubscriptionName)).ToList();
@@ -196,15 +208,17 @@ else
             }
             SubscriptionService.DeleteSubscription(toDelete);
         }
-        Snackbar.Add("Beneficios borrados", Severity.Success);
         CloseDialog();
         if (_employees.Length() > 0)
         {
             await SendEmployeeEmails();
+            snackHandler._saving = false;
+            Snackbar.Add("Beneficios borrados", Severity.Success);
             OpenDialogEmployee();
         }
         else
         {
+            Snackbar.Add("Beneficios borrados", Severity.Success);
             GoToMain();
         }
     }
@@ -227,7 +241,7 @@ else
 
     private void GoToMain()
     {
-        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Benefits");
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Benefits", true);
     }
 
     private void GoToCreate()

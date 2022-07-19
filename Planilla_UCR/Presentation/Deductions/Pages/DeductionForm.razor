@@ -79,6 +79,21 @@
     </MudItem>
 </MudGrid>
 
+<MudDialog @bind-IsVisible="_visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Reactivar Beneficio</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText>Ya existe un beneficio inhabilitado con el nombre ingresado, ¿desea reactivarlo?</MudText>
+    </DialogContent>
+    <DialogActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ReactivateSubscription" Class="px-10">Aceptar</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Transparent" OnClick="CloseDialog" Class="px-10">Cancelar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
 @code{
     private double? _cost;
     SnackHandler snackHandler = new SnackHandler();
@@ -88,6 +103,12 @@
 
     [Parameter] public string employerEmail { get; set; }
     [Parameter] public string projectName { get; set; }
+
+    private bool _visible;
+    private bool _open;
+    void CloseDialog() => _visible = false;
+    private void OpenDialog() => _visible = true;
+    private DialogOptions dialogOptions = new() { FullWidth = true };
 
     async Task SaveDeduction()
     {
@@ -99,20 +120,60 @@
         await form.Validate();
         if (form.IsValid)
         {
-            try
+            int error = await ValidName();
+            if (error == 0)
             {
-                await SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
+                SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
                 snackHandler._saving = false;
-                ShowSnackNotification("Deducción "+subscriptionToAdd.SubscriptionName+" creada", Severity.Success);
+                ShowSnackNotification("Deducción " + subscriptionToAdd.SubscriptionName + " creada", Severity.Success);
             }
-            catch (Exception)
+            else
             {
-                snackHandler._saving = false;
-                ShowSnackNotification("Ya existe una deducción con el nombre "+subscriptionToAdd.SubscriptionName, Severity.Error);
+                if (error == 1)
+                {
+                    OpenDialog();
+                }
+                else
+                {
+                    snackHandler._saving = false;
+                    ShowSnackNotification("Ya existe una deducción con el nombre " + subscriptionToAdd.SubscriptionName, Severity.Error);
+                }
             }
         }
         snackHandler._saving = false;
     }
+
+    private void ReactivateSubscription()
+    {
+        Subscription subscriptionToAdd = subscriptionInfo;
+        SubscriptionService.DisabledSubscription(subscriptionToAdd);
+        SubscriptionService.CreateSubscriptionAsync(subscriptionToAdd);
+        ShowSnackNotification("Beneficio " + subscriptionToAdd.SubscriptionName + " reactivado", Severity.Success);
+        CloseDialog();
+        GoToMain();
+    }
+
+    private async Task<int> ValidName()
+    {
+        Subscription subscription = await SubscriptionService.GetSubscription(employerEmail, projectName, subscriptionInfo.SubscriptionName);
+        if (subscription == null)
+        {
+            return 0;
+        }
+        else
+        {
+            if (subscription.IsEnabled == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+
+    }
+
 
     void ShowSnackNotification(string message, Severity severity)
     {
@@ -133,7 +194,7 @@
 
     private void GoToMain()
     {
-        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions");
+        nav.NavigateTo($"/Projects/{employerEmail}/{projectName}/Deductions", true);
     }
 
     private void CleanForm()

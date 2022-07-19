@@ -94,6 +94,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        ContextMenuService.SetProjectsContext(true,true, projectName, ContextMenuService.GetEmployerEmailContext(), ContextMenuService.GetHoursEmployeeContext(), ContextMenuService.GetReportsContext());
         _elements = await SubscriptionService.GetBenefitsByEmployee(employeeEmail, projectName);
         if (_elements.Length() > 0)
         {

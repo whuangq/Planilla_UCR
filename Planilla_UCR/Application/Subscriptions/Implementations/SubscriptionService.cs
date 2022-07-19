@@ -23,9 +23,9 @@ namespace Application.Subscriptions.Implementations
             return await _subscriptionRepository.GetAllBenefictsAsync();
         }
 
-        public async Task CreateSubscriptionAsync(Subscription subscription)
+        public void CreateSubscriptionAsync(Subscription subscription)
         {
-            await _subscriptionRepository.CreateSubscriptionAsync(subscription);
+            _subscriptionRepository.CreateSubscriptionAsync(subscription);
         }
 
         public async Task<Subscription>? GetSubscription(string employerEmail, string projectName, string subscriptionName)
@@ -59,6 +59,11 @@ namespace Application.Subscriptions.Implementations
         public async Task<IList<Subscription>> GetDeductionsByEmployee(string employeeEmail, string projectName) 
         {
             return await _subscriptionRepository.GetDeductionsByEmployee(employeeEmail, projectName);
+        }
+
+        public void DisabledSubscription(Subscription subscription) 
+        { 
+            _subscriptionRepository.DisabledSubscription(subscription);
         }
     }
 }
