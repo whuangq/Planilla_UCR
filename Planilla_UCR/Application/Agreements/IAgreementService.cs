@@ -16,7 +16,7 @@ namespace Application.Agreements
         Task<IList<Agreement>> GetProjectAgreements(string projectName, string employerEmail);
         Task<IEnumerable<Agreement>>? CheckAgreementTypeOfContractee(Agreement agreement);
         Task<IEnumerable<Agreement>>? CheckIfAgreementIsDesactivated(Agreement agreement);
-        void UpdateAgreementStatus(Agreement agreement);
-
+        Task UpdateAgreementStatus(Agreement agreement);
+        Task<IEnumerable<Agreement>>? GetErasableAgreeements(string employeeEmail);
     }
 }

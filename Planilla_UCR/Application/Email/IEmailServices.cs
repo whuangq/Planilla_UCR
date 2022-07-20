@@ -19,5 +19,8 @@ namespace Application.Email
         public void SendEmployerBenefitNotification(EmailObject emailData, IList<Person> employeesEmail, string benefitName);
         public void ReactivateAccountEmail(string message, string destiny);
         public void SendDeletedSubscriptionEmail(EmailObject emailData, string subscriptionName);
+        public void SendQuittingEmailToEmployee(EmailObject emailData, IList<string> employeeInfo);
+        public void SendQuittingEmailToEmployer(EmailObject emailData, IList<string> employeeInfo);
+
     }
 }

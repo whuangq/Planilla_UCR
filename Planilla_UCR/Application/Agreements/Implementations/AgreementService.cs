@@ -30,9 +30,9 @@ namespace Application.Agreements.Implementations
             return await _agreementRepository.GetAllAgreementsByProjectAndEmployer(projectName, employerEmail);
         }
 
-        public async Task DesactivateAgreement(string employeeEmail, string employerEmail, string projectName, string justification)
+        public Task DesactivateAgreement(string employeeEmail, string employerEmail, string projectName, string justification)
         {
-            await _agreementRepository.DesactivateAgreement(employeeEmail, employerEmail, projectName, justification);
+            return _agreementRepository.DesactivateAgreement(employeeEmail, employerEmail, projectName, justification);
         }
 
         public Task<IEnumerable<Agreement>> GetEmployeeAgreements(string employeeEmail)
@@ -62,9 +62,14 @@ namespace Application.Agreements.Implementations
         {
             return await _agreementRepository.CheckIfAgreementIsDesactivated(agreement);
         }
-        public void UpdateAgreementStatus(Agreement agreement)
+        public Task UpdateAgreementStatus(Agreement agreement)
         {
-            _agreementRepository.UpdateAgreementStatus(agreement);
+            return _agreementRepository.UpdateAgreementStatus(agreement);
+        }
+
+        public async Task<IEnumerable<Agreement>>? GetErasableAgreeements(string employeeEmail)
+        {
+            return await _agreementRepository.GetErasableAgreeements(employeeEmail);
         }
     }
 }

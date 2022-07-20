@@ -643,8 +643,18 @@ BEGIN
 	SET Agreement.ContractStartDate = @ContractStartDate, Agreement.ContractType = @ContractType, 
 	Agreement.MountPerHour = @MountPerHour, Agreement.ContractFinishDate = @ContractFinishDate,
 	Agreement.IsEnabled = 1, Agreement.Justification = ''
-	WHERE Agreement.EmployeeEmail = @EmployeeEmail AND Agreement.EmployerEmail = @EmployerEmail AND Agreement.ProjectName = @ProjectName and Agreement.IsEnabled <= 0;
+	WHERE Agreement.EmployeeEmail = @EmployeeEmail AND Agreement.EmployerEmail = @EmployerEmail AND Agreement.ProjectName = @ProjectName and Agreement.IsEnabled <= 1;
 END
+
+GO
+CREATE OR ALTER PROCEDURE GetErasableAgreeements(@EmployeeEmail varchar(255))
+AS
+BEGIN
+	SELECT *
+	FROM Agreement AS A
+	WHERE A.IsEnabled >= 0 AND A.ContractFinishDate <= GETDATE() AND A.EmployeeEmail = @EmployeeEmail
+END
+
 -- Payment stored procedures
 
 GO

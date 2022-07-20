@@ -50,5 +50,28 @@ namespace Tests.Application
             ProjectTest.EmployerEmail.Should().Be(EmployerEmail);
             mockProjectsRepository.Verify(repo => repo.GetProject(EmployerEmail, ProjectName), Times.Once);
         }
+
+        [Fact]
+        public async Task GetAllProjectsAsyncTest()
+        {
+            // arrange
+            IEnumerable<Project> projectList = new List<Project>()
+            {
+                new Project(EmployerEmail, ProjectName, ProjectDescription, MaximumAmountForBenefits, MaximumBenefitAmount, PaymentInterval, IsEnabled, LastPaymentDate)
+            };
+            var project = new Project(EmployerEmail, ProjectName, ProjectDescription, MaximumAmountForBenefits, MaximumBenefitAmount, PaymentInterval, IsEnabled, LastPaymentDate);
+            var mockProjectsRepository = new Mock<IProjectRepository>();
+            var projectsService = new ProjectService(mockProjectsRepository.Object);
+            mockProjectsRepository.Setup(repo => repo.GetAllProjectsAsync()).ReturnsAsync(projectList);
+            await projectsService.CreateProjectAsync(project);
+
+            //act
+            IEnumerable<Project> ProjectTest = await projectsService.GetAllProjectsAsync();
+
+            //assert
+            ProjectTest.ElementAtOrDefault(0).EmployerEmail.Should().Be(EmployerEmail);
+            mockProjectsRepository.Verify(repo => repo.GetAllProjectsAsync(), Times.AtLeastOnce);
+
+        }
     }
 }

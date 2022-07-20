@@ -51,5 +51,27 @@ namespace Tests.Application
             PeopleTest.Email.Should().Be(Email);
             mockPeopleRepository.Verify(repo => repo.GetPerson(Email), Times.Once);
         }
+        [Fact]
+        public async Task GetAllPeopleAsyncTest() 
+        {
+            // arrange
+            IEnumerable<Person> people = new List<Person>()
+            {
+                new Person(Email, Name, LastName1, LastName2, Ssn, BankAccount, Adress, PhoneNumber, IsEnabled)
+            };
+            var person = new Person(Email, Name, LastName1, LastName2, Ssn, BankAccount, Adress, PhoneNumber, IsEnabled);
+            var mockPeopleRepository = new Mock<IPersonRepository>();
+            var peopleService = new PersonService(mockPeopleRepository.Object);
+            mockPeopleRepository.Setup(repo => repo.GetAllPeopleAsync()).ReturnsAsync(people);
+            await peopleService.CreatePersonAsync(person);
+
+            //act
+            IEnumerable<Person> PeopleTest = await peopleService.GetAllPeopleAsync();
+
+            //assert
+            PeopleTest.ElementAtOrDefault(0).Email.Should().Be(Email);
+            mockPeopleRepository.Verify(repo => repo.GetAllPeopleAsync(), Times.AtLeastOnce);
+
+        }
     }
 }

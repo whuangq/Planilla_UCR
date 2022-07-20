@@ -209,7 +209,7 @@
         isOld = await CheckIfAgreementIsDesactivated();
         if (isOld)
         {
-            UpdateAgreementStatus();       
+            await UpdateAgreementStatus();       
         }
         else
         {
@@ -348,8 +348,8 @@
         return isAnExistingAgreement;
     }
 
-    private void UpdateAgreementStatus()
+    private async Task UpdateAgreementStatus()
     {
-        AgreementService.UpdateAgreementStatus(_myAgreement);
+        await AgreementService.UpdateAgreementStatus(_myAgreement);
     }
 }

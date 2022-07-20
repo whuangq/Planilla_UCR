@@ -216,6 +216,46 @@ namespace Application.Email.Implementations
             _emailSender.SendMail(destiny, subject, htmlContent);
         }
 
+        public void SendQuittingEmailToEmployee(EmailObject emailData, IList<string> employeeInfo) 
+        {
+            string employeeEmail = employeeInfo.ElementAtOrDefault(0);
+            string projectName = employeeInfo.ElementAtOrDefault(1);
+            string startDate = employeeInfo.ElementAtOrDefault(2);
+            string endDate = employeeInfo.ElementAtOrDefault(3);
+            string employerName = employeeInfo.ElementAtOrDefault(4);
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/QuitCommunicate.html");
+           
+            htmlContent = htmlContent.Replace("[Heading]", "Recibido la solicitud de renuncia del proyecto " + projectName);
+            htmlContent = htmlContent.Replace("[Body]", "Por este medio se le informa que se ha completado la solicitud de renuncia del proyecto "
+                +projectName + " por parte del empleado asociado al correo electrónico " + employeeEmail + ". Se adjunta la siguiente tabla la cual" +
+                " indica el último día al cual debe asistir a su labor en el proyecto "+ projectName + ".");
+            htmlContent = htmlContent.Replace("[projectName]", projectName);
+            htmlContent = htmlContent.Replace("[startDate]", startDate);
+            htmlContent = htmlContent.Replace("[endDate]", endDate);
+            htmlContent = htmlContent.Replace("[Greetings]", "Coordialmente, se despide " + employerName);
+            _emailSender.SendMail(emailData.Destiny, "Confirmación preaviso de renuncia", htmlContent);
+        }
+        public void SendQuittingEmailToEmployer(EmailObject emailData, IList<string> employeeInfo)
+        {
+            string employeeEmail = employeeInfo.ElementAtOrDefault(0);
+            string projectName = employeeInfo.ElementAtOrDefault(1);
+            string startDate = employeeInfo.ElementAtOrDefault(2);
+            string endDate = employeeInfo.ElementAtOrDefault(3);
+            string employerName = employeeInfo.ElementAtOrDefault(4);
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/QuitCommunicate.html");
+
+            htmlContent = htmlContent.Replace("[Heading]", "Preaviso de renuncia por parte del empleado " + employeeEmail);
+            htmlContent = htmlContent.Replace("[Body]", "Por este medio se le informa que el empleado asociado al correo electrónico " + employeeEmail +
+                " ha solicitado renunciar al proyecto " + projectName + ". " + "A continuación, se adjunta una tabla informativa con la información pertinente" +
+                "al empleado, proyecto al que estaba asociado así como el día en que se hara efectiva la renuncia.");
+            htmlContent = htmlContent.Replace("[projectName]", projectName);
+            htmlContent = htmlContent.Replace("[startDate]", startDate);
+            htmlContent = htmlContent.Replace("[endDate]", endDate);
+            htmlContent = htmlContent.Replace("[Greetings]", "");
+            _emailSender.SendMail(emailData.Destiny, "Aviso de preaviso de renuncia", htmlContent);
+        }
+
+
         public void ReactivateAccountEmail(string message, string destiny)
         {
             string htmlContent = "<section>" + "<div>" + "<header style = BACKGROUND-COLOR:#00695c>" + "<center>" + "<FONT SIZE=5 COLOR=#FFFFFF>" +

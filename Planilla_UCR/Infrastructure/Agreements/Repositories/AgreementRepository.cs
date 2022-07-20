@@ -84,7 +84,7 @@ namespace Infrastructure.Agreements.Repositories
 
         public async Task DesactivateAgreement(string employeeEmail, string employerEmail, string projectName, string justification)
         {
-            System.FormattableString query = $"EXECUTE DesactivateAgreement @EmployeeEmail = {employeeEmail}, @EmployerEmail = {employerEmail}, @ProjectName = {projectName}, @Justification = {justification}";
+            System.FormattableString query = $"EXECUTE DesactivateAgreement @EmployeeEmail = {employeeEmail},@EmployerEmail = {employerEmail}, @ProjectName = {projectName}, @Justification = {justification}";
             _dbContext.Database.ExecuteSqlInterpolated(query);
         }
 
@@ -110,18 +110,29 @@ namespace Infrastructure.Agreements.Repositories
             return agreementList;
         }
 
-        public void UpdateAgreementStatus(Agreement agreement)
+        public async Task UpdateAgreementStatus(Agreement agreement)
         {
-            SqlParameter myEmployeeEmail = new SqlParameter("@EmployeeEmail", agreement.EmployeeEmail);
-            SqlParameter myEmployerEmail = new SqlParameter("@EmployerEmail", agreement.EmployerEmail);
-            SqlParameter myProjectName = new SqlParameter("@ProjectName", agreement.ProjectName);
-            SqlParameter myContractStartDate = new SqlParameter("@ContractStartDate", agreement.ContractStartDate);
-            SqlParameter myContractFinishDate = new SqlParameter("@ContractFinishDate", agreement.ContractFinishDate);
-            SqlParameter myContractType = new SqlParameter("@ContractType", agreement.ContractType);
-            SqlParameter myMountPerHour = new SqlParameter("@MountPerHour", agreement.MountPerHour);
+            string myEmployeeEmail = agreement.EmployeeEmail;
+            string myEmployerEmail = agreement.EmployerEmail;
+            string myProjectName =  agreement.ProjectName;
+            DateTime? myContractStartDate = agreement.ContractStartDate;
+            DateTime? myContractFinishDate = agreement.ContractFinishDate;
+            string myContractType = agreement.ContractType;
+            int myMountPerHour = agreement.MountPerHour;
 
-            _dbContext.Agreements.FromSqlRaw("EXEC UpdateAgreementStatus {0},{1},{2},{3},{4},{5},{6}",
-                myEmployeeEmail, myEmployerEmail, myProjectName, myContractStartDate, myContractFinishDate, myContractType, myMountPerHour).ToListAsync();
+            System.FormattableString query = ($@"EXECUTE UpdateAgreementStatus @EmployeeEmail = {myEmployeeEmail},
+            @EmployerEmail = {myEmployerEmail}, @ProjectName = {myProjectName}, @ContractStartDate = {myContractStartDate},
+            @ContractFinishDate = {myContractFinishDate}, @ContractType = {myContractType}, @MountPerHour = {myMountPerHour}");
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
+
+        public async Task<IEnumerable<Agreement?>> GetErasableAgreeements(string employeeAgreements)
+        {
+            SqlParameter myEmployeeEmail = new SqlParameter("@EmployeeEmail", employeeAgreements);
+            var agreementList = await _dbContext.Agreements.FromSqlRaw("EXEC GetErasableAgreeements {0}",
+                myEmployeeEmail).ToListAsync();
+            return agreementList;
+        }
+       
     }
 }

@@ -70,6 +70,7 @@ namespace Tests.Application
 
             //assert
             AgreementTest.Should().NotBeNull();
+            AgreementTest.ElementAtOrDefault(0).EmployeeEmail.Should().Be(EmployeeEmail);
             mockAgreementRepository.Verify(repo => repo.GetAllAgreementsByProjectAndEmployer(ProjectName, EmployerEmail), Times.Once);
         }
 
@@ -94,5 +95,28 @@ namespace Tests.Application
             AgreementTest.Should().NotBeNull();
             mockAgreementRepository.Verify(repo => repo.GetAllAgreementsByProjectAndEmployer(ProjectName, EmployerEmail), Times.Once);
         }
+
+        [Fact]
+        public async Task GetErasableAgreeementsTest() 
+        {
+            //arrange
+            var agreementObject = new Agreement(EmployeeEmail, EmployerEmail, ProjectName, ContractStartDate, ContractType, MountPerHour, ContractFinishDate, IsEnabled, Justification);
+            IList<Agreement> agreement = new List<Agreement>
+            {
+                new Agreement(EmployeeEmail, EmployerEmail, ProjectName, ContractStartDate, ContractType, MountPerHour, ContractFinishDate, IsEnabled, Justification)
+            };
+            var mockAgreementRepository = new Mock<IAgreementRepository>();
+            var agreementService = new AgreementService(mockAgreementRepository.Object);
+            mockAgreementRepository.Setup(repo => repo.GetErasableAgreeements(EmployeeEmail)).ReturnsAsync(agreement);
+            await agreementService.CreateAgreementAsync(agreementObject);
+
+            //act
+            IEnumerable<Agreement?> AgreementTest = await agreementService.GetErasableAgreeements(EmployeeEmail);
+
+            //assert
+            AgreementTest.ElementAtOrDefault(0).ProjectName.Should().NotBeNull();
+            AgreementTest.ElementAtOrDefault(0).EmployerEmail.Should().Be(EmployerEmail);
+            mockAgreementRepository.Verify(repo => repo.GetErasableAgreeements(EmployeeEmail), Times.Once);
+        } 
     }
 }

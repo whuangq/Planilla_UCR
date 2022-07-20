@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Presentation.Projects.Models
+namespace Application.Employees.Models
 {
-    internal class EmployeeList
+    public class EmployeeList
     {
         public string ProjectName { get; set; }
         public string EmployerName { get; set; }

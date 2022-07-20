@@ -17,6 +17,7 @@ namespace Domain.Agreements.Repositories
         Task DesactivateAgreement(string employeeEmail, string employerEmail, string projectName, string justification);
         Task<IEnumerable<Agreement>>? CheckAgreementTypeOfContractee(Agreement agreement);
         Task<IEnumerable<Agreement>>? CheckIfAgreementIsDesactivated(Agreement agreement);
-        void UpdateAgreementStatus(Agreement agreement);
+        Task UpdateAgreementStatus(Agreement agreement);
+        Task<IEnumerable<Agreement>>? GetErasableAgreeements(string employeeEmail);
     }
 }
