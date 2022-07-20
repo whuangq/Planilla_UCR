@@ -49,7 +49,7 @@
 	<ItemGroup>
 	  <None Include="Dashboard\Components\BarChart.razor" />
 	  <None Include="Dashboard\Components\PieChart.razor" />
-	  <None Include="Projects\Models\EmployeeProjectList.razor" />
+	  <None Include="Projects\Components\EmployeeProjectList.razor" />
 	</ItemGroup>
 
 </Project>

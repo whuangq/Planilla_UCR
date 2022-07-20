@@ -449,6 +449,19 @@ BEGIN
 	SET IsEnabled = 0
 	WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName;
 END
+
+GO
+CREATE OR ALTER PROCEDURE UpdateProject
+(
+	@ProjectName varchar(255),
+	@EmployerEmail varchar(255)
+) AS
+BEGIN
+	UPDATE Project
+	SET ProjectName='BORRADO*'+ CAST(GETDATE() AS varchar(20))+ '*'+@ProjectName
+	WHERE EmployerEmail= @EmployerEmail AND ProjectName = @ProjectName;
+END
+
 GO
 CREATE OR ALTER PROCEDURE UpdatePaymentDate(
 	@ProjectName varchar(255),

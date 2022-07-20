@@ -8,7 +8,7 @@
 @using Application.People
 @using Application.AgreementTypes
 @using Presentation.Core.Components
-@using Presentation.Projects.Models
+@using Presentation.Projects.Components
 @using Application.ContextMenu
 @using Presentation.Authentication
 
@@ -24,7 +24,14 @@
 
 <AuthorizeView Roles="Employer">
     <Authorized>
-            <EmployerProjectList personEmail="@personEmail" projectName="@projectName"></EmployerProjectList>
+        @if (selectedWindow)
+        {
+            <EmployerProjectList personEmail="@personEmail" projectName="@projectName"  SendTableState="ReceiveTableState"></EmployerProjectList>
+        }
+        else
+        {
+            <DeactivatedProjects personEmail="@personEmail" projectName="@projectName" SendTableState="ReceiveTableState"></DeactivatedProjects>
+        }
     </Authorized>
     <NotAuthorized>
     </NotAuthorized>
@@ -39,7 +46,8 @@
 </AuthorizeView>
 
 @code {
-
+    private bool selectedWindow = true;
+    public EventCallback<string> conmuteWindow => EventCallback.Factory.Create<string>(this, ReceiveTableState);
 
     [Parameter] public string personEmail { get; set; }
     [Parameter] public string projectName { get; set; }
@@ -51,5 +59,10 @@
             ContextMenuService.SetProjectsContext(false, false, "", "", false, ContextMenuService.GetReportsContext());
         }
         await InvokeAsync(StateHasChanged);
+    }
+  
+    public void ReceiveTableState()
+    {
+        selectedWindow = !selectedWindow;
     }
 }

@@ -16,9 +16,15 @@ namespace Application.Projects
 
         Task<Project> GetProject(string projectName);
 
+        Task<Project> GetDisabledProject(string employerEmail, string projectName);
+
         Task<IEnumerable<Project>> GetEmployerProyects(string email);
+        
+        Task<IEnumerable<Project>> GetEmployerDeactivedProyects(string email);
 
         Task<IEnumerable<Project>> GetEmployeeProyects(string email);
+
+        public void UpdateProject(string projectName, string employerEmail);
 
         public void ModifyProject(Project project, string newProjectName);
 

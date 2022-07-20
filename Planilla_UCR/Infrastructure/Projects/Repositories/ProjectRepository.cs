@@ -47,6 +47,19 @@ namespace Infrastructure.Projects.Repositories
             }
             return project;
         }
+        public async Task<Project> GetDisabledProject(string employerEmail, string projectName)
+        {
+            IList<Project> projectResult = await _dbContext.Projects.Where
+                    (e => e.EmployerEmail == employerEmail &&
+                    e.ProjectName == projectName && e.IsEnabled == 0).ToListAsync();
+
+            Project project = null;
+            if (projectResult.Length() > 0)
+            {
+                project = projectResult.First();
+            }
+            return project;
+        }
 
         public async Task<Project> GetProject(string projectName)
         {
@@ -77,11 +90,25 @@ namespace Infrastructure.Projects.Repositories
             return projectsResult;
         }
 
+        public async Task<IEnumerable<Project>> GetEmployerDeactivedProyects(string email)
+        {
+            IList<Project> projectsResult = await _dbContext.Projects.Where
+                        (e => e.EmployerEmail == email && e.IsEnabled == 0).ToListAsync();
+            return projectsResult;
+        }
         public async Task<IEnumerable<Project>> GetEmployeeProyects(string name)
         {
             IList<Project> projectsResult = await _dbContext.Projects.Where
                         (e => e.ProjectName == name).ToListAsync();
             return projectsResult;
+        }
+        public void UpdateProject(string projectName, string employerEmail)
+        {
+            System.FormattableString query = ($@"EXECUTE UpdateProject 
+                @ProjectName = {projectName},
+                @EmployerEmail = {employerEmail}");
+
+            _dbContext.Database.ExecuteSqlInterpolated(query);
         }
 
         public void ModifyProject(Project project, string newProjectName)

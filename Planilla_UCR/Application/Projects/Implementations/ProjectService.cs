@@ -38,10 +38,18 @@ namespace Application.Projects.Implementations
         {
             return await _projectRepository.GetProject(projectName);
         }
+        public async Task<Project> GetDisabledProject(string employerEmail, string projectName)
+        {
+            return await _projectRepository.GetDisabledProject(employerEmail, projectName);
+        }
 
         public async Task<IEnumerable<Project>> GetEmployerProyects(string email) 
         { 
             return await _projectRepository.GetEmployerProyects(email);
+        }
+        public async Task<IEnumerable<Project>> GetEmployerDeactivedProyects(string email)
+        {
+            return await _projectRepository.GetEmployerDeactivedProyects(email);
         }
 
         public async Task<IEnumerable<Project>> GetEmployeeProyects(string email)
@@ -62,6 +70,11 @@ namespace Application.Projects.Implementations
         public void UpdatePaymentDate(Project project) 
         { 
             _projectRepository.UpdatePaymentDate(project);
+        }
+
+        public void UpdateProject(string projectName, string employerEmail)
+        {
+            _projectRepository.UpdateProject(projectName, employerEmail);
         }
     }
 }

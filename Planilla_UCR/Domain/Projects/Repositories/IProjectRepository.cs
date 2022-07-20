@@ -13,13 +13,18 @@ namespace Domain.Projects.Repositories
         Task<IEnumerable<Project>> GetAllNameProjects(string name);
         
         Task<IEnumerable<Project>> GetEmployerProyects(string email);
-        
+        Task<Project> GetDisabledProject(string employerEmail, string projectName);
+
         Task<IEnumerable<Project>> GetEmployeeProyects(string email);
+
+        Task<IEnumerable<Project>> GetEmployerDeactivedProyects(string email);
         
         Task<Project> GetProject(string employerEmail, string projectName);
         
         Task<Project> GetProject(string projectName);
         
+        public void UpdateProject(string projectName, string employerEmail);
+
         public void ModifyProject(Project project, string newProjectName);
         
         public void DisableProject(string projectName, string employerEmail);
