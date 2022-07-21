@@ -1,4 +1,4 @@
-﻿@page "/Reports/{employerEmail}/Employee_History"
+﻿@page "/Employee_History/{employerEmail}"
 @using Application.PaymentCalculator
 @using Domain.Agreements.Entities
 @using Domain.People.Entities
@@ -52,16 +52,17 @@ else
     <MudBreadcrumbs Items="_items" Separator=">"></MudBreadcrumbs>
     <MudPaper Height="60px" Width="100%" Outlined="false" Class="border-none" Elevation="0"> 
     </MudPaper>
+    
+    <MudGrid>
+        <MudItem xs="12" Class="d-flex justify-center align-center">
+            <MudItem xs="8">
+                    <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Reporte histórico de pagos a empleados</MudText>
+            </MudItem>
+            </MudItem>
+    </MudGrid>
+    <br>
     if (!_emptyHistory)
     {
-        <MudGrid>
-            <MudItem xs="12" Class="d-flex justify-center align-center">
-                <MudItem xs="8">
-                        <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom="true">Reporte histórico de pagos a empleados</MudText>
-                </MudItem>
-                </MudItem>
-        </MudGrid>
-        <br>
         <MudTable Style="pt-6" @ref="@_table" Items="@_paymentsHistory" RowsPerPage="4" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_emptyHistory" LoadingProgressColor="Color.Primary" Filter="new Func<EmployeeHistoryList,bool>(FiltersFunction)">  
 
             <ToolBarContent>
@@ -161,9 +162,11 @@ else
     }
     else
     {
-        <MudText Align="Align.Center" Typo="Typo.h6">
-            No existen registros de pagos para ningún empleado.
-        </MudText>
+        <MudGrid>
+            <MudText Align="Align.Center" Typo="Typo.h6">
+                No existen registros de pagos para ningún empleado.
+            </MudText>
+        </MudGrid>
     }
     
 }
@@ -194,7 +197,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         _agreements = await AgreementService.GetEmployerAgreements(employerEmail);
-        _emptyHistory = false;
         if (_agreements.Length() > 0) 
         {
             _emptyHistory = false;

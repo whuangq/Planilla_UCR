@@ -93,7 +93,7 @@ else
                         <MudTd DataLabel="Proyecto">@context.ProjectName</MudTd>
                         <MudTd DataLabel="Fecha">@context.LastPaymentDate.ToShortDateString() </MudTd>
                         <MudTd DataLabel="Acciones">
-                            <MudButton Size="Size.Small" @onclick="@(e => GoToPay(@context.ProjectName))" Variant="Variant.Filled" Color="Color.Primary"> Pagar</MudButton>    
+                            <MudButton Size="Size.Small" @onclick="@(e => GoToPay(context.ProjectName))" Variant="Variant.Filled" Color="Color.Primary"> Pagar</MudButton>    
                         </MudTd>
                 </RowTemplate>
                 <PagerContent>

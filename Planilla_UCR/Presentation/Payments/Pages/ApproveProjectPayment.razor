@@ -329,6 +329,7 @@
                 ProjectService.UpdatePaymentDate(_projectInfo);
             }
             Snackbar.Add("Pagos aprobados", Severity.Success);
+            await Task.Delay(3500);
             if (_projectsList.Length() == 0)
             {
                 _empty = true;
@@ -338,6 +339,7 @@
         else
         {
             Snackbar.Add("Por favor seleccione los pagos a aprobar", Severity.Warning);
+            await Task.Delay(3500);
         }
     }
     

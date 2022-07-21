@@ -24,15 +24,15 @@
             </NotAuthorized>
         </AuthorizeView>
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" Elevation="2" Width="300px">
-        <AuthorizeView>
-            <Authorized>
-                <NavMenu email=@_email ></NavMenu>
-            </Authorized>
-            <NotAuthorized>
-            </NotAuthorized>
-        </AuthorizeView>
-    </MudDrawer>
+    <AuthorizeView>
+        <Authorized>
+            <MudDrawer @bind-Open="@_drawerOpen" Elevation="2" Width="300px">
+                <NavMenu email=@_email ></NavMenu>      
+            </MudDrawer>
+        </Authorized>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
     <MudMainContent>
         <div style="padding: 2%;" class="container">
                 @Body
@@ -47,6 +47,7 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+        InvokeAsync(StateHasChanged);
     }
 
     public void GoToProfile()

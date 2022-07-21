@@ -6,6 +6,8 @@
 @using Application.ContextMenu
 @using Application.Agreements
 @using Domain.Agreements.Entities
+@using System.Threading;
+
 
 @inject NavigationManager nav
 @inject IReportOfHoursService HoursReportService
@@ -68,10 +70,6 @@
             <MudText Align="Align.Center" Typo="Typo.h6">
                 No existen horas por aprobar en este proyecto
             </MudText>
-            if(last == true)
-            {
-                Snackbar.Add("Horas aprobadas", Severity.Success);   
-            }
         }
     }
 }
@@ -164,12 +162,15 @@
                 _elements.Remove(element);
             }
             Snackbar.Add("Horas aprobadas", Severity.Success);
+            await Task.Delay(3500);
         }
         else
         {
             Snackbar.Add("Por favor seleccione las horas a aprobar", Severity.Error);
+            await Task.Delay(3500);
         }
         _selectedItems.Clear();
+
         if (_elements.Length() == 0)
         {
             last = true;

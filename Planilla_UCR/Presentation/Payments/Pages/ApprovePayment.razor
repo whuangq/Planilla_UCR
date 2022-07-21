@@ -18,6 +18,7 @@
 @using Presentation.Payments.Models
 @using System.Globalization
 @using Application.PaymentCalculator;
+@using Application.TaxCalculator
 
 @inject IAgreementService AgreementService
 @inject IContextMenuService ContextService
@@ -27,6 +28,8 @@
 @inject IReportOfHoursService ReportHoursService
 @inject ISubscribeService SubscribeService
 @inject IPaymentCalculatorService PaymentCalculatorService
+@inject ITaxCalculatorService TaxCalculatorService
+
 @inject ISnackbar Snackbar
 @inject NavigationManager nav
 
@@ -171,6 +174,7 @@
                     _employeeAgreement.ContractStartDate);
                 if (_employeeAgreement.MountToPay > 0)
                 {
+                    _employeeAgreement.MountToPay += TaxCalculatorService.GetEmployerSocialCharges(_employeeAgreement.MountToPay);
                     _employeesList.Add(_employeeAgreement);
                 }
             }
@@ -334,6 +338,7 @@
                 }
             }
             Snackbar.Add("Pagos aprobados", Severity.Success);
+            await Task.Delay(3500);
             if (_employeesList.Length() == 0)
             {
                 _projectInfo.LastPaymentDate = _nextPay;
@@ -344,6 +349,7 @@
         else
         {
             Snackbar.Add("Por favor seleccione los pagos a aprobar", Severity.Warning);
+            await Task.Delay(3500);
         }
     }
 

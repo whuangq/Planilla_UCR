@@ -139,7 +139,7 @@
                     e.EndDate == null);
                 if (_active == null)
                 {
-                    subscribe.EmployerEmail = subscription.EmployerEmail;
+                    subscribe.EmployerEmail = ContextMenuService.GetEmployerEmailContext();
                     subscribe.SubscriptionName = subscription.SubscriptionName;
                     subscribe.Cost = subscription.Cost;
                     int error = SubscribeService.CreateSubscribe(subscribe, 1);
