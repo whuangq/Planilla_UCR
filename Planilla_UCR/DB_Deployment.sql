@@ -942,13 +942,7 @@ INSERT INTO Agreement VALUES
 ('fernando@ucr.ac.cr', 'david@ucr.ac.cr', 'Taller Hidalgo','2022-06-1','Medio tiempo', 2000, '2026-06-1', 1, ''),
 
 ('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'El camino', '2022-06-1','Medio tiempo', 1600, '2026-06-1', 1, ''),
-
-('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'Cryptomonedas','2022-06-1','Tiempo completo', 16000, '2026-06-1', 1, ''),
-('jeremy@ucr.ac.cr', 'david@ucr.ac.cr', 'Cryptomonedas','2022-06-1','Medio tiempo', 4000, '2026-06-1', 1, ''),
-('julio@ucr.ac.cr', 'david@ucr.ac.cr', 'Cryptomonedas','2022-06-1','Servicios profesionales', 1600, '2026-06-1', 1, ''),
-('mary@ucr.ac.cr', 'david@ucr.ac.cr', 'Cryptomonedas','2022-06-1','Tiempo completo', 8000, '2026-06-1', 1, ''),
-('jefferson@ucr.ac.cr', 'david@ucr.ac.cr', 'Cryptomonedas','2022-06-1','Tiempo completo', 16000, '2026-06-1', 1, '')
-
+('naye@ucr.ac.cr', 'david@ucr.ac.cr', 'Cryptomonedas','2022-06-1','Tiempo completo', 16000, '2026-06-1', 1, '')
 
 INSERT INTO ReportOfHours VALUES
 ('david@ucr.ac.cr', 'Taller Hidalgo','naye@ucr.ac.cr', '2022-06-2',4.0 ,0),

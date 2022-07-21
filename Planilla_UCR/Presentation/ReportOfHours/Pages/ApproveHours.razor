@@ -162,15 +162,14 @@
                 _elements.Remove(element);
             }
             Snackbar.Add("Horas aprobadas", Severity.Success);
-            await Task.Delay(3500);
+            await Task.Delay(2000);
         }
         else
         {
             Snackbar.Add("Por favor seleccione las horas a aprobar", Severity.Error);
-            await Task.Delay(3500);
+            await Task.Delay(2000);
         }
         _selectedItems.Clear();
-
         if (_elements.Length() == 0)
         {
             last = true;

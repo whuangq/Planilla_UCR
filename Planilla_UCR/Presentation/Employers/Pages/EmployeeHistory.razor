@@ -235,7 +235,11 @@ else
         await GetAllLegalDeductions();
         await GetAllVoluntaryDeductions();
         await GetAllBenefits();
-        GetTotalSocialCharges();
+        foreach (EmployeeHistoryList person in _paymentsHistory)
+        {
+            if (person.ContractType != "Servicios profesionales")
+                GetTotalSocialCharges();
+        }
         GetTotalCostForEmployee();
     }
 
@@ -247,7 +251,7 @@ else
             double totalGrossSalary = 0.0;
             foreach (Payment pay in _payment) 
             {
-                if (pay.EmployeeEmail == person.EmployeeEmail)
+                if (pay.EmployeeEmail == person.EmployeeEmail && pay.ProjectName == person.ProjectName)
                 {
                     totalGrossSalary += pay.GrossSalary;
                     person.PaymentDate = pay.EndDate.ToShortDateString();
@@ -269,7 +273,8 @@ else
             double costLegalDeductions = 0.0;
             foreach (Payment pay in _payment) 
             {
-                if (!person.ContractType.Equals("Servicios profesionales") && pay.EmployeeEmail == person.EmployeeEmail)
+                if (!person.ContractType.Equals("Servicios profesionales") && pay.EmployeeEmail == person.EmployeeEmail
+                && pay.ProjectName == person.ProjectName)
                 {
                     foreach (var item in _legalDeductions)
                     {
@@ -290,7 +295,7 @@ else
             double costVoluntaryDeductions = 0.0;
             foreach (Payment pay in _payment) 
             {
-                if (pay.EmployeeEmail == person.EmployeeEmail)
+                if (pay.EmployeeEmail == person.EmployeeEmail && pay.ProjectName == person.ProjectName)
                 {
                     Subscribe searchSubscribe= new Subscribe(pay.EmployeeEmail,pay.EmployerEmail, pay.ProjectName, "", 0.0, pay.StartDate, pay.EndDate);
                     IList<Subscription> subscriptions = (await SubscribeService.GetSubscriptionCostsByDate(searchSubscribe)).ToList();
@@ -311,12 +316,11 @@ else
             double costBenefits = 0.0;
             foreach (Payment pay in _payment) 
             {
-                if (pay.EmployeeEmail == person.EmployeeEmail)
+                if (pay.EmployeeEmail == person.EmployeeEmail && pay.ProjectName == person.ProjectName)
                 {
                     benefits = (IList<Subscription>) await SubscriptionService.GetBenefitsByEmployee(pay.EmployeeEmail, pay.ProjectName);
                     costBenefits += PaymentCalculatorService.DeductionsCost(benefits);
                 }
-
             }
             person.TotalBenefits = costBenefits;
         }
@@ -347,8 +351,7 @@ else
     {
         foreach (EmployeeHistoryList person in _paymentsHistory)
         {
-            person.EmployeeCost = person.GrossSalary + person.TotalBenefits + person.EmployerSocialCharges + 
-                                  person.MandatoryEmployeeDeductions + person.VoluntaryDeductions;
+            person.EmployeeCost = person.GrossSalary + person.TotalBenefits + person.EmployerSocialCharges;
         }
     }
 

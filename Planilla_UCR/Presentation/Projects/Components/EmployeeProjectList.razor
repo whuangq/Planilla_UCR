@@ -198,7 +198,7 @@ else
 			SendEmailToEmployer(element, endDate);
 		}
 		Snackbar.Add("Su solicitud de renuncia ha terminado exitosamente", Severity.Success);
-		await Task.Delay(3500);
+		await Task.Delay(2000);
 		nav.NavigateTo($"/Projects/{personEmail}/", true);
 	}
 

@@ -219,7 +219,7 @@ else
 			CloseDialog();
 			await AgreementService.DesactivateAgreement(_employeeEmailToBeDeleted, _employerEmailToBeDeleted, _projectNameToBeDeleted, _justificationToBeDeleted);
 			ShowSnackNotification("El empleado con el email " + _employeeEmailToBeDeleted + " ha sido eliminado del proyecto", Severity.Success);
-			await Task.Delay(3500); // Time in miliseconds
+			await Task.Delay(2000); // Time in miliseconds
 			nav.NavigateTo($"/View_Project_Employees/{email}/{projectName}", true);
 		}
 		else
