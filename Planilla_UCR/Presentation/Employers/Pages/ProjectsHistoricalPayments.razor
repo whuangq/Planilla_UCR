@@ -199,15 +199,17 @@
                 projectHistorical.EmployerEmail, projectHistorical.ProjectName, null, "", 0, null, 1, "");
             _agreement = await AgreementService.GetContractee(_agreement);
             projectHistorical.Benefits = Convert.ToDouble(await GetEmployeeBenefits(projectHistorical));
-            if (_agreement.ContractType != "Servicios profesionales")
-            {
-                double obligatoryCost = Convert.ToDouble(await GetEmployeeObligatoryDeductions(projectHistorical));
-                netSalary -= obligatoryCost;
-                projectHistorical.ObligatoryDeductions = obligatoryCost;
-                projectHistorical.EmployerCharges = GetEmployerSocialCharges(projectHistorical);
+            if(_agreement != null){
+                if (_agreement.ContractType != "Servicios profesionales")
+                {
+                    double obligatoryCost = Convert.ToDouble(await GetEmployeeObligatoryDeductions(projectHistorical));
+                    netSalary -= obligatoryCost;
+                    projectHistorical.ObligatoryDeductions = obligatoryCost;
+                    projectHistorical.EmployerCharges = GetEmployerSocialCharges(projectHistorical);
+                }
+                projectHistorical.VoluntaryDeductions = Convert.ToDouble(await GetEmployeeVoluntaryDeductions(projectHistorical, netSalary));
+                projectHistorical.EmployerCost = projectHistorical.GrossSalary + projectHistorical.Benefits + projectHistorical.EmployerCharges;
             }
-            projectHistorical.VoluntaryDeductions = Convert.ToDouble(await GetEmployeeVoluntaryDeductions(projectHistorical, netSalary));
-            projectHistorical.EmployerCost = projectHistorical.GrossSalary + projectHistorical.Benefits +  projectHistorical.EmployerCharges;
         }
     }
 

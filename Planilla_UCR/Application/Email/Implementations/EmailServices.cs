@@ -56,7 +56,7 @@ namespace Application.Email.Implementations
             string projectName = rows[1].Split("#")[0];
             string salary = rows[1].Split("#")[2];
             string netSalary = rows[2].Split("#")[2];
-            string htmlContent = File.ReadAllText("../wwwroot/wwwroot/emails/LastPayEmail.html");
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/LastPayEmail.html");
             htmlContent = htmlContent.Replace("[employeeName]", employeeName);
             htmlContent = htmlContent.Replace("[contractType]", contractType);
             htmlContent = htmlContent.Replace("[Date]", date);
@@ -92,7 +92,7 @@ namespace Application.Email.Implementations
         {
             string projectName = summaryTable.ElementAtOrDefault(0).DeductionName;
             string date = summaryTable.ElementAtOrDefault(2).DeductionName;
-            string htmlContent = File.ReadAllText("../wwwroot/wwwroot/emails/PlanillaReportEmail.html");
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/PlanillaReportEmail.html");
             htmlContent = htmlContent.Replace("[date]", date);
             htmlContent = htmlContent.Replace("[projectName]", projectName);
 
@@ -198,7 +198,7 @@ namespace Application.Email.Implementations
                 "</strong>" + "</FONT>" + "</center>" + "</div>" + "</header>" + "</section>" + "<br>" + "</br>" + "<section>" + "<div>" + "Señor(a): " + employerName + "<br>" +
                 "</br>" + "</div>" + "</section>" + "<section>" + "<div>" + "En este correo se incluye la lista de empleados que actualmente están excediendo el monto y/o " +
                 "la cantidad de beneficios de " + projectName + ". " + "<br>" + "</br>" + "</div> " + "</section>";
-            htmlContent += File.ReadAllText("../wwwroot/wwwroot/emails/OverstaffedEmployees.html");
+            htmlContent += File.ReadAllText("../Server_Planilla/wwwroot/emails/OverstaffedEmployees.html");
             
             htmlContent += "<section>" + "<div>" +"<br>" + "</br>" + "A cada uno de ellos se les envió un correo indicando que deben desuscribirse de alguno de sus beneficios." +
                 "</div> " + "</section>" + "<section>" + "<div>" + "Favor monitorear que cumplan con la fecha límite." + "<br>" + "</br>" + "</div>" + "</section>";
@@ -223,7 +223,7 @@ namespace Application.Email.Implementations
             string startDate = employeeInfo.ElementAtOrDefault(2);
             string endDate = employeeInfo.ElementAtOrDefault(3);
             string employerName = employeeInfo.ElementAtOrDefault(4);
-            string htmlContent = File.ReadAllText("../wwwroot/wwwroot/emails/QuitCommunicate.html");
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/QuitCommunicate.html");
            
             htmlContent = htmlContent.Replace("[Heading]", "Recibido la solicitud de renuncia del proyecto " + projectName);
             htmlContent = htmlContent.Replace("[Body]", "Por este medio se le informa que se ha completado la solicitud de renuncia del proyecto "
@@ -242,7 +242,7 @@ namespace Application.Email.Implementations
             string startDate = employeeInfo.ElementAtOrDefault(2);
             string endDate = employeeInfo.ElementAtOrDefault(3);
             string employerName = employeeInfo.ElementAtOrDefault(4);
-            string htmlContent = File.ReadAllText("../wwwroot/wwwroot/emails/QuitCommunicate.html");
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/QuitCommunicate.html");
 
             htmlContent = htmlContent.Replace("[Heading]", "Preaviso de renuncia por parte del empleado " + employeeEmail);
             htmlContent = htmlContent.Replace("[Body]", "Por este medio se le informa que el empleado asociado al correo electrónico " + employeeEmail +
@@ -271,7 +271,7 @@ namespace Application.Email.Implementations
 
         public void SendEmployeeBenefitNotification(EmailObject emailData, string benefitName) 
         {
-            string htmlContent = File.ReadAllText("../wwwroot/wwwroot/emails/EmployeeBenefitNotification.html");
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/EmployeeBenefitNotification.html");
             htmlContent = htmlContent.Replace("[employeeName]", emailData.EmployeeName);
             htmlContent = htmlContent.Replace("[employerName]", emailData.EmployerName);
             htmlContent = htmlContent.Replace("[projectName]", emailData.ProjectName);
@@ -283,7 +283,7 @@ namespace Application.Email.Implementations
         {
             string affectedEmployees = string.Empty;
 
-            string htmlContent = File.ReadAllText("../wwwroot/wwwroot/emails/EmployerBenefitNotification.html");
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/EmployerBenefitNotification.html");
             htmlContent = htmlContent.Replace("[employerName]", emailData.EmployerName);
             htmlContent = htmlContent.Replace("[projectName]", emailData.ProjectName);
             htmlContent = htmlContent.Replace("[benefitName]", benefitName);
@@ -301,7 +301,7 @@ namespace Application.Email.Implementations
 
         public void SendDeletedSubscriptionEmail(EmailObject emailData, string subscriptionName)
         {
-            string htmlContent = File.ReadAllText("../wwwroot/wwwroot/emails/DeletedSubscription.html");
+            string htmlContent = File.ReadAllText("../Server_Planilla/wwwroot/emails/DeletedSubscription.html");
             htmlContent = htmlContent.Replace("[employeeName]", emailData.EmployeeName);
             htmlContent = htmlContent.Replace("[employerName]", emailData.EmployerName);
             htmlContent = htmlContent.Replace("[projectName]", emailData.ProjectName);
